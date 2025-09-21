@@ -4,6 +4,7 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.math.Vec3d;
 import org.kouv.tome.api.skill.Skill;
+import org.kouv.tome.api.skill.SkillResponse;
 import org.kouv.tome.api.skill.condition.SkillCondition;
 import org.kouv.tome.api.skill.registry.SkillRegistries;
 import org.kouv.tome.api.skill.state.SkillStateCreationResult;
@@ -15,28 +16,35 @@ public final class SkillTest implements ModInitializer {
 
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
             .setCondition(context -> {
+                SkillResponse response = SkillCondition.defaultConditions().test(context);
                 LOGGER.info(
-                        "skill tested: skill={}, source={}",
+                        "skill tested: skill={}, source={}, response={}",
                         context.getSkill(),
-                        context.getSource()
+                        context.getSource(),
+                        response
                 );
-                return SkillCondition.defaultConditions().test(context);
+                return response;
             })
             .setDurationProvider(context -> {
+                int duration = 50;
                 LOGGER.info(
-                        "skill duration set: skill={}, source={}",
+                        "skill duration set: skill={}, source={}, duration={}",
                         context.getSkill(),
-                        context.getSource()
+                        context.getSource(),
+                        duration
                 );
-                return 50;
+                return duration;
             })
             .setStateFactory(context -> {
+                SkillStateCreationResult<TestState> creationResult =
+                        SkillStateCreationResult.ok(new TestState(context.getSource().getPos()));
                 LOGGER.info(
-                        "skill state set: skill={}, source={}",
+                        "skill state set: skill={}, source={}, creationResult={}",
                         context.getSkill(),
-                        context.getSource()
+                        context.getSource(),
+                        creationResult
                 );
-                return SkillStateCreationResult.ok(new TestState(context.getSource().getPos()));
+                return creationResult;
             })
             .setStartBehavior(instance ->
                     LOGGER.info(
@@ -67,26 +75,30 @@ public final class SkillTest implements ModInitializer {
                     )
             )
             .setCancelHandler(instance -> {
+                boolean cancelled = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill cancelled: state={}, duration={}",
+                        "skill cancelled: state={}, duration={}, cancelled={}",
                         instance.getState(),
-                        instance.getDuration()
+                        instance.getDuration(),
+                        cancelled
                 );
-                return !instance.getSource().isOnGround();
+                return cancelled;
             })
             .setInterruptHandler(instance -> {
+                boolean interrupted = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill interrupted: state={}, duration={}",
+                        "skill interrupted: state={}, duration={}, interrupted={}",
                         instance.getState(),
-                        instance.getDuration()
+                        instance.getDuration(),
+                        interrupted
                 );
-                return !instance.getSource().isOnGround();
+                return interrupted;
             })
             .build();
 
     @Override
     public void onInitialize() {
-        Registry.register(SkillRegistries.SKILL, "tome:skill", testSkill);
+        Registry.register(SkillRegistries.SKILL, "tome:test_skill", testSkill);
     }
 
     private record TestState(Vec3d pos) {
