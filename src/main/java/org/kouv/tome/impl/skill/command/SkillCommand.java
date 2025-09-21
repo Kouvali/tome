@@ -21,6 +21,7 @@ import org.kouv.tome.api.skill.registry.SkillRegistries;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 public final class SkillCommand {
     private static final DynamicCommandExceptionType ENTITY_FAILED_EXCEPTION = new DynamicCommandExceptionType(
@@ -234,11 +235,8 @@ public final class SkillCommand {
             Collection<? extends Entity> targets,
             RegistryEntry<? extends Skill<?>> skill
     ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities = targets.stream()
-                .filter(LivingEntity.class::isInstance)
-                .map(LivingEntity.class::cast)
-                .filter(entity -> entity.getSkillContainer().addSkill(skill))
-                .toList();
+        List<? extends LivingEntity> entities =
+                filterLivingEntities(targets, entity -> entity.getSkillContainer().addSkill(skill));
 
         if (entities.isEmpty()) {
             throw ADD_FAILED_EXCEPTION.create();
@@ -258,11 +256,8 @@ public final class SkillCommand {
             Collection<? extends Entity> targets,
             RegistryEntry<? extends Skill<?>> skill
     ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities = targets.stream()
-                .filter(LivingEntity.class::isInstance)
-                .map(LivingEntity.class::cast)
-                .filter(entity -> entity.getSkillContainer().removeSkill(skill))
-                .toList();
+        List<? extends LivingEntity> entities =
+                filterLivingEntities(targets, entity -> entity.getSkillContainer().removeSkill(skill));
 
         if (entities.isEmpty()) {
             throw REMOVE_FAILED_EXCEPTION.create();
@@ -315,11 +310,8 @@ public final class SkillCommand {
             ServerCommandSource source,
             Collection<? extends Entity> targets
     ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities = targets.stream()
-                .filter(LivingEntity.class::isInstance)
-                .map(LivingEntity.class::cast)
-                .filter(entity -> entity.getSkillManager().cancelCasting())
-                .toList();
+        List<? extends LivingEntity> entities =
+                filterLivingEntities(targets, entity -> entity.getSkillManager().cancelCasting());
 
         if (entities.isEmpty()) {
             throw CANCEL_FAILED_EXCEPTION.create();
@@ -338,11 +330,8 @@ public final class SkillCommand {
             ServerCommandSource source,
             Collection<? extends Entity> targets
     ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities = targets.stream()
-                .filter(LivingEntity.class::isInstance)
-                .map(LivingEntity.class::cast)
-                .filter(entity -> entity.getSkillManager().interruptCasting())
-                .toList();
+        List<? extends LivingEntity> entities =
+                filterLivingEntities(targets, entity -> entity.getSkillManager().interruptCasting());
 
         if (entities.isEmpty()) {
             throw INTERRUPT_FAILED_EXCEPTION.create();
@@ -361,11 +350,8 @@ public final class SkillCommand {
             ServerCommandSource source,
             Collection<? extends Entity> targets
     ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities = targets.stream()
-                .filter(LivingEntity.class::isInstance)
-                .map(LivingEntity.class::cast)
-                .filter(entity -> entity.getSkillManager().terminateCasting())
-                .toList();
+        List<? extends LivingEntity> entities =
+                filterLivingEntities(targets, entity -> entity.getSkillManager().terminateCasting());
 
         if (entities.isEmpty()) {
             throw TERMINATE_FAILED_EXCEPTION.create();
@@ -378,6 +364,17 @@ public final class SkillCommand {
         }
 
         return entities.size();
+    }
+
+    private static List<? extends LivingEntity> filterLivingEntities(
+            Collection<? extends Entity> entities,
+            Predicate<? super LivingEntity> predicate
+    ) {
+        return entities.stream()
+                .filter(LivingEntity.class::isInstance)
+                .map(LivingEntity.class::cast)
+                .filter(predicate)
+                .toList();
     }
 
     private static LivingEntity getLivingEntity(Entity entity) throws CommandSyntaxException {
