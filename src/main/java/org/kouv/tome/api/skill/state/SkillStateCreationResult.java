@@ -22,8 +22,8 @@ public sealed interface SkillStateCreationResult<S> {
     ) {
         Objects.requireNonNull(mapper);
         return switch (this) {
-            case SkillStateCreationResult.Ok<S> ok -> ok(mapper.apply(ok.state()));
-            case SkillStateCreationResult.Error<S> error -> (Error<R>) error;
+            case Ok<S> ok -> ok(mapper.apply(ok.state()));
+            case Error<S> error -> (Error<R>) error;
         };
     }
 
@@ -34,8 +34,8 @@ public sealed interface SkillStateCreationResult<S> {
     ) {
         Objects.requireNonNull(mapper);
         return switch (this) {
-            case SkillStateCreationResult.Ok<S> ok -> mapper.apply(ok.state());
-            case SkillStateCreationResult.Error<S> error -> (Error<R>) error;
+            case Ok<S> ok -> mapper.apply(ok.state());
+            case Error<S> error -> (Error<R>) error;
         };
     }
 
