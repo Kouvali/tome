@@ -1,13 +1,6 @@
 package org.kouv.tome.api.skill
 
-import org.kouv.tome.api.skill.behavior.SkillCompleteBehavior
-import org.kouv.tome.api.skill.behavior.SkillEndBehavior
-import org.kouv.tome.api.skill.behavior.SkillStartBehavior
-import org.kouv.tome.api.skill.behavior.SkillTickBehavior
-import org.kouv.tome.api.skill.behavior.skillCompleteBehavior
-import org.kouv.tome.api.skill.behavior.skillEndBehavior
-import org.kouv.tome.api.skill.behavior.skillStartBehavior
-import org.kouv.tome.api.skill.behavior.skillTickBehavior
+import org.kouv.tome.api.skill.behavior.*
 import org.kouv.tome.api.skill.condition.SkillCondition
 import org.kouv.tome.api.skill.condition.skillCondition
 import org.kouv.tome.api.skill.duration.SkillDurationProvider
