@@ -9,6 +9,8 @@ import org.kouv.tome.api.skill.SkillResponse;
 public interface SkillManager {
     boolean isCasting();
 
+    <S> @Nullable SkillInstance<S> getCastingInstance(RegistryEntry<? extends Skill<S>> skill);
+
     <S> @Nullable SkillInstance<S> getCastingInstance(Class<? extends S> clazz);
 
     SkillResponse testSkill(RegistryEntry<? extends Skill<?>> skill);

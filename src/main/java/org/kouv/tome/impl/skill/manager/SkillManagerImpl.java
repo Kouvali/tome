@@ -33,6 +33,15 @@ public final class SkillManagerImpl implements SkillManager {
 
     @SuppressWarnings("unchecked")
     @Override
+    public @Nullable <S> SkillInstance<S> getCastingInstance(RegistryEntry<? extends Skill<S>> skill) {
+        Objects.requireNonNull(skill);
+        return instance == null || !instance.getSkill().equals(skill) ?
+                null :
+                (SkillInstance<S>) instance;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
     public @Nullable <S> SkillInstance<S> getCastingInstance(Class<? extends S> clazz) {
         Objects.requireNonNull(clazz);
         return instance == null || !clazz.isInstance(instance.getState()) ?
