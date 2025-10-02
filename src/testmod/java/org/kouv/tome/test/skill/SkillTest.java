@@ -37,7 +37,7 @@ public final class SkillTest implements ModInitializer {
             })
             .setStateFactory(context -> {
                 SkillStateCreationResult<TestState> creationResult =
-                        SkillStateCreationResult.ok(new TestState(context.getSource().getPos()));
+                        SkillStateCreationResult.ok(new TestState(context.getSource().getEntityPos()));
                 LOGGER.info(
                         "skill state set: skill={}, source={}, creationResult={}",
                         context.getSkill(),

@@ -44,7 +44,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillSource {
 
     @Inject(method = "onDeath", at = @At(value = "TAIL"))
     private void tome$onDeath(DamageSource damageSource, CallbackInfo ci) {
-        if (getWorld().isClient()) {
+        if (getEntityWorld().isClient()) {
             return;
         }
 
@@ -56,7 +56,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillSource {
 
     @Inject(method = "onRemove", at = @At(value = "TAIL"))
     private void tome$onRemove(Entity.RemovalReason reason, CallbackInfo ci) {
-        if (getWorld().isClient()) {
+        if (getEntityWorld().isClient()) {
             return;
         }
 
@@ -68,7 +68,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillSource {
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void tome$tick(CallbackInfo ci) {
-        if (getWorld().isClient()) {
+        if (getEntityWorld().isClient()) {
             return;
         }
 
