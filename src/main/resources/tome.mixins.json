@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "org.kouv.tome.mixin.skill",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "LivingEntityMixin",
+    "ServerPlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
