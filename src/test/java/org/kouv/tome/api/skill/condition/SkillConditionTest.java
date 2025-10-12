@@ -33,7 +33,7 @@ class SkillConditionTest {
     private SkillCooldownManager mockCooldownManager;
 
     @Test
-    void testRequireLearned_Success() {
+    void testRequireLearned_whenSkillLearned_returnsSuccess() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
         when(mockContext.getSkill()).thenAnswer(invocation -> mockSkill);
@@ -49,7 +49,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireLearned_Failure() {
+    void testRequireLearned_whenSkillNotLearned_returnsFailure() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
         when(mockContext.getSkill()).thenAnswer(invocation -> mockSkill);
@@ -66,7 +66,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireLearned_WithSkillProvider_Success() {
+    void testRequireLearned_withSkillProvider_whenSkillLearned_returnsSuccess() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
 
@@ -85,7 +85,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireLearned_WithSkillProvider_Failure() {
+    void testRequireLearned_withSkillProvider_whenSkillNotLearned_returnsFailure() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
 
@@ -105,7 +105,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireNoCooldown_Success() {
+    void testRequireNoCooldown_whenNoCooldown_returnsSuccess() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
         when(mockContext.getSkill()).thenAnswer(invocation -> mockSkill);
@@ -121,7 +121,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireNoCooldown_Failure() {
+    void testRequireNoCooldown_whenOnCooldown_returnsFailure() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
         when(mockContext.getSkill()).thenAnswer(invocation -> mockSkill);
@@ -138,7 +138,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireNoCooldown_WithSkillProvider_Success() {
+    void testRequireNoCooldown_withSkillProvider_whenNoCooldown_returnsSuccess() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
 
@@ -157,7 +157,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireNoCooldown_WithSkillProvider_Failure() {
+    void testRequireNoCooldown_withSkillProvider_whenOnCooldown_returnsFailure() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
 
@@ -177,7 +177,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireInGame_Success() {
+    void testRequireInGame_whenInGame_returnsSuccess() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
         when(mockSource.isPartOfGame()).thenReturn(true);
@@ -190,7 +190,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testRequireInGame_Failure() {
+    void testRequireInGame_whenNotInGame_returnsFailure() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
         when(mockSource.isPartOfGame()).thenReturn(false);
@@ -204,7 +204,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testDefaultConditions() {
+    void testDefaultConditions_whenAllConditionsMet_returnsSuccess() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
         when(mockContext.getSkill()).thenAnswer(invocation -> mockSkill);
@@ -224,7 +224,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testAndOperator_BothSuccess() {
+    void testAndOperator_whenBothConditionsSuccess_returnsSuccess() {
         // given
         SkillCondition condition1 = context -> SkillResponse.success();
         SkillCondition condition2 = context -> SkillResponse.success();
@@ -238,7 +238,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testAndOperator_FirstFails() {
+    void testAndOperator_whenFirstConditionFails_returnsFailure() {
         // given
         SkillCondition condition1 = context -> SkillResponse.unavailable();
         SkillCondition condition2 = context -> SkillResponse.success();
@@ -253,7 +253,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testAndOperator_SecondFails() {
+    void testAndOperator_whenSecondConditionFails_returnsFailure() {
         // given
         SkillCondition condition1 = context -> SkillResponse.success();
         SkillCondition condition2 = context -> SkillResponse.unavailable();
@@ -268,7 +268,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testAndOperator_BothFail_ReturnsFirstFailure() {
+    void testAndOperator_whenBothConditionsFail_returnsFirstFailure() {
         // given
         SkillCondition condition1 = context -> SkillResponse.inProgress();
         SkillCondition condition2 = context -> SkillResponse.notLearned();
@@ -283,7 +283,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testOrOperator_BothSuccess() {
+    void testOrOperator_whenBothConditionsSuccess_returnsSuccess() {
         // given
         SkillCondition condition1 = context -> SkillResponse.success();
         SkillCondition condition2 = context -> SkillResponse.success();
@@ -297,7 +297,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testOrOperator_FirstSuccess() {
+    void testOrOperator_whenFirstConditionSuccess_returnsSuccess() {
         // given
         SkillCondition condition1 = context -> SkillResponse.success();
         SkillCondition condition2 = context -> SkillResponse.unavailable();
@@ -311,7 +311,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testOrOperator_SecondSuccess() {
+    void testOrOperator_whenSecondConditionSuccess_returnsSuccess() {
         // given
         SkillCondition condition1 = context -> SkillResponse.unavailable();
         SkillCondition condition2 = context -> SkillResponse.success();
@@ -325,7 +325,7 @@ class SkillConditionTest {
     }
 
     @Test
-    void testOrOperator_BothFail() {
+    void testOrOperator_whenBothConditionsFail_returnsLastFailure() {
         // given
         SkillCondition condition1 = context -> SkillResponse.inProgress();
         SkillCondition condition2 = context -> SkillResponse.notLearned();
