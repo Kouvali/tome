@@ -2,6 +2,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm'
     id 'fabric-loom'
     id 'maven-publish'
+    id 'org.jreleaser'
 }
 
 sourceSets {
@@ -41,6 +42,8 @@ processTestmodResources {
 }
 
 java {
+    withJavadocJar()
+    withSourcesJar()
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
@@ -48,8 +51,68 @@ java {
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        mavenJava(MavenPublication) {
             from components.java
+
+            groupId = project.group
+            artifactId = project.name
+            version = project.version
+
+            pom {
+                name = 'tome'
+                description = 'Library for creating server-side skills'
+                url = 'https://github.com/Kouvali/tome'
+
+                licenses {
+                    license {
+                        name = 'Apache-2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'Kouvali'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:https://github.com/Kouvali/tome.git'
+                    developerConnection = 'scm:git:ssh://github.com/Kouvali/tome.git'
+                    url = 'http://github.com/Kouvali/tome'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url = layout.buildDirectory.dir('staging-deploy')
+        }
+    }
+}
+
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        armored = true
+    }
+
+    release {
+        github {
+            enabled = false
+        }
+    }
+
+    deploy {
+        maven {
+            mavenCentral {
+                sonatype {
+                    active = 'ALWAYS'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    stagingRepository('build/staging-deploy')
+                }
+            }
         }
     }
 }
