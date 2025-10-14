@@ -2,15 +2,31 @@ package org.kouv.tome.api.skill.state;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.kouv.tome.api.skill.SkillContext;
+import org.kouv.tome.api.skill.SkillResponse;
 
 import java.util.Objects;
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
 @FunctionalInterface
 public interface SkillStateFactory<S> {
+    static <S> SkillStateFactory<S> alwaysOk(
+            Function<? super SkillContext<?>, ? extends S> provider
+    ) {
+        Objects.requireNonNull(provider);
+        return context -> SkillStateCreationResult.ok(provider.apply(context));
+    }
+
+    static <S> SkillStateFactory<S> alwaysError(
+            Function<? super SkillContext<?>, ? extends SkillResponse.Failure> provider
+    ) {
+        Objects.requireNonNull(provider);
+        return context -> SkillStateCreationResult.error(provider.apply(context));
+    }
+
     static <S> SkillStateFactory<S> constant(S state) {
         Objects.requireNonNull(state);
-        return context -> SkillStateCreationResult.ok(state);
+        return alwaysOk(context -> state);
     }
 
     SkillStateCreationResult<S> create(SkillContext<?> context);
