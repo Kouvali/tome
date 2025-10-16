@@ -20,6 +20,10 @@ public interface SkillCondition {
                 SkillResponse.notLearned();
     }
 
+    static SkillCondition requireLearned(RegistryEntry<? extends Skill<?>> skill) {
+        return requireLearned(context -> skill);
+    }
+
     static SkillCondition requireLearned() {
         return requireLearned(SkillContext::getSkill);
     }
@@ -31,6 +35,10 @@ public interface SkillCondition {
         return context -> context.getSource().getSkillCooldownManager().isCoolingDown(skillProvider.apply(context)) ?
                 SkillResponse.cooldown() :
                 SkillResponse.success();
+    }
+
+    static SkillCondition requireNoCooldown(RegistryEntry<? extends Skill<?>> skill) {
+        return requireNoCooldown(context -> skill);
     }
 
     static SkillCondition requireNoCooldown() {

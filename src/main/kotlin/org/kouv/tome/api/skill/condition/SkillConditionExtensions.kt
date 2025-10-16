@@ -11,10 +11,16 @@ inline fun skillCondition(crossinline block: SkillContext<*>.() -> SkillResponse
 inline fun requireLearnedSkillCondition(crossinline block: SkillContext<*>.() -> RegistryEntry<out Skill<*>>): SkillCondition =
     SkillCondition.requireLearned { context -> context.block() }
 
+fun requireLearnedSkillCondition(skill: RegistryEntry<out Skill<*>>): SkillCondition =
+    SkillCondition.requireLearned(skill)
+
 fun requireLearnedSkillCondition(): SkillCondition = SkillCondition.requireLearned()
 
 inline fun requireNoCooldownSkillCondition(crossinline block: SkillContext<*>.() -> RegistryEntry<out Skill<*>>): SkillCondition =
     SkillCondition.requireNoCooldown { context -> context.block() }
+
+fun requireNoCooldownSkillCondition(skill: RegistryEntry<out Skill<*>>): SkillCondition =
+    SkillCondition.requireNoCooldown(skill)
 
 fun requireNoCooldownSkillCondition(): SkillCondition = SkillCondition.requireNoCooldown()
 

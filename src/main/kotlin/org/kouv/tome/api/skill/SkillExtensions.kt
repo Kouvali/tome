@@ -42,11 +42,17 @@ inline fun <S : Any> Skill.Builder<S>.condition(crossinline block: SkillContext<
 inline fun <S : Any> Skill.Builder<S>.requireLearnedCondition(crossinline block: SkillContext<*>.() -> RegistryEntry<out Skill<*>>): SkillCondition =
     requireLearnedSkillCondition(block).also { condition = it }
 
+fun <S : Any> Skill.Builder<S>.requireLearnedCondition(skill: RegistryEntry<out Skill<*>>): SkillCondition =
+    requireLearnedSkillCondition(skill).also { condition = it }
+
 fun <S : Any> Skill.Builder<S>.requireLearnedCondition(): SkillCondition =
     requireLearnedSkillCondition().also { condition = it }
 
 inline fun <S : Any> Skill.Builder<S>.requireNoCooldownCondition(crossinline block: SkillContext<*>.() -> RegistryEntry<out Skill<*>>): SkillCondition =
     requireNoCooldownSkillCondition(block).also { condition = it }
+
+fun <S : Any> Skill.Builder<S>.requireNoCooldownCondition(skill: RegistryEntry<out Skill<*>>): SkillCondition =
+    requireNoCooldownSkillCondition(skill).also { condition = it }
 
 fun <S : Any> Skill.Builder<S>.requireNoCooldownCondition(): SkillCondition =
     requireNoCooldownSkillCondition().also { condition = it }

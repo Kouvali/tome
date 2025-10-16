@@ -105,6 +105,39 @@ class SkillConditionTest {
     }
 
     @Test
+    void testRequireLearned_withSkill_whenSkillLearned_returnsSuccess() {
+        // given
+        when(mockContext.getSource()).thenReturn(mockSource);
+
+        RegistryEntry<? extends Skill<?>> mockSkill = mock();
+        when(mockSource.getSkillContainer()).thenReturn(mockSkillContainer);
+        when(mockSkillContainer.hasSkill(mockSkill)).thenReturn(true);
+
+        // when
+        SkillResponse response = SkillCondition.requireLearned(mockSkill).test(mockContext);
+
+        // then
+        assertInstanceOf(SkillResponse.Success.class, response);
+    }
+
+    @Test
+    void testRequireLearned_withSkill_whenSkillNotLearned_returnsFailure() {
+        // given
+        when(mockContext.getSource()).thenReturn(mockSource);
+
+        RegistryEntry<? extends Skill<?>> mockSkill = mock();
+        when(mockSource.getSkillContainer()).thenReturn(mockSkillContainer);
+        when(mockSkillContainer.hasSkill(mockSkill)).thenReturn(false);
+
+        // when
+        SkillResponse response = SkillCondition.requireLearned(mockSkill).test(mockContext);
+
+        // then
+        assertInstanceOf(SkillResponse.Failure.class, response);
+        assertEquals(SkillResponse.notLearned(), response);
+    }
+
+    @Test
     void testRequireNoCooldown_whenNoCooldown_returnsSuccess() {
         // given
         when(mockContext.getSource()).thenReturn(mockSource);
@@ -170,6 +203,39 @@ class SkillConditionTest {
 
         // when
         SkillResponse response = SkillCondition.requireNoCooldown(skillProvider).test(mockContext);
+
+        // then
+        assertInstanceOf(SkillResponse.Failure.class, response);
+        assertEquals(SkillResponse.cooldown(), response);
+    }
+
+    @Test
+    void testRequireNoCooldown_withSkill_whenNoCooldown_returnsSuccess() {
+        // given
+        when(mockContext.getSource()).thenReturn(mockSource);
+
+        RegistryEntry<? extends Skill<?>> mockSkill = mock();
+        when(mockSource.getSkillCooldownManager()).thenReturn(mockCooldownManager);
+        when(mockCooldownManager.isCoolingDown(mockSkill)).thenReturn(false);
+
+        // when
+        SkillResponse response = SkillCondition.requireNoCooldown(mockSkill).test(mockContext);
+
+        // then
+        assertInstanceOf(SkillResponse.Success.class, response);
+    }
+
+    @Test
+    void testRequireNoCooldown_withSkill_whenOnCooldown_returnsFailure() {
+        // given
+        when(mockContext.getSource()).thenReturn(mockSource);
+
+        RegistryEntry<? extends Skill<?>> mockSkill = mock();
+        when(mockSource.getSkillCooldownManager()).thenReturn(mockCooldownManager);
+        when(mockCooldownManager.isCoolingDown(mockSkill)).thenReturn(true);
+
+        // when
+        SkillResponse response = SkillCondition.requireNoCooldown(mockSkill).test(mockContext);
 
         // then
         assertInstanceOf(SkillResponse.Failure.class, response);
