@@ -469,6 +469,45 @@ class SkillManagerImplTest {
         assertTrue(endExecuted[0]);
     }
 
+    @Test
+    void testCompleteCasting_whenNotCasting_returnsFalse() {
+        // given
+        SkillManagerImpl manager = new SkillManagerImpl(mockSource);
+
+        // when
+        boolean result = manager.completeCasting();
+
+        // then
+        assertFalse(result);
+    }
+
+    @Test
+    void testCompleteCasting_whenCasting_returnsTrue() {
+        // given
+        boolean[] completeExecuted = {false};
+        boolean[] endExecuted = {false};
+
+        Skill<String> skill = defaultBuilder()
+                .setCompleteBehavior(instance -> completeExecuted[0] = true)
+                .setEndBehavior(instance -> endExecuted[0] = true)
+                .build();
+
+        SkillManagerImpl manager = new SkillManagerImpl(mockSource);
+        when(mockEntry.value()).thenAnswer(invocation -> skill);
+
+        manager.castSkill(mockEntry);
+        assertTrue(manager.isCasting());
+
+        // when
+        boolean result = manager.completeCasting();
+
+        // then
+        assertTrue(result);
+        assertFalse(manager.isCasting());
+        assertTrue(completeExecuted[0]);
+        assertTrue(endExecuted[0]);
+    }
+
     private Skill.Builder<String> defaultBuilder() {
         return Skill.<String>builder()
                 .setCondition(context -> SkillResponse.success())

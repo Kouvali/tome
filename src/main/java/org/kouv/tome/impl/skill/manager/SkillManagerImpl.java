@@ -78,6 +78,16 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     @Override
+    public boolean completeCasting() {
+        if (!isCasting()) {
+            return false;
+        }
+
+        completeCasting(instance);
+        return true;
+    }
+
+    @Override
     public boolean terminateCasting() {
         if (!isCasting()) {
             return false;
@@ -115,8 +125,7 @@ public final class SkillManagerImpl implements SkillManager {
                 );
                 beginCasting(instance);
                 if (instance.getDuration() <= 0) {
-                    instance.getSkill().value().getCompleteBehavior().execute(instance);
-                    endCasting(instance);
+                    completeCasting(instance);
                 }
 
                 yield SkillResponse.success();
@@ -146,13 +155,17 @@ public final class SkillManagerImpl implements SkillManager {
         return isAccepted;
     }
 
+    private <S> void completeCasting(SkillInstance<S> instance) {
+        instance.getSkill().value().getCompleteBehavior().execute(instance);
+        endCasting(instance);
+    }
+
     private <S> void updateCasting(SkillInstance<S> instance) {
         if (instance.getDuration() > 0) {
             instance.setDuration(instance.getDuration() - 1);
             instance.getSkill().value().getTickBehavior().execute(instance);
             if (instance.getDuration() == 0) {
-                instance.getSkill().value().getCompleteBehavior().execute(instance);
-                endCasting(instance);
+                completeCasting(instance);
             }
         }
     }

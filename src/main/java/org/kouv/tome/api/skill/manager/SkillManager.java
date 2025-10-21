@@ -21,5 +21,7 @@ public interface SkillManager {
 
     boolean interruptCasting();
 
+    boolean completeCasting();
+
     boolean terminateCasting();
 }
