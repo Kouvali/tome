@@ -81,13 +81,16 @@ public final class SkillManagerImpl implements SkillManager {
         return switch (creationResult) {
             case SkillStateCreationResult.Error<Object> error -> error.failure();
             case SkillStateCreationResult.Ok<Object> ok -> {
-                status = Status.STARTING;
                 instance = createInstance(context, ok.state(), objectSkill.value().getDurationProvider().get(context));
+                status = Status.STARTING;
                 try {
                     executeBehavior(instance, it -> it.getSkill().value().getStartBehavior().execute(it));
-                    yield SkillResponse.success();
-                } finally {
                     status = Status.ACTIVE;
+                    yield SkillResponse.success();
+                } catch (Exception exception) {
+                    status = Status.IDLE;
+                    instance = null;
+                    throw exception;
                 }
             }
         };
