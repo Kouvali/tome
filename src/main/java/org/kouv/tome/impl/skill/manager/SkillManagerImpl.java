@@ -189,17 +189,11 @@ public final class SkillManagerImpl implements SkillManager {
         }
     }
 
-    private <S> void executeBehavior(
-            SkillInstance<S> instance,
-            Consumer<? super SkillInstance<S>> consumer
-    ) {
+    private <S> void executeBehavior(SkillInstance<S> instance, Consumer<? super SkillInstance<S>> consumer) {
         consumer.accept(instance);
     }
 
-    private <S> boolean testCondition(
-            SkillInstance<S> instance,
-            Predicate<? super SkillInstance<S>> predicate
-    ) {
+    private <S> boolean testCondition(SkillInstance<S> instance, Predicate<? super SkillInstance<S>> predicate) {
         return predicate.test(instance);
     }
 
