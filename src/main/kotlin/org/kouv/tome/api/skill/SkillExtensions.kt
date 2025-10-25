@@ -3,8 +3,8 @@ package org.kouv.tome.api.skill
 import net.minecraft.registry.entry.RegistryEntry
 import org.kouv.tome.api.skill.behavior.*
 import org.kouv.tome.api.skill.condition.*
-import org.kouv.tome.api.skill.duration.constantSkillDurationProvider
 import org.kouv.tome.api.skill.duration.SkillDurationProvider
+import org.kouv.tome.api.skill.duration.constantSkillDurationProvider
 import org.kouv.tome.api.skill.duration.skillDurationProvider
 import org.kouv.tome.api.skill.handler.*
 import org.kouv.tome.api.skill.state.*

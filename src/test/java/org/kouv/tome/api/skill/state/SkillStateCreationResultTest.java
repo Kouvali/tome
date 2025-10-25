@@ -5,7 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.kouv.tome.api.skill.SkillResponse;
 import org.kouv.tome.test.FabricExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 @ExtendWith(FabricExtension.class)
 class SkillStateCreationResultTest {
