@@ -12,6 +12,12 @@ import org.kouv.tome.api.skill.state.*
 inline fun <S : Any> skill(builderAction: Skill.Builder<S>.() -> Unit): Skill<S> =
     Skill.builder<S>().apply(builderAction).build()
 
+inline fun <S : Any> Skill.Builder<S>.cancelBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillCancelBehavior<S> =
+    skillCancelBehavior(block).also { cancelBehavior = it }
+
+fun <S : Any> Skill.Builder<S>.noOpCancelBehavior(): SkillCancelBehavior<S> =
+    noOpSkillCancelBehavior<S>().also { cancelBehavior = it }
+
 inline fun <S : Any> Skill.Builder<S>.completeBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillCompleteBehavior<S> =
     skillCompleteBehavior(block).also { completeBehavior = it }
 
@@ -23,6 +29,12 @@ inline fun <S : Any> Skill.Builder<S>.endBehavior(crossinline block: SkillInstan
 
 fun <S : Any> Skill.Builder<S>.noOpEndBehavior(): SkillEndBehavior<S> =
     noOpSkillEndBehavior<S>().also { endBehavior = it }
+
+inline fun <S : Any> Skill.Builder<S>.interruptBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillInterruptBehavior<S> =
+    skillInterruptBehavior(block).also { interruptBehavior = it }
+
+fun <S : Any> Skill.Builder<S>.noOpInterruptBehavior(): SkillInterruptBehavior<S> =
+    noOpSkillInterruptBehavior<S>().also { interruptBehavior = it }
 
 inline fun <S : Any> Skill.Builder<S>.startBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillStartBehavior<S> =
     skillStartBehavior(block).also { startBehavior = it }

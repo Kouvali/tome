@@ -18,7 +18,7 @@ public final class SkillTest implements ModInitializer {
             .setCondition(context -> {
                 SkillResponse response = SkillCondition.defaultConditions().test(context);
                 LOGGER.info(
-                        "skill tested: skill={}, source={}, response={}",
+                        "skill condition called: skill={}, source={}, response={}",
                         context.getSkill(),
                         context.getSource(),
                         response
@@ -28,7 +28,7 @@ public final class SkillTest implements ModInitializer {
             .setDurationProvider(context -> {
                 int duration = 50;
                 LOGGER.info(
-                        "skill duration set: skill={}, source={}, duration={}",
+                        "skill duration provider called: skill={}, source={}, duration={}",
                         context.getSkill(),
                         context.getSource(),
                         duration
@@ -39,7 +39,7 @@ public final class SkillTest implements ModInitializer {
                 SkillStateCreationResult<TestState> creationResult =
                         SkillStateCreationResult.ok(new TestState(context.getSource().getEntityPos()));
                 LOGGER.info(
-                        "skill state set: skill={}, source={}, creationResult={}",
+                        "skill state factory called: skill={}, source={}, creationResult={}",
                         context.getSkill(),
                         context.getSource(),
                         creationResult
@@ -48,28 +48,42 @@ public final class SkillTest implements ModInitializer {
             })
             .setStartBehavior(instance ->
                     LOGGER.info(
-                            "skill started: state={}, duration={}",
+                            "skill start behavior called: state={}, duration={}",
                             instance.getState(),
                             instance.getDuration()
                     )
             )
             .setTickBehavior(instance ->
                     LOGGER.info(
-                            "skill ticked: state={}, duration={}",
+                            "skill tick behavior called: state={}, duration={}",
+                            instance.getState(),
+                            instance.getDuration()
+                    )
+            )
+            .setCancelBehavior(instance ->
+                    LOGGER.info(
+                            "skill cancel behavior called: state={}, duration={}",
+                            instance.getState(),
+                            instance.getDuration()
+                    )
+            )
+            .setInterruptBehavior(instance ->
+                    LOGGER.info(
+                            "skill interrupt behavior called: state={}, duration={}",
                             instance.getState(),
                             instance.getDuration()
                     )
             )
             .setCompleteBehavior(instance ->
                     LOGGER.info(
-                            "skill completed: state={}, duration={}",
+                            "skill complete behavior called: state={}, duration={}",
                             instance.getState(),
                             instance.getDuration()
                     )
             )
             .setEndBehavior(instance ->
                     LOGGER.info(
-                            "skill ended: state={}, duration={}",
+                            "skill end behavior called: state={}, duration={}",
                             instance.getState(),
                             instance.getDuration()
                     )
@@ -77,7 +91,7 @@ public final class SkillTest implements ModInitializer {
             .setCancelHandler(instance -> {
                 boolean cancelled = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill cancelled: state={}, duration={}, cancelled={}",
+                        "skill cancel handler called: state={}, duration={}, cancelled={}",
                         instance.getState(),
                         instance.getDuration(),
                         cancelled
@@ -87,7 +101,7 @@ public final class SkillTest implements ModInitializer {
             .setInterruptHandler(instance -> {
                 boolean interrupted = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill interrupted: state={}, duration={}, interrupted={}",
+                        "skill interrupt handler called: state={}, duration={}, interrupted={}",
                         instance.getState(),
                         instance.getDuration(),
                         interrupted

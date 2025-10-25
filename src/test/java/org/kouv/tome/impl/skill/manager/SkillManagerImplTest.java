@@ -265,31 +265,6 @@ class SkillManagerImplTest {
     }
 
     @Test
-    void testCastSkill_withZeroDuration_executesCompleteAndEndsImmediately() {
-        // given
-        boolean[] executed = {false, false, false};
-
-        Skill<String> skill = defaultBuilder()
-                .setDurationProvider(SkillDurationProvider.constant(0))
-                .setStartBehavior(instance -> executed[0] = true)
-                .setCompleteBehavior(instance -> executed[1] = true)
-                .setEndBehavior(instance -> executed[2] = true)
-                .build();
-
-        SkillManagerImpl manager = new SkillManagerImpl(mockSource);
-        when(mockEntry.value()).thenAnswer(invocation -> skill);
-
-        // when
-        manager.castSkill(mockEntry);
-
-        // then
-        assertFalse(manager.isCasting());
-        assertTrue(executed[0]);
-        assertTrue(executed[1]);
-        assertTrue(executed[2]);
-    }
-
-    @Test
     void testUpdate_decrementsDurationAndExecutesTick() {
         // given
         int[] tickCount = {0};

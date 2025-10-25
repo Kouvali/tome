@@ -15,10 +15,14 @@ import org.kouv.tome.impl.skill.SkillInstanceImpl;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public final class SkillManagerImpl implements SkillManager {
     private final WeakReference<? extends LivingEntity> sourceRef;
-    private @Nullable SkillInstance<?> instance;
+
+    private @Nullable SkillInstance<?> instance = null;
+    private Status status = Status.IDLE;
 
     public SkillManagerImpl(
             LivingEntity sourceRef
@@ -28,7 +32,7 @@ public final class SkillManagerImpl implements SkillManager {
 
     @Override
     public boolean isCasting() {
-        return instance != null;
+        return status != Status.IDLE;
     }
 
     @SuppressWarnings("unchecked")
@@ -53,121 +57,150 @@ public final class SkillManagerImpl implements SkillManager {
     @Override
     public SkillResponse testSkill(RegistryEntry<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
-        return executeTest(
-                (RegistryEntry<? extends Skill<Object>>) skill
-        );
+        return status != Status.IDLE ?
+                SkillResponse.inProgress() :
+                skill.value().getCondition().test(createContext((RegistryEntry<? extends Skill<Object>>) skill));
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public SkillResponse castSkill(RegistryEntry<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
-        return executeCast(
-                (RegistryEntry<? extends Skill<Object>>) skill
-        );
-    }
-
-    @Override
-    public boolean cancelCasting() {
-        return isCasting() && stopCasting(instance, true);
-    }
-
-    @Override
-    public boolean interruptCasting() {
-        return isCasting() && stopCasting(instance, false);
-    }
-
-    @Override
-    public boolean completeCasting() {
-        if (!isCasting()) {
-            return false;
+        if (status != Status.IDLE) {
+            return SkillResponse.inProgress();
         }
 
-        completeCasting(instance);
-        return true;
-    }
-
-    @Override
-    public boolean terminateCasting() {
-        if (!isCasting()) {
-            return false;
+        RegistryEntry<? extends Skill<Object>> objectSkill = (RegistryEntry<? extends Skill<Object>>) skill;
+        SkillResponse testResponse = testSkill(objectSkill);
+        if (testResponse instanceof SkillResponse.Failure) {
+            return testResponse;
         }
 
-        endCasting(instance);
-        return true;
-    }
-
-    public void update() {
-        if (isCasting()) {
-            updateCasting(instance);
-        }
-    }
-
-    private <S> SkillResponse executeTest(RegistryEntry<? extends Skill<S>> skill) {
-        return isCasting() ?
-                SkillResponse.inProgress() :
-                skill.value().getCondition().test(createContext(skill));
-    }
-
-    private <S> SkillResponse executeCast(RegistryEntry<? extends Skill<S>> skill) {
-        if (testSkill(skill) instanceof SkillResponse.Failure failure) {
-            return failure;
-        }
-
-        SkillContext<S> context = createContext(skill);
-        return switch (skill.value().getStateFactory().create(context)) {
-            case SkillStateCreationResult.Error<S> error -> error.failure();
-            case SkillStateCreationResult.Ok<S> ok -> {
-                SkillInstance<S> instance = createInstance(
-                        context,
-                        ok.state(),
-                        skill.value().getDurationProvider().get(context)
-                );
-                beginCasting(instance);
-                if (instance.getDuration() <= 0) {
-                    completeCasting(instance);
+        SkillContext<Object> context = createContext(objectSkill);
+        SkillStateCreationResult<Object> creationResult = objectSkill.value().getStateFactory().create(context);
+        return switch (creationResult) {
+            case SkillStateCreationResult.Error<Object> error -> error.failure();
+            case SkillStateCreationResult.Ok<Object> ok -> {
+                status = Status.STARTING;
+                instance = createInstance(context, ok.state(), objectSkill.value().getDurationProvider().get(context));
+                try {
+                    executeBehavior(instance, it -> it.getSkill().value().getStartBehavior().execute(it));
+                    yield SkillResponse.success();
+                } finally {
+                    status = Status.ACTIVE;
                 }
-
-                yield SkillResponse.success();
             }
         };
     }
 
-    private <S> void beginCasting(SkillInstance<S> instance) {
-        this.instance = instance;
-        instance.getSkill().value().getStartBehavior().execute(instance);
-    }
-
-    private <S> void endCasting(SkillInstance<S> instance) {
-        instance.getSkill().value().getEndBehavior().execute(instance);
-        this.instance = null;
-    }
-
-    private <S> boolean stopCasting(SkillInstance<S> instance, boolean cancel) {
-        boolean isAccepted = cancel ?
-                instance.getSkill().value().getCancelHandler().handle(instance) :
-                instance.getSkill().value().getInterruptHandler().handle(instance);
-
-        if (isAccepted) {
-            endCasting(instance);
+    @Override
+    public boolean cancelCasting() {
+        if (status != Status.ACTIVE) {
+            return false;
         }
 
-        return isAccepted;
-    }
-
-    private <S> void completeCasting(SkillInstance<S> instance) {
-        instance.getSkill().value().getCompleteBehavior().execute(instance);
-        endCasting(instance);
-    }
-
-    private <S> void updateCasting(SkillInstance<S> instance) {
-        if (instance.getDuration() > 0) {
-            instance.setDuration(instance.getDuration() - 1);
-            instance.getSkill().value().getTickBehavior().execute(instance);
-            if (instance.getDuration() == 0) {
-                completeCasting(instance);
-            }
+        assert instance != null;
+        if (!testCondition(instance, it -> it.getSkill().value().getCancelHandler().handle(it))) {
+            return false;
         }
+
+        status = Status.CANCELLING;
+        try {
+            executeBehavior(instance, it -> it.getSkill().value().getCancelBehavior().execute(it));
+            return true;
+        } finally {
+            terminateCasting();
+        }
+    }
+
+    @Override
+    public boolean interruptCasting() {
+        if (status != Status.ACTIVE) {
+            return false;
+        }
+
+        assert instance != null;
+        if (!testCondition(instance, it -> it.getSkill().value().getInterruptHandler().handle(it))) {
+            return false;
+        }
+
+        status = Status.INTERRUPTING;
+        try {
+            executeBehavior(instance, it -> it.getSkill().value().getInterruptBehavior().execute(it));
+            return true;
+        } finally {
+            terminateCasting();
+        }
+    }
+
+    @Override
+    public boolean completeCasting() {
+        if (status != Status.ACTIVE) {
+            return false;
+        }
+
+        assert instance != null;
+        status = Status.COMPLETING;
+        try {
+            executeBehavior(instance, it -> it.getSkill().value().getCompleteBehavior().execute(it));
+            return true;
+        } finally {
+            terminateCasting();
+        }
+    }
+
+    @Override
+    public boolean terminateCasting() {
+        if (status == Status.IDLE || status == Status.ENDING) {
+            return false;
+        }
+
+        assert instance != null;
+        status = Status.ENDING;
+        try {
+            executeBehavior(instance, it -> it.getSkill().value().getEndBehavior().execute(it));
+            return true;
+        } finally {
+            instance = null;
+            status = Status.IDLE;
+        }
+    }
+
+    public void update() {
+        if (status != Status.ACTIVE) {
+            return;
+        }
+
+        assert instance != null;
+        if (instance.getDuration() == 0) {
+            completeCasting();
+            return;
+        }
+
+        if (instance.getDuration() < 0) {
+            executeBehavior(instance, it -> it.getSkill().value().getTickBehavior().execute(it));
+            return;
+        }
+
+        instance.setDuration(instance.getDuration() - 1);
+        executeBehavior(instance, it -> it.getSkill().value().getTickBehavior().execute(it));
+        if (instance.getDuration() == 0) {
+            completeCasting();
+        }
+    }
+
+    private <S> void executeBehavior(
+            SkillInstance<S> instance,
+            Consumer<? super SkillInstance<S>> consumer
+    ) {
+        consumer.accept(instance);
+    }
+
+    private <S> boolean testCondition(
+            SkillInstance<S> instance,
+            Predicate<? super SkillInstance<S>> predicate
+    ) {
+        return predicate.test(instance);
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {
@@ -181,5 +214,15 @@ public final class SkillManagerImpl implements SkillManager {
     private LivingEntity getSource() {
         return Optional.ofNullable(sourceRef.get())
                 .orElseThrow(() -> new IllegalStateException("Entity is no longer available"));
+    }
+
+    private enum Status {
+        IDLE,
+        STARTING,
+        ACTIVE,
+        COMPLETING,
+        CANCELLING,
+        INTERRUPTING,
+        ENDING
     }
 }
