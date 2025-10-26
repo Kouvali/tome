@@ -5,15 +5,30 @@ import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillResponse;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 @FunctionalInterface
 public interface SkillAction {
+    static SkillAction alwaysSuccess(Consumer<? super SkillContext> action) {
+        return context -> {
+            action.accept(context);
+            return SkillResponse.success();
+        };
+    }
+
     static SkillAction alwaysSuccess() {
-        return context -> SkillResponse.success();
+        return alwaysSuccess(context -> {});
+    }
+
+    static SkillAction alwaysUnavailable(Consumer<? super SkillContext> action) {
+        return context -> {
+            action.accept(context);
+            return SkillResponse.unavailable();
+        };
     }
 
     static SkillAction alwaysUnavailable() {
-        return context -> SkillResponse.unavailable();
+        return alwaysUnavailable(context -> {});
     }
 
     SkillResponse execute(SkillContext context);
