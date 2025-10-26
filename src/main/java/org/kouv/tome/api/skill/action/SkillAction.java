@@ -20,15 +20,15 @@ public interface SkillAction {
         return alwaysSuccess(context -> {});
     }
 
-    static SkillAction alwaysUnavailable(Consumer<? super SkillContext> action) {
+    static SkillAction alwaysFailure(SkillResponse.Failure failure, Consumer<? super SkillContext> action) {
         return context -> {
             action.accept(context);
-            return SkillResponse.unavailable();
+            return failure;
         };
     }
 
-    static SkillAction alwaysUnavailable() {
-        return alwaysUnavailable(context -> {});
+    static SkillAction alwaysFailure(SkillResponse.Failure failure) {
+        return alwaysFailure(failure, context -> {});
     }
 
     SkillResponse execute(SkillContext context);
