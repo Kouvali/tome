@@ -9,6 +9,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
+      "org.kouv.tome.test.channeling.ChannelingTest",
       "org.kouv.tome.test.skill.SkillTest"
     ]
   },

@@ -19,7 +19,7 @@ public final class SkillContainerImpl implements SkillContainer {
                                     .fieldOf("skills")
                                     .forGetter(container ->
                                             List.copyOf(
-                                                    (Set<RegistryEntry<Skill<?>>>) (Set<?>) container.skills
+                                                    (Set<RegistryEntry<Skill>>) (Set<?>) container.skills
                                             )
                                     )
                     )
@@ -29,10 +29,10 @@ public final class SkillContainerImpl implements SkillContainer {
             container -> (SkillContainerImpl) container
     );
 
-    private final Set<RegistryEntry<? extends Skill<?>>> skills;
+    private final Set<RegistryEntry<? extends Skill>> skills;
 
     private SkillContainerImpl(
-            Collection<? extends RegistryEntry<? extends Skill<?>>> skills
+            Collection<? extends RegistryEntry<? extends Skill>> skills
     ) {
         this.skills = new CopyOnWriteArraySet<>(Objects.requireNonNull(skills));
     }
@@ -42,24 +42,24 @@ public final class SkillContainerImpl implements SkillContainer {
     }
 
     @Override
-    public Set<? extends RegistryEntry<? extends Skill<?>>> getSkills() {
+    public Set<? extends RegistryEntry<? extends Skill>> getSkills() {
         return Collections.unmodifiableSet(skills);
     }
 
     @Override
-    public boolean hasSkill(RegistryEntry<? extends Skill<?>> skill) {
+    public boolean hasSkill(RegistryEntry<? extends Skill> skill) {
         Objects.requireNonNull(skill);
         return skills.contains(skill);
     }
 
     @Override
-    public boolean addSkill(RegistryEntry<? extends Skill<?>> skill) {
+    public boolean addSkill(RegistryEntry<? extends Skill> skill) {
         Objects.requireNonNull(skill);
         return skills.add(skill);
     }
 
     @Override
-    public boolean removeSkill(RegistryEntry<? extends Skill<?>> skill) {
+    public boolean removeSkill(RegistryEntry<? extends Skill> skill) {
         Objects.requireNonNull(skill);
         return skills.remove(skill);
     }

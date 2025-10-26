@@ -11,6 +11,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
+      "org.kouv.tome.impl.channeling.ChannelingEntrypoint",
       "org.kouv.tome.impl.skill.SkillEntrypoint"
     ]
   },
@@ -20,7 +21,8 @@
   "custom": {
     "loom:injected_interfaces": {
       "net/minecraft/class_1309": [
-        "org/kouv/tome/api/skill/entity/SkillSource"
+        "org/kouv/tome/api/channeling/entity/ChannelingEntity",
+        "org/kouv/tome/api/skill/entity/SkillEntity"
       ]
     }
   },

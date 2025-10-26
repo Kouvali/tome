@@ -1,48 +1,29 @@
 package org.kouv.tome.api.skill.condition;
 
-import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.ApiStatus;
-import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillResponse;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 @FunctionalInterface
 public interface SkillCondition {
-    static SkillCondition requireLearned(
-            Function<? super SkillContext<?>, ? extends RegistryEntry<? extends Skill<?>>> skillProvider
-    ) {
-        Objects.requireNonNull(skillProvider);
-        return context -> context.getSource().getSkillContainer().hasSkill(skillProvider.apply(context)) ?
+    static SkillCondition requireNotChanneling() {
+        return context -> context.getSource().getChannelingManager().isChanneling() ?
+                SkillResponse.inProgress() :
+                SkillResponse.success();
+    }
+
+    static SkillCondition requireLearned() {
+        return context -> context.getSource().getSkillContainer().hasSkill(context.getSkill()) ?
                 SkillResponse.success() :
                 SkillResponse.notLearned();
     }
 
-    static SkillCondition requireLearned(RegistryEntry<? extends Skill<?>> skill) {
-        return requireLearned(context -> skill);
-    }
-
-    static SkillCondition requireLearned() {
-        return requireLearned(SkillContext::getSkill);
-    }
-
-    static SkillCondition requireNoCooldown(
-            Function<? super SkillContext<?>, ? extends RegistryEntry<? extends Skill<?>>> skillProvider
-    ) {
-        Objects.requireNonNull(skillProvider);
-        return context -> context.getSource().getSkillCooldownManager().isCoolingDown(skillProvider.apply(context)) ?
+    static SkillCondition requireNoCooldown() {
+        return context -> context.getSource().getSkillCooldownManager().isCoolingDown(context.getSkill()) ?
                 SkillResponse.cooldown() :
                 SkillResponse.success();
-    }
-
-    static SkillCondition requireNoCooldown(RegistryEntry<? extends Skill<?>> skill) {
-        return requireNoCooldown(context -> skill);
-    }
-
-    static SkillCondition requireNoCooldown() {
-        return requireNoCooldown(SkillContext::getSkill);
     }
 
     static SkillCondition requireInGame() {
@@ -52,12 +33,13 @@ public interface SkillCondition {
     }
 
     static SkillCondition defaultConditions() {
-        return requireLearned()
+        return requireNotChanneling()
+                .and(requireLearned())
                 .and(requireNoCooldown())
                 .and(requireInGame());
     }
 
-    SkillResponse test(SkillContext<?> context);
+    SkillResponse test(SkillContext context);
 
     @ApiStatus.NonExtendable
     default SkillCondition and(SkillCondition other) {

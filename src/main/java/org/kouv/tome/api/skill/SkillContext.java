@@ -3,8 +3,8 @@ package org.kouv.tome.api.skill;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 
-public interface SkillContext<S> {
-    RegistryEntry<? extends Skill<S>> getSkill();
+public interface SkillContext {
+    RegistryEntry<? extends Skill> getSkill();
 
     LivingEntity getSource();
 }

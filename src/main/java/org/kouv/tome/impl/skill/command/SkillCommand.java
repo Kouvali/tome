@@ -36,15 +36,6 @@ public final class SkillCommand {
     private static final SimpleCommandExceptionType REMOVE_FAILED_EXCEPTION = new SimpleCommandExceptionType(
             Text.translatable("commands.skill.remove.failed")
     );
-    private static final SimpleCommandExceptionType CANCEL_FAILED_EXCEPTION = new SimpleCommandExceptionType(
-            Text.translatable("commands.skill.cancel.failed")
-    );
-    private static final SimpleCommandExceptionType INTERRUPT_FAILED_EXCEPTION = new SimpleCommandExceptionType(
-            Text.translatable("commands.skill.interrupt.failed")
-    );
-    private static final SimpleCommandExceptionType TERMINATE_FAILED_EXCEPTION = new SimpleCommandExceptionType(
-            Text.translatable("commands.skill.terminate.failed")
-    );
 
     private SkillCommand() {
     }
@@ -59,10 +50,7 @@ public final class SkillCommand {
                 .then(argumentAdd())
                 .then(argumentRemove())
                 .then(argumentTest())
-                .then(argumentCast())
-                .then(argumentCancel())
-                .then(argumentInterrupt())
-                .then(argumentTerminate());
+                .then(argumentCast());
     }
 
     private static LiteralArgumentBuilder<ServerCommandSource> argumentAdd() {
@@ -173,67 +161,10 @@ public final class SkillCommand {
                 );
     }
 
-    private static LiteralArgumentBuilder<ServerCommandSource> argumentCancel() {
-        return CommandManager.literal("cancel")
-                .executes(context ->
-                        executeCancel(
-                                context.getSource(),
-                                List.of(context.getSource().getEntityOrThrow())
-                        )
-                )
-                .then(
-                        CommandManager.argument("targets", EntityArgumentType.entities())
-                                .executes(context ->
-                                        executeCancel(
-                                                context.getSource(),
-                                                EntityArgumentType.getEntities(context, "targets")
-                                        )
-                                )
-                );
-    }
-
-    private static LiteralArgumentBuilder<ServerCommandSource> argumentInterrupt() {
-        return CommandManager.literal("interrupt")
-                .executes(context ->
-                        executeInterrupt(
-                                context.getSource(),
-                                List.of(context.getSource().getEntityOrThrow())
-                        )
-                )
-                .then(
-                        CommandManager.argument("targets", EntityArgumentType.entities())
-                                .executes(context ->
-                                        executeInterrupt(
-                                                context.getSource(),
-                                                EntityArgumentType.getEntities(context, "targets")
-                                        )
-                                )
-                );
-    }
-
-    private static LiteralArgumentBuilder<ServerCommandSource> argumentTerminate() {
-        return CommandManager.literal("terminate")
-                .executes(context ->
-                        executeTerminate(
-                                context.getSource(),
-                                List.of(context.getSource().getEntityOrThrow())
-                        )
-                )
-                .then(
-                        CommandManager.argument("targets", EntityArgumentType.entities())
-                                .executes(context ->
-                                        executeTerminate(
-                                                context.getSource(),
-                                                EntityArgumentType.getEntities(context, "targets")
-                                        )
-                                )
-                );
-    }
-
     private static int executeAdd(
             ServerCommandSource source,
             Collection<? extends Entity> targets,
-            RegistryEntry<? extends Skill<?>> skill
+            RegistryEntry<? extends Skill> skill
     ) throws CommandSyntaxException {
         List<? extends LivingEntity> entities =
                 filterLivingEntities(targets, entity -> entity.getSkillContainer().addSkill(skill));
@@ -254,7 +185,7 @@ public final class SkillCommand {
     private static int executeRemove(
             ServerCommandSource source,
             Collection<? extends Entity> targets,
-            RegistryEntry<? extends Skill<?>> skill
+            RegistryEntry<? extends Skill> skill
     ) throws CommandSyntaxException {
         List<? extends LivingEntity> entities =
                 filterLivingEntities(targets, entity -> entity.getSkillContainer().removeSkill(skill));
@@ -275,7 +206,7 @@ public final class SkillCommand {
     private static int executeTest(
             ServerCommandSource source,
             Entity target,
-            RegistryEntry<? extends Skill<?>> skill
+            RegistryEntry<? extends Skill> skill
     ) throws CommandSyntaxException {
         switch (
                 getLivingEntity(target).getSkillManager().testSkill(skill)
@@ -292,7 +223,7 @@ public final class SkillCommand {
     private static int executeCast(
             ServerCommandSource source,
             Entity target,
-            RegistryEntry<? extends Skill<?>> skill
+            RegistryEntry<? extends Skill> skill
     ) throws CommandSyntaxException {
         switch (
                 getLivingEntity(target).getSkillManager().castSkill(skill)
@@ -304,66 +235,6 @@ public final class SkillCommand {
         }
 
         return 1;
-    }
-
-    private static int executeCancel(
-            ServerCommandSource source,
-            Collection<? extends Entity> targets
-    ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillManager().cancelCasting());
-
-        if (entities.isEmpty()) {
-            throw CANCEL_FAILED_EXCEPTION.create();
-        }
-
-        if (entities.size() == 1) {
-            source.sendFeedback(() -> Text.translatable("commands.skill.cancel.success.single", entities.getFirst().getName()), true);
-        } else {
-            source.sendFeedback(() -> Text.translatable("commands.skill.cancel.success.multiple", entities.size()), true);
-        }
-
-        return entities.size();
-    }
-
-    private static int executeInterrupt(
-            ServerCommandSource source,
-            Collection<? extends Entity> targets
-    ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillManager().interruptCasting());
-
-        if (entities.isEmpty()) {
-            throw INTERRUPT_FAILED_EXCEPTION.create();
-        }
-
-        if (entities.size() == 1) {
-            source.sendFeedback(() -> Text.translatable("commands.skill.interrupt.success.single", entities.getFirst().getName()), true);
-        } else {
-            source.sendFeedback(() -> Text.translatable("commands.skill.interrupt.success.multiple", entities.size()), true);
-        }
-
-        return entities.size();
-    }
-
-    private static int executeTerminate(
-            ServerCommandSource source,
-            Collection<? extends Entity> targets
-    ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillManager().terminateCasting());
-
-        if (entities.isEmpty()) {
-            throw TERMINATE_FAILED_EXCEPTION.create();
-        }
-
-        if (entities.size() == 1) {
-            source.sendFeedback(() -> Text.translatable("commands.skill.terminate.success.single", entities.getFirst().getName()), true);
-        } else {
-            source.sendFeedback(() -> Text.translatable("commands.skill.terminate.success.multiple", entities.size()), true);
-        }
-
-        return entities.size();
     }
 
     private static List<? extends LivingEntity> filterLivingEntities(
@@ -385,7 +256,7 @@ public final class SkillCommand {
         return livingEntity;
     }
 
-    private static RegistryEntry<? extends Skill<?>> getSkill(Identifier id) throws CommandSyntaxException {
+    private static RegistryEntry<? extends Skill> getSkill(Identifier id) throws CommandSyntaxException {
         return SkillRegistries.SKILL.getEntry(id)
                 .orElseThrow(() -> NOT_FOUND_EXCEPTION.create(id));
     }

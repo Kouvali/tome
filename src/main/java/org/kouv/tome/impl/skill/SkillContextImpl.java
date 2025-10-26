@@ -7,12 +7,12 @@ import org.kouv.tome.api.skill.SkillContext;
 
 import java.util.Objects;
 
-public final class SkillContextImpl<S> implements SkillContext<S> {
-    private final RegistryEntry<? extends Skill<S>> skill;
+public final class SkillContextImpl implements SkillContext {
+    private final RegistryEntry<? extends Skill> skill;
     private final LivingEntity source;
 
     public SkillContextImpl(
-            RegistryEntry<? extends Skill<S>> skill,
+            RegistryEntry<? extends Skill> skill,
             LivingEntity source
     ) {
         this.skill = Objects.requireNonNull(skill);
@@ -20,7 +20,7 @@ public final class SkillContextImpl<S> implements SkillContext<S> {
     }
 
     @Override
-    public RegistryEntry<? extends Skill<S>> getSkill() {
+    public RegistryEntry<? extends Skill> getSkill() {
         return skill;
     }
 

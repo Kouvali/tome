@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "org.kouv.tome.mixin.skill",
+  "package": "org.kouv.tome.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "LivingEntityMixin",

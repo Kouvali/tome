@@ -43,7 +43,7 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     }
 
     @Override
-    public boolean isCoolingDown(RegistryEntry<? extends Skill<?>> skill) {
+    public boolean isCoolingDown(RegistryEntry<? extends Skill> skill) {
         Objects.requireNonNull(skill);
         return isCoolingDown(getId(skill));
     }
@@ -55,7 +55,7 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     }
 
     @Override
-    public int getCooldown(RegistryEntry<? extends Skill<?>> skill) {
+    public int getCooldown(RegistryEntry<? extends Skill> skill) {
         Objects.requireNonNull(skill);
         return getCooldown(getId(skill));
     }
@@ -67,7 +67,7 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     }
 
     @Override
-    public void setCooldown(RegistryEntry<? extends Skill<?>> skill, int cooldown) {
+    public void setCooldown(RegistryEntry<? extends Skill> skill, int cooldown) {
         Objects.requireNonNull(skill);
         setCooldown(getId(skill), cooldown);
     }
@@ -94,7 +94,7 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
         }
     }
 
-    private Identifier getId(RegistryEntry<? extends Skill<?>> skill) {
+    private Identifier getId(RegistryEntry<? extends Skill> skill) {
         return skill.getKey().map(RegistryKey::getValue)
                 .orElseThrow();
     }
