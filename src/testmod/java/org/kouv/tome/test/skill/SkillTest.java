@@ -17,40 +17,46 @@ public final class SkillTest implements ModInitializer {
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
             .setCancelBehavior(instance ->
                     LOGGER.info(
-                            "skill cancel behavior called: state={}",
-                            instance.getState()
+                            "skill cancel behavior called: state={}, elapsedTime={}",
+                            instance.getState(),
+                            instance.getElapsedTime()
                     )
             )
             .setCompleteBehavior(instance -> {
                 instance.getSource().setVelocity(instance.getState().rotation());
                 instance.getSource().velocityModified = true;
                 LOGGER.info(
-                        "skill complete behavior called: state={}",
-                        instance.getState()
+                        "skill complete behavior called: state={}, elapsedTime={}",
+                        instance.getState(),
+                        instance.getElapsedTime()
                 );
             })
             .setEndBehavior(instance ->
                     LOGGER.info(
-                            "skill end behavior called: state={}",
-                            instance.getState()
+                            "skill end behavior called: state={}, elapsedTime={}",
+                            instance.getState(),
+                            instance.getElapsedTime()
                     )
             )
             .setInterruptBehavior(instance ->
                     LOGGER.info(
-                            "skill interrupt behavior called: state={}",
-                            instance.getState()
+                            "skill interrupt behavior called: state={}, elapsedTime={}",
+                            instance.getState(),
+                            instance.getElapsedTime()
                     )
             )
             .setStartBehavior(instance ->
                     LOGGER.info(
-                            "skill start behavior called: state={}",
-                            instance.getState()
+                            "skill start behavior called: state={}, elapsedTime={}",
+                            instance.getState(),
+                            instance.getElapsedTime()
                     )
             )
             .setTickBehavior(instance -> {
                 LOGGER.info(
-                        "skill tick behavior called: state={}",
-                        instance.getState()
+                        "skill tick behavior called: state={}, elapsedTime={}",
+                        instance.getState(),
+                        instance.getElapsedTime()
                 );
                 if (instance.getSource().isSneaking()) {
                     instance.getSource().getSkillManager().completeCasting(instance.getSkill());
@@ -59,8 +65,9 @@ public final class SkillTest implements ModInitializer {
             .setCancelCondition(instance -> {
                 boolean cancelled = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill cancel condition called: state={}, cancelled={}",
+                        "skill cancel condition called: state={}, elapsedTime={}, cancelled={}",
                         instance.getState(),
+                        instance.getElapsedTime(),
                         cancelled
                 );
                 return cancelled;
@@ -78,8 +85,9 @@ public final class SkillTest implements ModInitializer {
             .setInterruptCondition(instance -> {
                 boolean interrupted = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill interrupt condition called: state={}, interrupted={}",
+                        "skill interrupt condition called: state={}, elapsedTime={}, interrupted={}",
                         instance.getState(),
+                        instance.getElapsedTime(),
                         interrupted
                 );
                 return interrupted;
