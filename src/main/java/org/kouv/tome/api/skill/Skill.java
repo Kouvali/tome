@@ -23,6 +23,7 @@ public final class Skill<S> {
     private final SkillCondition condition;
     private final SkillInterruptCondition<S> interruptCondition;
     private final SkillStateFactory<S> stateFactory;
+    private final int duration;
 
     private @Nullable String translationKey;
     private @Nullable Text name;
@@ -37,7 +38,8 @@ public final class Skill<S> {
             SkillCancelCondition<S> cancelCondition,
             SkillCondition condition,
             SkillInterruptCondition<S> interruptCondition,
-            SkillStateFactory<S> stateFactory
+            SkillStateFactory<S> stateFactory,
+            int duration
     ) {
         this.cancelBehavior = Objects.requireNonNull(cancelBehavior);
         this.completeBehavior = Objects.requireNonNull(completeBehavior);
@@ -49,6 +51,7 @@ public final class Skill<S> {
         this.condition = Objects.requireNonNull(condition);
         this.interruptCondition = Objects.requireNonNull(interruptCondition);
         this.stateFactory = Objects.requireNonNull(stateFactory);
+        this.duration = duration;
     }
 
     public static <S> Builder<S> builder() {
@@ -95,6 +98,10 @@ public final class Skill<S> {
         return stateFactory;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
     public String getTranslationKey() {
         if (translationKey == null) {
             translationKey = Util.createTranslationKey("skill", SkillRegistries.SKILL.getId(this));
@@ -122,6 +129,7 @@ public final class Skill<S> {
         private SkillCondition condition = SkillCondition.defaultConditions();
         private SkillInterruptCondition<S> interruptCondition = SkillInterruptCondition.allowed();
         private @Nullable SkillStateFactory<S> stateFactory = null;
+        private int duration = 0;
 
         private Builder() {
         }
@@ -216,6 +224,15 @@ public final class Skill<S> {
             return this;
         }
 
+        public int getDuration() {
+            return duration;
+        }
+
+        public Builder<S> setDuration(int duration) {
+            this.duration = duration;
+            return this;
+        }
+
         public Skill<S> build() {
             return new Skill<>(
                     cancelBehavior,
@@ -227,7 +244,8 @@ public final class Skill<S> {
                     cancelCondition,
                     condition,
                     interruptCondition,
-                    Objects.requireNonNull(stateFactory)
+                    Objects.requireNonNull(stateFactory),
+                    duration
             );
         }
     }
