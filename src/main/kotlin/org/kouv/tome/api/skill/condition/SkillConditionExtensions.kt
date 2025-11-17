@@ -6,8 +6,6 @@ import org.kouv.tome.api.skill.SkillResponse
 inline fun skillCondition(crossinline block: SkillContext<*>.() -> SkillResponse): SkillCondition =
     SkillCondition { context -> context.block() }
 
-fun requireNotCastingSkillCondition(): SkillCondition = SkillCondition.requireNotCasting()
-
 fun requireLearnedSkillCondition(): SkillCondition = SkillCondition.requireLearned()
 
 fun requireNoCooldownSkillCondition(): SkillCondition = SkillCondition.requireNoCooldown()

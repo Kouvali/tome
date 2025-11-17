@@ -334,7 +334,7 @@ public final class SkillCommand {
             Collection<? extends Entity> targets
     ) throws CommandSyntaxException {
         List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillManager().completeCastingAll());
+                filterLivingEntities(targets, entity -> entity.getSkillManager().completeCasting());
 
         if (entities.isEmpty()) {
             throw COMPLETE_FAILED_EXCEPTION.create();
@@ -354,7 +354,7 @@ public final class SkillCommand {
             Collection<? extends Entity> targets
     ) throws CommandSyntaxException {
         List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillManager().cancelCastingAll() > 0);
+                filterLivingEntities(targets, entity -> entity.getSkillManager().cancelCasting());
 
         if (entities.isEmpty()) {
             throw CANCEL_FAILED_EXCEPTION.create();
@@ -374,7 +374,7 @@ public final class SkillCommand {
             Collection<? extends Entity> targets
     ) throws CommandSyntaxException {
         List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillManager().interruptCastingAll() > 0);
+                filterLivingEntities(targets, entity -> entity.getSkillManager().interruptCasting());
 
         if (entities.isEmpty()) {
             throw INTERRUPT_FAILED_EXCEPTION.create();
@@ -394,7 +394,7 @@ public final class SkillCommand {
             Collection<? extends Entity> targets
     ) throws CommandSyntaxException {
         List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillManager().terminateCastingAll());
+                filterLivingEntities(targets, entity -> entity.getSkillManager().terminateCasting());
 
         if (entities.isEmpty()) {
             throw TERMINATE_FAILED_EXCEPTION.create();

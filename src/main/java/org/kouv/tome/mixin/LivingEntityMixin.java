@@ -49,8 +49,8 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
         }
 
         SkillManager skillManager = getSkillManager();
-        if (skillManager.interruptCastingAll() <= 0) {
-            skillManager.terminateCastingAll();
+        if (!skillManager.interruptCasting()) {
+            skillManager.terminateCasting();
         }
     }
 
@@ -61,8 +61,8 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
         }
 
         SkillManager skillManager = getSkillManager();
-        if (skillManager.interruptCastingAll() <= 0) {
-            skillManager.terminateCastingAll();
+        if (!skillManager.interruptCasting()) {
+            skillManager.terminateCasting();
         }
     }
 

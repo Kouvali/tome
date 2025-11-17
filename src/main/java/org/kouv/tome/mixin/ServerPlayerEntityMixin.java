@@ -24,8 +24,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
         }
 
         SkillManager skillManager = getSkillManager();
-        if (skillManager.interruptCastingAll() <= 0) {
-            skillManager.terminateCastingAll();
+        if (!skillManager.interruptCasting()) {
+            skillManager.terminateCasting();
         }
     }
 }

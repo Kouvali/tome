@@ -7,9 +7,7 @@ import org.kouv.tome.api.skill.SkillInstance;
 import org.kouv.tome.api.skill.SkillResponse;
 
 public interface SkillManager {
-    boolean isCasting(RegistryEntry<? extends Skill<?>> skill);
-
-    boolean isCastingAny();
+    boolean isCasting();
 
     <S> @Nullable SkillInstance<S> getCastingInstance(RegistryEntry<? extends Skill<S>> skill);
 
@@ -17,19 +15,11 @@ public interface SkillManager {
 
     SkillResponse castSkill(RegistryEntry<? extends Skill<?>> skill);
 
-    boolean completeCasting(RegistryEntry<? extends Skill<?>> skill);
+    boolean completeCasting();
 
-    boolean completeCastingAll();
+    boolean cancelCasting();
 
-    boolean cancelCasting(RegistryEntry<? extends Skill<?>> skill);
+    boolean interruptCasting();
 
-    int cancelCastingAll();
-
-    boolean interruptCasting(RegistryEntry<? extends Skill<?>> skill);
-
-    int interruptCastingAll();
-
-    boolean terminateCasting(RegistryEntry<? extends Skill<?>> skill);
-
-    boolean terminateCastingAll();
+    boolean terminateCasting();
 }

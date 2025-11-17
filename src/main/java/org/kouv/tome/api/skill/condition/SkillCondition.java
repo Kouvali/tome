@@ -8,12 +8,6 @@ import java.util.Objects;
 
 @FunctionalInterface
 public interface SkillCondition {
-    static SkillCondition requireNotCasting() {
-        return context -> context.getSource().getSkillManager().isCastingAny() ?
-                SkillResponse.inProgress() :
-                SkillResponse.success();
-    }
-
     static SkillCondition requireLearned() {
         return context -> context.getSource().getSkillContainer().hasSkill(context.getSkill()) ?
                 SkillResponse.success() :
@@ -33,8 +27,7 @@ public interface SkillCondition {
     }
 
     static SkillCondition defaultConditions() {
-        return requireNotCasting()
-                .and(requireLearned())
+        return requireLearned()
                 .and(requireNoCooldown())
                 .and(requireInGame());
     }

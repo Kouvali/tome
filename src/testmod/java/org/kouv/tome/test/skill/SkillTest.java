@@ -59,7 +59,7 @@ public final class SkillTest implements ModInitializer {
                         instance.getElapsedTime()
                 );
                 if (instance.getSource().isSneaking()) {
-                    instance.getSource().getSkillManager().completeCasting(instance.getSkill());
+                    instance.getSource().getSkillManager().completeCasting();
                 }
             })
             .setCancelCondition(instance -> {

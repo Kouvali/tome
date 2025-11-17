@@ -13,36 +13,30 @@ import org.kouv.tome.impl.skill.SkillContextImpl;
 import org.kouv.tome.impl.skill.SkillInstanceImpl;
 
 import java.lang.ref.WeakReference;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class SkillManagerImpl implements SkillManager {
     private final WeakReference<? extends LivingEntity> sourceRef;
 
-    private final Map<RegistryEntry<? extends Skill<?>>, SkillInstance<?>> instances = new ConcurrentHashMap<>();
+    private @Nullable SkillInstance<?> instance = null;
 
     public SkillManagerImpl(LivingEntity source) {
         this.sourceRef = new WeakReference<>(Objects.requireNonNull(source));
     }
 
     @Override
-    public boolean isCasting(RegistryEntry<? extends Skill<?>> skill) {
-        Objects.requireNonNull(skill);
-        return instances.get(skill) != null;
-    }
-
-    @Override
-    public boolean isCastingAny() {
-        return !instances.isEmpty();
+    public boolean isCasting() {
+        return instance != null;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public @Nullable <S> SkillInstance<S> getCastingInstance(RegistryEntry<? extends Skill<S>> skill) {
         Objects.requireNonNull(skill);
-        return (SkillInstance<S>) instances.get(skill);
+        return instance == null || !instance.getSkill().equals(skill) ?
+                null :
+                (SkillInstance<S>) instance;
     }
 
     @SuppressWarnings("unchecked")
@@ -64,81 +58,43 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     @Override
-    public boolean completeCasting(RegistryEntry<? extends Skill<?>> skill) {
-        Objects.requireNonNull(skill);
-        if (!isCasting(skill)) {
+    public boolean completeCasting() {
+        if (!isCasting()) {
             return false;
         }
 
-        executeComplete(instances.get(skill));
+        executeComplete(instance);
         return true;
     }
 
     @Override
-    public boolean completeCastingAll() {
-        if (!isCastingAny()) {
+    public boolean cancelCasting() {
+        return isCasting() && executeCancel(instance);
+    }
+
+    @Override
+    public boolean interruptCasting() {
+        return isCasting() && executeInterrupt(instance);
+    }
+
+    @Override
+    public boolean terminateCasting() {
+        if (!isCasting()) {
             return false;
         }
 
-        instances.values().forEach(this::executeComplete);
-        return true;
-    }
-
-    @Override
-    public boolean cancelCasting(RegistryEntry<? extends Skill<?>> skill) {
-        Objects.requireNonNull(skill);
-        return isCasting(skill) && executeCancel(instances.get(skill));
-    }
-
-    @Override
-    public int cancelCastingAll() {
-        return (int) instances.values()
-                .stream()
-                .filter(this::executeCancel)
-                .count();
-    }
-
-    @Override
-    public boolean interruptCasting(RegistryEntry<? extends Skill<?>> skill) {
-        Objects.requireNonNull(skill);
-        return isCasting(skill) && executeInterrupt(instances.get(skill));
-    }
-
-    @Override
-    public int interruptCastingAll() {
-        return (int) instances.values()
-                .stream()
-                .filter(this::executeInterrupt)
-                .count();
-    }
-
-    @Override
-    public boolean terminateCasting(RegistryEntry<? extends Skill<?>> skill) {
-        Objects.requireNonNull(skill);
-        if (!isCasting(skill)) {
-            return false;
-        }
-
-        executeEnd(instances.get(skill));
-        return true;
-    }
-
-    @Override
-    public boolean terminateCastingAll() {
-        if (!isCastingAny()) {
-            return false;
-        }
-
-        instances.values().forEach(this::executeEnd);
+        executeEnd(instance);
         return true;
     }
 
     public void update() {
-        instances.values().forEach(this::executeTick);
+        if (isCasting()) {
+            executeTick(instance);
+        }
     }
 
     private <S> SkillResponse executeTest(RegistryEntry<? extends Skill<S>> skill) {
-        return isCasting(skill) ?
+        return isCasting() ?
                 SkillResponse.inProgress() :
                 skill.value().getCondition().test(createContext(skill));
     }
@@ -159,7 +115,7 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> void executeStart(SkillInstance<S> instance) {
-        instances.put(instance.getSkill(), instance);
+        this.instance = instance;
         instance.getSkill().value().getStartBehavior().execute(instance);
     }
 
@@ -190,7 +146,7 @@ public final class SkillManagerImpl implements SkillManager {
 
     private <S> void executeEnd(SkillInstance<S> instance) {
         instance.getSkill().value().getEndBehavior().execute(instance);
-        instances.remove(instance.getSkill());
+        this.instance = null;
     }
 
     private <S> void executeTick(SkillInstance<S> instance) {

@@ -55,9 +55,6 @@ fun <S : Any> Skill.Builder<S>.deniedCancelCondition(): SkillCancelCondition<S> 
 inline fun Skill.Builder<*>.condition(crossinline block: SkillContext<*>.() -> SkillResponse): SkillCondition =
     skillCondition(block).also { condition = it }
 
-fun Skill.Builder<*>.requireNotCastingCondition(): SkillCondition =
-    requireNotCastingSkillCondition().also { condition = it }
-
 fun Skill.Builder<*>.requireLearnedCondition(): SkillCondition =
     requireLearnedSkillCondition().also { condition = it }
 
