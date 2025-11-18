@@ -117,6 +117,11 @@ public final class SkillManagerImpl implements SkillManager {
     private <S> void executeStart(SkillInstance<S> instance) {
         this.instance = instance;
         instance.getSkill().value().getStartBehavior().execute(instance);
+        if (isCasting() &&
+                instance.getSkill().value().getDuration() == 0
+        ) {
+            executeComplete(instance);
+        }
     }
 
     private <S> void executeComplete(SkillInstance<S> instance) {
@@ -152,7 +157,7 @@ public final class SkillManagerImpl implements SkillManager {
     private <S> void executeTick(SkillInstance<S> instance) {
         instance.getSkill().value().getTickBehavior().execute(instance);
         if (isCasting() &&
-                instance.getSkill().value().getDuration() >= 0 &&
+                instance.getSkill().value().getDuration() > 0 &&
                 instance.getSkill().value().getDuration() <= instance.getElapsedTime()
         ) {
             executeComplete(instance);
