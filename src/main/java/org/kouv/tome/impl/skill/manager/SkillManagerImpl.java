@@ -150,11 +150,11 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> void executeTick(SkillInstance<S> instance) {
-        if (instance.getSkill().value().getDuration() > 0 &&
-                instance.getSkill().value().getDuration() < instance.getElapsedTime()
+        instance.getSkill().value().getTickBehavior().execute(instance);
+        if (isCasting() &&
+                instance.getSkill().value().getDuration() >= 0 &&
+                instance.getSkill().value().getDuration() <= instance.getElapsedTime()
         ) {
-            instance.getSkill().value().getTickBehavior().execute(instance);
-        } else {
             completeCasting();
         }
     }
