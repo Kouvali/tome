@@ -17,63 +17,54 @@ public final class SkillTest implements ModInitializer {
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
             .setCancelBehavior(instance ->
                     LOGGER.info(
-                            "skill cancel behavior called: state={}, age={}, maxAge={}",
+                            "skill cancel behavior called: state={}, elapsedTime={}",
                             instance.getState(),
-                            instance.getAge(),
-                            instance.getMaxAge()
+                            instance.getElapsedTime()
                     )
             )
             .setCompleteBehavior(instance -> {
                 instance.getSource().setVelocity(instance.getState().rotation());
                 instance.getSource().velocityModified = true;
                 LOGGER.info(
-                        "skill complete behavior called: state={}, age={}, maxAge={}",
+                        "skill complete behavior called: state={}, elapsedTime={}",
                         instance.getState(),
-                        instance.getAge(),
-                        instance.getMaxAge()
+                        instance.getElapsedTime()
                 );
             })
             .setEndBehavior(instance ->
                     LOGGER.info(
-                            "skill end behavior called: state={}, age={}, maxAge={}",
+                            "skill end behavior called: state={}, elapsedTime={}",
                             instance.getState(),
-                            instance.getAge(),
-                            instance.getMaxAge()
+                            instance.getElapsedTime()
                     )
             )
             .setInterruptBehavior(instance ->
                     LOGGER.info(
-                            "skill interrupt behavior called: state={}, age={}, maxAge={}",
+                            "skill interrupt behavior called: state={}, elapsedTime={}",
                             instance.getState(),
-                            instance.getAge(),
-                            instance.getMaxAge()
+                            instance.getElapsedTime()
                     )
             )
             .setStartBehavior(instance ->
                     LOGGER.info(
-                            "skill start behavior called: state={}, age={}, maxAge={}",
+                            "skill start behavior called: state={}, elapsedTime={}",
                             instance.getState(),
-                            instance.getAge(),
-                            instance.getMaxAge()
+                            instance.getElapsedTime()
                     )
             )
-            .setTickBehavior(instance -> {
-                LOGGER.info(
-                        "skill tick behavior called: state={}, age={}, maxAge={}",
-                        instance.getState(),
-                        instance.getAge(),
-                        instance.getMaxAge()
-                );
-                if (instance.getSource().isSneaking()) {
-                    instance.setMaxAge(0);
-                }
-            })
+            .setTickBehavior(instance ->
+                    LOGGER.info(
+                            "skill tick behavior called: state={}, elapsedTime={}",
+                            instance.getState(),
+                            instance.getElapsedTime()
+                    )
+            )
             .setCancelCondition(instance -> {
                 boolean cancelled = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill cancel condition called: state={}, age={}, cancelled={}",
+                        "skill cancel condition called: state={}, elapsedTime={}, cancelled={}",
                         instance.getState(),
-                        instance.getAge(),
+                        instance.getElapsedTime(),
                         cancelled
                 );
                 return cancelled;
@@ -91,9 +82,9 @@ public final class SkillTest implements ModInitializer {
             .setInterruptCondition(instance -> {
                 boolean interrupted = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill interrupt condition called: state={}, age={}, interrupted={}",
+                        "skill interrupt condition called: state={}, elapsedTime={}, interrupted={}",
                         instance.getState(),
-                        instance.getAge(),
+                        instance.getElapsedTime(),
                         interrupted
                 );
                 return interrupted;
@@ -109,7 +100,7 @@ public final class SkillTest implements ModInitializer {
                 );
                 return creationResult;
             })
-            .setMaxAge(50)
+            .setDuration(50)
             .build();
 
     @Override
