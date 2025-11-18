@@ -108,7 +108,8 @@ public final class SkillManagerImpl implements SkillManager {
         this.instance = instance;
         instance.getSkill().value().getStartBehavior().execute(instance);
         if (isCasting() &&
-                instance.getSkill().value().getDuration() == 0
+                instance.getMaxAge() >= 0 &&
+                instance.getMaxAge() <= instance.getAge()
         ) {
             executeComplete(instance);
         }
@@ -145,10 +146,11 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> void executeTick(SkillInstance<S> instance) {
+        ((SkillInstanceImpl<?>) instance).update();
         instance.getSkill().value().getTickBehavior().execute(instance);
         if (isCasting() &&
-                instance.getSkill().value().getDuration() > 0 &&
-                instance.getSkill().value().getDuration() <= instance.getElapsedTime()
+                instance.getMaxAge() >= 0 &&
+                instance.getMaxAge() <= instance.getAge()
         ) {
             executeComplete(instance);
         }
@@ -159,7 +161,7 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> SkillInstance<S> createInstance(SkillContext<S> context, S state) {
-        return new SkillInstanceImpl<>(context, state);
+        return new SkillInstanceImpl<>(context, state, context.getSkill().value().getMaxAge());
     }
 
     private LivingEntity getSource() {
