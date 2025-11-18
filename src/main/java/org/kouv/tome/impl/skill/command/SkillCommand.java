@@ -36,9 +36,6 @@ public final class SkillCommand {
     private static final SimpleCommandExceptionType REMOVE_FAILED_EXCEPTION = new SimpleCommandExceptionType(
             Text.translatable("commands.skill.remove.failed")
     );
-    private static final SimpleCommandExceptionType COMPLETE_FAILED_EXCEPTION = new SimpleCommandExceptionType(
-            Text.translatable("commands.skill.complete.failed")
-    );
     private static final SimpleCommandExceptionType CANCEL_FAILED_EXCEPTION = new SimpleCommandExceptionType(
             Text.translatable("commands.skill.cancel.failed")
     );
@@ -63,7 +60,6 @@ public final class SkillCommand {
                 .then(argumentRemove())
                 .then(argumentTest())
                 .then(argumentCast())
-                .then(argumentComplete())
                 .then(argumentCancel())
                 .then(argumentInterrupt())
                 .then(argumentTerminate());
@@ -173,25 +169,6 @@ public final class SkillCommand {
                                                                 getSkill(IdentifierArgumentType.getIdentifier(context, "skill"))
                                                         )
                                                 )
-                                )
-                );
-    }
-
-    private static LiteralArgumentBuilder<ServerCommandSource> argumentComplete() {
-        return CommandManager.literal("complete")
-                .executes(context ->
-                        executeComplete(
-                                context.getSource(),
-                                List.of(context.getSource().getEntityOrThrow())
-                        )
-                )
-                .then(
-                        CommandManager.argument("targets", EntityArgumentType.entities())
-                                .executes(context ->
-                                        executeComplete(
-                                                context.getSource(),
-                                                EntityArgumentType.getEntities(context, "targets")
-                                        )
                                 )
                 );
     }
@@ -327,26 +304,6 @@ public final class SkillCommand {
         }
 
         return 1;
-    }
-
-    private static int executeComplete(
-            ServerCommandSource source,
-            Collection<? extends Entity> targets
-    ) throws CommandSyntaxException {
-        List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillManager().completeCasting());
-
-        if (entities.isEmpty()) {
-            throw COMPLETE_FAILED_EXCEPTION.create();
-        }
-
-        if (entities.size() == 1) {
-            source.sendFeedback(() -> Text.translatable("commands.skill.complete.success.single", entities.getFirst().getName()), true);
-        } else {
-            source.sendFeedback(() -> Text.translatable("commands.skill.complete.success.multiple", entities.size()), true);
-        }
-
-        return entities.size();
     }
 
     private static int executeCancel(

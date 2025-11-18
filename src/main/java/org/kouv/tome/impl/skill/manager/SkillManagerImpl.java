@@ -58,16 +58,6 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     @Override
-    public boolean completeCasting() {
-        if (!isCasting()) {
-            return false;
-        }
-
-        executeComplete(instance);
-        return true;
-    }
-
-    @Override
     public boolean cancelCasting() {
         return isCasting() && executeCancel(instance);
     }

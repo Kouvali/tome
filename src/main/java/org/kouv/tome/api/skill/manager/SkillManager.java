@@ -15,8 +15,6 @@ public interface SkillManager {
 
     SkillResponse castSkill(RegistryEntry<? extends Skill<?>> skill);
 
-    boolean completeCasting();
-
     boolean cancelCasting();
 
     boolean interruptCasting();
