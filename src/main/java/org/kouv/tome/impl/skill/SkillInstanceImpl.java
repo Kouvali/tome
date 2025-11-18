@@ -13,17 +13,29 @@ import java.util.Optional;
 public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final SkillContext<S> context;
     private final S state;
+    private int totalDuration;
     private final int startTime;
 
-    public SkillInstanceImpl(SkillContext<S> context, S state) {
+    public SkillInstanceImpl(SkillContext<S> context, S state, int totalDuration) {
         this.context = Objects.requireNonNull(context);
         this.state = Objects.requireNonNull(state);
+        this.totalDuration = totalDuration;
         this.startTime = getServer().getTicks();
     }
 
     @Override
     public S getState() {
         return state;
+    }
+
+    @Override
+    public int getTotalDuration() {
+        return totalDuration;
+    }
+
+    @Override
+    public void setTotalDuration(int totalDuration) {
+        this.totalDuration = totalDuration;
     }
 
     @Override

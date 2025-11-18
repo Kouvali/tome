@@ -23,7 +23,7 @@ public final class Skill<S> {
     private final SkillCondition condition;
     private final SkillInterruptCondition<S> interruptCondition;
     private final SkillStateFactory<S> stateFactory;
-    private final int duration;
+    private final int totalDuration;
 
     private @Nullable String translationKey;
     private @Nullable Text name;
@@ -39,7 +39,7 @@ public final class Skill<S> {
             SkillCondition condition,
             SkillInterruptCondition<S> interruptCondition,
             SkillStateFactory<S> stateFactory,
-            int duration
+            int totalDuration
     ) {
         this.cancelBehavior = Objects.requireNonNull(cancelBehavior);
         this.completeBehavior = Objects.requireNonNull(completeBehavior);
@@ -51,7 +51,7 @@ public final class Skill<S> {
         this.condition = Objects.requireNonNull(condition);
         this.interruptCondition = Objects.requireNonNull(interruptCondition);
         this.stateFactory = Objects.requireNonNull(stateFactory);
-        this.duration = duration;
+        this.totalDuration = totalDuration;
     }
 
     public static <S> Builder<S> builder() {
@@ -98,8 +98,8 @@ public final class Skill<S> {
         return stateFactory;
     }
 
-    public int getDuration() {
-        return duration;
+    public int getTotalDuration() {
+        return totalDuration;
     }
 
     public String getTranslationKey() {
@@ -129,7 +129,7 @@ public final class Skill<S> {
         private SkillCondition condition = SkillCondition.defaultConditions();
         private SkillInterruptCondition<S> interruptCondition = SkillInterruptCondition.allowed();
         private @Nullable SkillStateFactory<S> stateFactory = null;
-        private int duration = 0;
+        private int totalDuration = 0;
 
         private Builder() {
         }
@@ -224,12 +224,12 @@ public final class Skill<S> {
             return this;
         }
 
-        public int getDuration() {
-            return duration;
+        public int getTotalDuration() {
+            return totalDuration;
         }
 
-        public Builder<S> setDuration(int duration) {
-            this.duration = duration;
+        public Builder<S> setTotalDuration(int totalDuration) {
+            this.totalDuration = totalDuration;
             return this;
         }
 
@@ -245,7 +245,7 @@ public final class Skill<S> {
                     condition,
                     interruptCondition,
                     Objects.requireNonNull(stateFactory),
-                    duration
+                    totalDuration
             );
         }
     }

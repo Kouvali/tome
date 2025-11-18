@@ -100,7 +100,7 @@ public final class SkillTest implements ModInitializer {
                 );
                 return creationResult;
             })
-            .setDuration(50)
+            .setTotalDuration(50)
             .build();
 
     @Override
