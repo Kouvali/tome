@@ -155,7 +155,7 @@ public final class SkillManagerImpl implements SkillManager {
                 instance.getSkill().value().getDuration() >= 0 &&
                 instance.getSkill().value().getDuration() <= instance.getElapsedTime()
         ) {
-            completeCasting();
+            executeComplete(instance);
         }
     }
 
