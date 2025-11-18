@@ -52,16 +52,13 @@ public final class SkillTest implements ModInitializer {
                             instance.getElapsedTime()
                     )
             )
-            .setTickBehavior(instance -> {
-                LOGGER.info(
-                        "skill tick behavior called: state={}, elapsedTime={}",
-                        instance.getState(),
-                        instance.getElapsedTime()
-                );
-                if (instance.getSource().isSneaking()) {
-                    instance.completeCasting();
-                }
-            })
+            .setTickBehavior(instance ->
+                    LOGGER.info(
+                            "skill tick behavior called: state={}, elapsedTime={}",
+                            instance.getState(),
+                            instance.getElapsedTime()
+                    )
+            )
             .setCancelCondition(instance -> {
                 boolean cancelled = !instance.getSource().isOnGround();
                 LOGGER.info(
