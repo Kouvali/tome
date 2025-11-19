@@ -13,6 +13,7 @@ import java.util.Optional;
 public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final SkillContext<S> context;
     private final S state;
+    private boolean shouldComplete;
     private int totalDuration;
     private final int startTime;
 
@@ -26,6 +27,16 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     @Override
     public S getState() {
         return state;
+    }
+
+    @Override
+    public boolean isShouldComplete() {
+        return shouldComplete;
+    }
+
+    @Override
+    public void setShouldComplete(boolean shouldComplete) {
+        this.shouldComplete = shouldComplete;
     }
 
     @Override

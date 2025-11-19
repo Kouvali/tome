@@ -108,8 +108,7 @@ public final class SkillManagerImpl implements SkillManager {
         this.instance = instance;
         instance.getSkill().value().getStartBehavior().execute(instance);
         if (isCasting() &&
-                instance.getTotalDuration() >= 0 &&
-                instance.getTotalDuration() <= instance.getElapsedTime()
+                isReadyToComplete(instance)
         ) {
             executeComplete(instance);
         }
@@ -148,11 +147,16 @@ public final class SkillManagerImpl implements SkillManager {
     private <S> void executeTick(SkillInstance<S> instance) {
         instance.getSkill().value().getTickBehavior().execute(instance);
         if (isCasting() &&
-                instance.getTotalDuration() >= 0 &&
-                instance.getTotalDuration() <= instance.getElapsedTime()
+                isReadyToComplete(instance)
         ) {
             executeComplete(instance);
         }
+    }
+
+    private boolean isReadyToComplete(SkillInstance<?> instance) {
+        return instance.isShouldComplete() ||
+                (instance.getTotalDuration() >= 0 &&
+                        instance.getTotalDuration() <= instance.getElapsedTime());
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {
