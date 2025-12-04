@@ -145,6 +145,7 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> void executeTick(SkillInstance<S> instance) {
+        ((SkillInstanceImpl<?>) instance).update();
         instance.getSkill().value().getTickBehavior().execute(instance);
         if (isCasting() &&
                 isReadyToComplete(instance)
