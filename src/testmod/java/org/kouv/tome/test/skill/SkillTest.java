@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public final class SkillTest implements ModInitializer {
-    private final Logger LOGGER = LoggerFactory.getLogger(SkillTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SkillTest.class);
 
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
             .setCancelBehavior(instance ->
