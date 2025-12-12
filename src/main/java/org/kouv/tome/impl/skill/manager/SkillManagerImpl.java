@@ -12,18 +12,12 @@ import org.kouv.tome.api.skill.state.SkillStateCreationResult;
 import org.kouv.tome.impl.skill.SkillContextImpl;
 import org.kouv.tome.impl.skill.SkillInstanceImpl;
 
-import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.Optional;
 
 public final class SkillManagerImpl implements SkillManager {
-    private final WeakReference<? extends LivingEntity> sourceRef;
-
     private @Nullable SkillInstance<?> instance = null;
-
-    public SkillManagerImpl(LivingEntity source) {
-        this.sourceRef = new WeakReference<>(Objects.requireNonNull(source));
-    }
+    private @Nullable LivingEntity source = null;
 
     @Override
     public boolean isCasting() {
@@ -75,6 +69,14 @@ public final class SkillManagerImpl implements SkillManager {
 
         executeEnd(instance);
         return true;
+    }
+
+    public @Nullable LivingEntity getSource() {
+        return source;
+    }
+
+    public void setSource(LivingEntity source) {
+        this.source = Objects.requireNonNull(source);
     }
 
     public void update() {
@@ -161,15 +163,15 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {
-        return new SkillContextImpl<>(skill, getSource());
+        return new SkillContextImpl<>(skill, getSourceOrThrow());
     }
 
     private <S> SkillInstance<S> createInstance(SkillContext<S> context, S state) {
         return new SkillInstanceImpl<>(context, state, context.getSkill().value().getTotalDuration());
     }
 
-    private LivingEntity getSource() {
-        return Optional.ofNullable(sourceRef.get())
-                .orElseThrow(() -> new IllegalStateException("Entity is no longer available"));
+    private LivingEntity getSourceOrThrow() {
+        return Optional.ofNullable(source)
+                .orElseThrow(() -> new IllegalStateException("Source entity is not set"));
     }
 }

@@ -41,7 +41,14 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
     @SuppressWarnings({"AddedMixinMembersNamePattern", "UnstableApiUsage"})
     @Override
     public SkillManager getSkillManager() {
-        return getAttachedOrCreate(SkillAttachments.SKILL_MANAGER, () -> new SkillManagerImpl((LivingEntity) (Object) this));
+        SkillManagerImpl skillManager =
+                (SkillManagerImpl) getAttachedOrCreate(SkillAttachments.SKILL_MANAGER, SkillManagerImpl::new);
+
+        if (skillManager.getSource() != (Object) this) {
+            skillManager.setSource((LivingEntity) (Object) this);
+        }
+
+        return skillManager;
     }
 
     @Inject(method = "onDeath", at = @At(value = "TAIL"))
