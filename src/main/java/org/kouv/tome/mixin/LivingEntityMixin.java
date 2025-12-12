@@ -5,7 +5,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.attachment.SkillAttachments;
 import org.kouv.tome.api.skill.entity.SkillEntity;
 import org.kouv.tome.api.skill.manager.SkillContainer;
@@ -71,8 +70,8 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
             return;
         }
 
-        SkillManager skillManager = tome$getSkillManagerOrNull();
-        if (skillManager != null && !skillManager.interruptCasting()) {
+        SkillManager skillManager = getSkillManager();
+        if (!skillManager.interruptCasting()) {
             skillManager.terminateCasting();
         }
     }
@@ -83,8 +82,8 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
             return;
         }
 
-        SkillManager skillManager = tome$getSkillManagerOrNull();
-        if (skillManager != null && !skillManager.interruptCasting()) {
+        SkillManager skillManager = getSkillManager();
+        if (!skillManager.interruptCasting()) {
             skillManager.terminateCasting();
         }
     }
@@ -95,41 +94,8 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
             return;
         }
 
-        SkillCooldownManager skillCooldownManager = tome$getSkillCooldownManagerOrNull();
-        if (skillCooldownManager != null) {
-            ((SkillCooldownManagerImpl) skillCooldownManager).update();
-        }
-
-        SkillManager skillManager = tome$getSkillManagerOrNull();
-        if (skillManager != null) {
-            ((SkillManagerImpl) skillManager).update();
-        }
-    }
-
-    @SuppressWarnings("UnstableApiUsage")
-    @Unique
-    private @Nullable SkillCooldownManager tome$getSkillCooldownManagerOrNull() {
-        SkillCooldownManagerImpl skillCooldownManager =
-                (SkillCooldownManagerImpl) getAttached(SkillAttachments.SKILL_COOLDOWN_MANAGER);
-
-        if (skillCooldownManager != null && skillCooldownManager.getSource() != (Object) this) {
-            skillCooldownManager.setSource(tome$livingEntity());
-        }
-
-        return skillCooldownManager;
-    }
-
-    @SuppressWarnings("UnstableApiUsage")
-    @Unique
-    private @Nullable SkillManager tome$getSkillManagerOrNull() {
-        SkillManagerImpl skillManager =
-                (SkillManagerImpl) getAttached(SkillAttachments.SKILL_MANAGER);
-
-        if (skillManager != null && skillManager.getSource() != (Object) this) {
-            skillManager.setSource(tome$livingEntity());
-        }
-
-        return skillManager;
+        ((SkillCooldownManagerImpl) getSkillCooldownManager()).update();
+        ((SkillManagerImpl) getSkillManager()).update();
     }
 
     @Unique
