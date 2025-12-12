@@ -1,6 +1,7 @@
 package org.kouv.tome.api.skill;
 
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.behavior.*;
@@ -25,6 +26,7 @@ public final class Skill<S> {
     private final SkillStateFactory<S> stateFactory;
     private final int totalDuration;
 
+    private @Nullable Identifier id;
     private @Nullable String translationKey;
     private @Nullable Text name;
 
@@ -102,9 +104,17 @@ public final class Skill<S> {
         return totalDuration;
     }
 
+    public Identifier getId() {
+        if (id == null) {
+            id = SkillRegistries.SKILL.getId(this);
+        }
+
+        return id;
+    }
+
     public String getTranslationKey() {
         if (translationKey == null) {
-            translationKey = Util.createTranslationKey("skill", SkillRegistries.SKILL.getId(this));
+            translationKey = Util.createTranslationKey("skill", getId());
         }
 
         return translationKey;
