@@ -29,13 +29,27 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
     @SuppressWarnings({"AddedMixinMembersNamePattern", "UnstableApiUsage"})
     @Override
     public SkillContainer getSkillContainer() {
-        return getAttachedOrCreate(SkillAttachments.SKILL_CONTAINER, SkillContainerImpl::new);
+        SkillContainerImpl skillContainer =
+                (SkillContainerImpl) getAttachedOrCreate(SkillAttachments.SKILL_CONTAINER, SkillContainerImpl::new);
+
+        if (skillContainer.getSource() != (Object) this) {
+            skillContainer.setSource(tome$livingEntity());
+        }
+
+        return skillContainer;
     }
 
     @SuppressWarnings({"AddedMixinMembersNamePattern", "UnstableApiUsage"})
     @Override
     public SkillCooldownManager getSkillCooldownManager() {
-        return getAttachedOrCreate(SkillAttachments.SKILL_COOLDOWN_MANAGER, SkillCooldownManagerImpl::new);
+        SkillCooldownManagerImpl skillCooldownManager =
+                (SkillCooldownManagerImpl) getAttachedOrCreate(SkillAttachments.SKILL_COOLDOWN_MANAGER, SkillCooldownManagerImpl::new);
+
+        if (skillCooldownManager.getSource() != (Object) this) {
+            skillCooldownManager.setSource(tome$livingEntity());
+        }
+
+        return skillCooldownManager;
     }
 
     @SuppressWarnings({"AddedMixinMembersNamePattern", "UnstableApiUsage"})
@@ -45,7 +59,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
                 (SkillManagerImpl) getAttachedOrCreate(SkillAttachments.SKILL_MANAGER, SkillManagerImpl::new);
 
         if (skillManager.getSource() != (Object) this) {
-            skillManager.setSource((LivingEntity) (Object) this);
+            skillManager.setSource(tome$livingEntity());
         }
 
         return skillManager;
@@ -95,12 +109,31 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
     @SuppressWarnings("UnstableApiUsage")
     @Unique
     private @Nullable SkillCooldownManager tome$getSkillCooldownManagerOrNull() {
-        return getAttached(SkillAttachments.SKILL_COOLDOWN_MANAGER);
+        SkillCooldownManagerImpl skillCooldownManager =
+                (SkillCooldownManagerImpl) getAttached(SkillAttachments.SKILL_COOLDOWN_MANAGER);
+
+        if (skillCooldownManager != null && skillCooldownManager.getSource() != (Object) this) {
+            skillCooldownManager.setSource(tome$livingEntity());
+        }
+
+        return skillCooldownManager;
     }
 
     @SuppressWarnings("UnstableApiUsage")
     @Unique
     private @Nullable SkillManager tome$getSkillManagerOrNull() {
-        return getAttached(SkillAttachments.SKILL_MANAGER);
+        SkillManagerImpl skillManager =
+                (SkillManagerImpl) getAttached(SkillAttachments.SKILL_MANAGER);
+
+        if (skillManager != null && skillManager.getSource() != (Object) this) {
+            skillManager.setSource(tome$livingEntity());
+        }
+
+        return skillManager;
+    }
+
+    @Unique
+    private LivingEntity tome$livingEntity() {
+        return (LivingEntity) (Object) this;
     }
 }

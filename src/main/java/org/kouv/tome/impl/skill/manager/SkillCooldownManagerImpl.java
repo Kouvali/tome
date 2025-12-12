@@ -2,15 +2,19 @@ package org.kouv.tome.impl.skill.manager;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
+import org.kouv.tome.api.skill.event.SkillEvents;
 import org.kouv.tome.api.skill.manager.SkillCooldownManager;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class SkillCooldownManagerImpl implements SkillCooldownManager {
@@ -31,6 +35,7 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     );
 
     private final Map<Identifier, Integer> cooldowns;
+    private @Nullable LivingEntity source = null;
 
     private SkillCooldownManagerImpl(
             Map<? extends Identifier, ? extends Integer> cooldowns
@@ -76,20 +81,33 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     public void setCooldown(Identifier id, int cooldown) {
         Objects.requireNonNull(id);
         if (cooldown > 0) {
-            cooldowns.put(id, cooldown);
+            if (cooldowns.put(id, cooldown) == null) {
+                SkillEvents.COOLDOWN_STARTED.invoker().onCooldownStarted(getSourceOrThrow(), id);
+            }
         } else {
-            cooldowns.remove(id);
+            if (cooldowns.remove(id) != null) {
+                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(getSourceOrThrow(), id);
+            }
         }
+    }
+
+    public @Nullable LivingEntity getSource() {
+        return source;
+    }
+
+    public void setSource(LivingEntity source) {
+        this.source = Objects.requireNonNull(source);
     }
 
     public void update() {
         Iterator<Map.Entry<Identifier, Integer>> iterator = cooldowns.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Identifier, Integer> entry = iterator.next();
-            if (entry.getValue() > 0) {
+            if (entry.getValue() > 1) {
                 entry.setValue(entry.getValue() - 1);
             } else {
                 iterator.remove();
+                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(getSourceOrThrow(), entry.getKey());
             }
         }
     }
@@ -97,5 +115,10 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     private Identifier getId(RegistryEntry<? extends Skill<?>> skill) {
         return skill.getKey().map(RegistryKey::getValue)
                 .orElseThrow();
+    }
+
+    private LivingEntity getSourceOrThrow() {
+        return Optional.ofNullable(source)
+                .orElseThrow(() -> new IllegalStateException("Source entity is not set"));
     }
 }

@@ -9,7 +9,8 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "org.kouv.tome.test.skill.SkillTest"
+      "org.kouv.tome.test.skill.SkillTest",
+      "org.kouv.tome.test.skill.event.SkillEventsTest"
     ]
   },
   "depends": {

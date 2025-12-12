@@ -2,8 +2,11 @@ package org.kouv.tome.impl.skill.manager;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
+import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
+import org.kouv.tome.api.skill.event.SkillEvents;
 import org.kouv.tome.api.skill.manager.SkillContainer;
 import org.kouv.tome.api.skill.registry.SkillRegistries;
 
@@ -30,6 +33,7 @@ public final class SkillContainerImpl implements SkillContainer {
     );
 
     private final Set<RegistryEntry<? extends Skill<?>>> skills;
+    private @Nullable LivingEntity source = null;
 
     private SkillContainerImpl(
             Collection<? extends RegistryEntry<? extends Skill<?>>> skills
@@ -55,12 +59,35 @@ public final class SkillContainerImpl implements SkillContainer {
     @Override
     public boolean addSkill(RegistryEntry<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
-        return skills.add(skill);
+        boolean added = skills.add(skill);
+        if (added) {
+            SkillEvents.ADDED.invoker().onAdded(getSourceOrThrow(), skill);
+        }
+
+        return added;
     }
 
     @Override
     public boolean removeSkill(RegistryEntry<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
-        return skills.remove(skill);
+        boolean removed = skills.remove(skill);
+        if (removed) {
+            SkillEvents.REMOVED.invoker().onRemoved(getSourceOrThrow(), skill);
+        }
+
+        return removed;
+    }
+
+    public @Nullable LivingEntity getSource() {
+        return source;
+    }
+
+    public void setSource(LivingEntity source) {
+        this.source = Objects.requireNonNull(source);
+    }
+
+    private LivingEntity getSourceOrThrow() {
+        return Optional.ofNullable(source)
+                .orElseThrow(() -> new IllegalStateException("Source entity is not set"));
     }
 }

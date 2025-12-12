@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.attachment.SkillAttachments;
 import org.kouv.tome.api.skill.manager.SkillManager;
+import org.kouv.tome.impl.skill.manager.SkillManagerImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,6 +36,13 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     @SuppressWarnings("UnstableApiUsage")
     @Unique
     private @Nullable SkillManager tome$getSkillManagerOrNull() {
-        return getAttached(SkillAttachments.SKILL_MANAGER);
+        SkillManagerImpl skillManager =
+                (SkillManagerImpl) getAttached(SkillAttachments.SKILL_MANAGER);
+
+        if (skillManager != null && skillManager.getSource() != this) {
+            skillManager.setSource(this);
+        }
+
+        return skillManager;
     }
 }

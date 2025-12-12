@@ -23,6 +23,7 @@ public final class SkillTest implements ModInitializer {
                     )
             )
             .setCompleteBehavior(instance -> {
+                instance.getSkillCooldownManager().setCooldown(instance.getSkill(), 50);
                 instance.getSource().setVelocity(instance.getState().rotation());
                 instance.getSource().velocityModified = true;
                 LOGGER.info(
