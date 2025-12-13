@@ -61,6 +61,12 @@ inline fun <S : Any> Skill.Builder<S>.interruptBehavior(crossinline block: Skill
 fun <S : Any> Skill.Builder<S>.noOpInterruptBehavior(): SkillInterruptBehavior<S> =
     noOpSkillInterruptBehavior<S>().also { interruptBehavior = it }
 
+inline fun Skill.Builder<*>.removeBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillRemoveBehavior =
+    skillRemoveBehavior(block).also { removeBehavior = it }
+
+fun Skill.Builder<*>.noOpRemoveBehavior(): SkillRemoveBehavior =
+    noOpSkillRemoveBehavior().also { removeBehavior = it }
+
 inline fun <S : Any> Skill.Builder<S>.startBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillStartBehavior<S> =
     skillStartBehavior(block).also { startBehavior = it }
 
