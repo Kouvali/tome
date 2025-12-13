@@ -2,52 +2,50 @@ package org.kouv.tome.api.skill.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.entry.RegistryEntry;
-import org.kouv.tome.api.skill.Skill;
+import org.kouv.tome.api.skill.SkillContext;
 
 public interface SkillEvents {
-    Event<Added> ADDED = EventFactory.createArrayBacked(Added.class, callbacks -> (entity, skill) -> {
+    Event<Added> ADDED = EventFactory.createArrayBacked(Added.class, callbacks -> (context) -> {
         for (Added callback : callbacks) {
-            callback.onAdded(entity, skill);
+            callback.onAdded(context);
         }
     });
 
-    Event<Removed> REMOVED = EventFactory.createArrayBacked(Removed.class, callbacks -> (entity, skill) -> {
+    Event<Removed> REMOVED = EventFactory.createArrayBacked(Removed.class, callbacks -> (context) -> {
         for (Removed callback : callbacks) {
-            callback.onRemoved(entity, skill);
+            callback.onRemoved(context);
         }
     });
 
-    Event<CooldownStarted> COOLDOWN_STARTED = EventFactory.createArrayBacked(CooldownStarted.class, callbacks -> (entity, id) -> {
+    Event<CooldownStarted> COOLDOWN_STARTED = EventFactory.createArrayBacked(CooldownStarted.class, callbacks -> (context) -> {
         for (CooldownStarted callback : callbacks) {
-            callback.onCooldownStarted(entity, id);
+            callback.onCooldownStarted(context);
         }
     });
 
-    Event<CooldownEnded> COOLDOWN_ENDED = EventFactory.createArrayBacked(CooldownEnded.class, callbacks -> (entity, id) -> {
+    Event<CooldownEnded> COOLDOWN_ENDED = EventFactory.createArrayBacked(CooldownEnded.class, callbacks -> (context) -> {
         for (CooldownEnded callback : callbacks) {
-            callback.onCooldownEnded(entity, id);
+            callback.onCooldownEnded(context);
         }
     });
 
     @FunctionalInterface
     interface Added {
-        void onAdded(LivingEntity source, RegistryEntry<? extends Skill<?>> skill);
+        void onAdded(SkillContext<?> context);
     }
 
     @FunctionalInterface
     interface Removed {
-        void onRemoved(LivingEntity source, RegistryEntry<? extends Skill<?>> skill);
+        void onRemoved(SkillContext<?> context);
     }
 
     @FunctionalInterface
     interface CooldownStarted {
-        void onCooldownStarted(LivingEntity source, RegistryEntry<? extends Skill<?>> skill);
+        void onCooldownStarted(SkillContext<?> context);
     }
 
     @FunctionalInterface
     interface CooldownEnded {
-        void onCooldownEnded(LivingEntity source, RegistryEntry<? extends Skill<?>> skill);
+        void onCooldownEnded(SkillContext<?> context);
     }
 }

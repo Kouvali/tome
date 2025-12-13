@@ -1,9 +1,7 @@
 package org.kouv.tome.test.skill.event;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.entry.RegistryEntry;
-import org.kouv.tome.api.skill.Skill;
+import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.event.SkillEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,29 +19,29 @@ public final class SkillEventsTest implements ModInitializer {
 
     public static final class TestAdded implements SkillEvents.Added {
         @Override
-        public void onAdded(LivingEntity source, RegistryEntry<? extends Skill<?>> skill) {
-            LOGGER.info("skill added: source={}, skill={}", source, skill);
+        public void onAdded(SkillContext<?> context) {
+            LOGGER.info("skill added: context={}", context);
         }
     }
 
     public static final class TestRemoved implements SkillEvents.Removed {
         @Override
-        public void onRemoved(LivingEntity source, RegistryEntry<? extends Skill<?>> skill) {
-            LOGGER.info("skill removed: source={}, skill={}", source, skill);
+        public void onRemoved(SkillContext<?> context) {
+            LOGGER.info("skill removed: context={}", context);
         }
     }
 
     public static final class TestCooldownStarted implements SkillEvents.CooldownStarted {
         @Override
-        public void onCooldownStarted(LivingEntity source, RegistryEntry<? extends Skill<?>> skill) {
-            LOGGER.info("skill cooldown started: source={}, skill={}", source, skill);
+        public void onCooldownStarted(SkillContext<?> context) {
+            LOGGER.info("skill cooldown started: context={}", context);
         }
     }
 
     public static final class TestCooldownEnded implements SkillEvents.CooldownEnded {
         @Override
-        public void onCooldownEnded(LivingEntity source, RegistryEntry<? extends Skill<?>> skill) {
-            LOGGER.info("skill cooldown ended: source={}, skill={}", source, skill);
+        public void onCooldownEnded(SkillContext<?> context) {
+            LOGGER.info("skill cooldown ended: context={}", context);
         }
     }
 }

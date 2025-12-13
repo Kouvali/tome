@@ -6,9 +6,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
+import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.event.SkillEvents;
 import org.kouv.tome.api.skill.manager.SkillContainer;
 import org.kouv.tome.api.skill.registry.SkillRegistries;
+import org.kouv.tome.impl.skill.SkillContextImpl;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -56,23 +58,27 @@ public final class SkillContainerImpl implements SkillContainer {
         return skills.contains(skill);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean addSkill(RegistryEntry<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
         boolean added = skills.add(skill);
         if (added) {
-            SkillEvents.ADDED.invoker().onAdded(getSourceOrThrow(), skill);
+            SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) skill);
+            SkillEvents.ADDED.invoker().onAdded(context);
         }
 
         return added;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean removeSkill(RegistryEntry<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
         boolean removed = skills.remove(skill);
         if (removed) {
-            SkillEvents.REMOVED.invoker().onRemoved(getSourceOrThrow(), skill);
+            SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) skill);
+            SkillEvents.REMOVED.invoker().onRemoved(context);
         }
 
         return removed;
@@ -84,6 +90,10 @@ public final class SkillContainerImpl implements SkillContainer {
 
     public void setSource(LivingEntity source) {
         this.source = Objects.requireNonNull(source);
+    }
+
+    private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {
+        return new SkillContextImpl<>(skill, getSourceOrThrow());
     }
 
     private LivingEntity getSourceOrThrow() {

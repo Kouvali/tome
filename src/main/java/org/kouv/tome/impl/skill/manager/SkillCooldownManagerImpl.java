@@ -6,9 +6,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
+import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.event.SkillEvents;
 import org.kouv.tome.api.skill.manager.SkillCooldownManager;
 import org.kouv.tome.api.skill.registry.SkillRegistries;
+import org.kouv.tome.impl.skill.SkillContextImpl;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -59,16 +61,19 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
         return cooldowns.getOrDefault(skill, 0);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void setCooldown(RegistryEntry<? extends Skill<?>> skill, int cooldown) {
         Objects.requireNonNull(skill);
         if (cooldown > 0) {
             if (cooldowns.put(skill, cooldown) == null) {
-                SkillEvents.COOLDOWN_STARTED.invoker().onCooldownStarted(getSourceOrThrow(), skill);
+                SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) skill);
+                SkillEvents.COOLDOWN_STARTED.invoker().onCooldownStarted(context);
             }
         } else {
             if (cooldowns.remove(skill) != null) {
-                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(getSourceOrThrow(), skill);
+                SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) skill);
+                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(context);
             }
         }
     }
@@ -81,6 +86,7 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
         this.source = Objects.requireNonNull(source);
     }
 
+    @SuppressWarnings("unchecked")
     public void update() {
         Iterator<Map.Entry<RegistryEntry<? extends Skill<?>>, Integer>> iterator = cooldowns.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -89,9 +95,15 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
                 entry.setValue(entry.getValue() - 1);
             } else {
                 iterator.remove();
-                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(getSourceOrThrow(), entry.getKey());
+
+                SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) entry.getKey());
+                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(context);
             }
         }
+    }
+
+    private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {
+        return new SkillContextImpl<>(skill, getSourceOrThrow());
     }
 
     private LivingEntity getSourceOrThrow() {
