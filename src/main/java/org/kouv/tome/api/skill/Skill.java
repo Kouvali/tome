@@ -21,12 +21,12 @@ public final class Skill<S> {
     private final SkillInterruptBehavior<S> interruptBehavior;
     private final SkillStartBehavior<S> startBehavior;
     private final SkillTickBehavior<S> tickBehavior;
-    private final SkillAddCallback addCallback;
-    private final SkillCooldownEndCallback cooldownEndCallback;
-    private final SkillCooldownStartCallback cooldownStartCallback;
-    private final SkillEntityLoadCallback entityLoadCallback;
-    private final SkillEntityUnloadCallback entityUnloadCallback;
-    private final SkillRemoveCallback removeCallback;
+    private final SkillAddedCallback addedCallback;
+    private final SkillCooldownEndedCallback cooldownEndedCallback;
+    private final SkillCooldownStartedCallback cooldownStartedCallback;
+    private final SkillEntityLoadedCallback entityLoadedCallback;
+    private final SkillEntityUnloadingCallback entityUnloadingCallback;
+    private final SkillRemovedCallback removedCallback;
     private final SkillCondition condition;
     private final SkillCancelPredicate<S> cancelPredicate;
     private final SkillInterruptPredicate<S> interruptPredicate;
@@ -44,12 +44,12 @@ public final class Skill<S> {
             SkillInterruptBehavior<S> interruptBehavior,
             SkillStartBehavior<S> startBehavior,
             SkillTickBehavior<S> tickBehavior,
-            SkillAddCallback addCallback,
-            SkillCooldownEndCallback cooldownEndCallback,
-            SkillCooldownStartCallback cooldownStartCallback,
-            SkillEntityLoadCallback entityLoadCallback,
-            SkillEntityUnloadCallback entityUnloadCallback,
-            SkillRemoveCallback removeCallback,
+            SkillAddedCallback addedCallback,
+            SkillCooldownEndedCallback cooldownEndedCallback,
+            SkillCooldownStartedCallback cooldownStartedCallback,
+            SkillEntityLoadedCallback entityLoadedCallback,
+            SkillEntityUnloadingCallback entityUnloadingCallback,
+            SkillRemovedCallback removedCallback,
             SkillCondition condition,
             SkillCancelPredicate<S> cancelPredicate,
             SkillInterruptPredicate<S> interruptPredicate,
@@ -62,12 +62,12 @@ public final class Skill<S> {
         this.interruptBehavior = Objects.requireNonNull(interruptBehavior);
         this.startBehavior = Objects.requireNonNull(startBehavior);
         this.tickBehavior = Objects.requireNonNull(tickBehavior);
-        this.addCallback = Objects.requireNonNull(addCallback);
-        this.cooldownEndCallback = Objects.requireNonNull(cooldownEndCallback);
-        this.cooldownStartCallback = Objects.requireNonNull(cooldownStartCallback);
-        this.entityLoadCallback = Objects.requireNonNull(entityLoadCallback);
-        this.entityUnloadCallback = Objects.requireNonNull(entityUnloadCallback);
-        this.removeCallback = Objects.requireNonNull(removeCallback);
+        this.addedCallback = Objects.requireNonNull(addedCallback);
+        this.cooldownEndedCallback = Objects.requireNonNull(cooldownEndedCallback);
+        this.cooldownStartedCallback = Objects.requireNonNull(cooldownStartedCallback);
+        this.entityLoadedCallback = Objects.requireNonNull(entityLoadedCallback);
+        this.entityUnloadingCallback = Objects.requireNonNull(entityUnloadingCallback);
+        this.removedCallback = Objects.requireNonNull(removedCallback);
         this.condition = Objects.requireNonNull(condition);
         this.cancelPredicate = Objects.requireNonNull(cancelPredicate);
         this.interruptPredicate = Objects.requireNonNull(interruptPredicate);
@@ -103,28 +103,28 @@ public final class Skill<S> {
         return tickBehavior;
     }
 
-    public SkillAddCallback getAddCallback() {
-        return addCallback;
+    public SkillAddedCallback getAddedCallback() {
+        return addedCallback;
     }
 
-    public SkillCooldownEndCallback getCooldownEndCallback() {
-        return cooldownEndCallback;
+    public SkillCooldownEndedCallback getCooldownEndedCallback() {
+        return cooldownEndedCallback;
     }
 
-    public SkillCooldownStartCallback getCooldownStartCallback() {
-        return cooldownStartCallback;
+    public SkillCooldownStartedCallback getCooldownStartedCallback() {
+        return cooldownStartedCallback;
     }
 
-    public SkillEntityLoadCallback getEntityLoadCallback() {
-        return entityLoadCallback;
+    public SkillEntityLoadedCallback getEntityLoadedCallback() {
+        return entityLoadedCallback;
     }
 
-    public SkillEntityUnloadCallback getEntityUnloadCallback() {
-        return entityUnloadCallback;
+    public SkillEntityUnloadingCallback getEntityUnloadingCallback() {
+        return entityUnloadingCallback;
     }
 
-    public SkillRemoveCallback getRemoveCallback() {
-        return removeCallback;
+    public SkillRemovedCallback getRemovedCallback() {
+        return removedCallback;
     }
 
     public SkillCondition getCondition() {
@@ -178,12 +178,12 @@ public final class Skill<S> {
         private SkillInterruptBehavior<S> interruptBehavior = SkillInterruptBehavior.noOp();
         private SkillStartBehavior<S> startBehavior = SkillStartBehavior.noOp();
         private SkillTickBehavior<S> tickBehavior = SkillTickBehavior.noOp();
-        private SkillAddCallback addCallback = SkillAddCallback.noOp();
-        private SkillCooldownEndCallback cooldownEndCallback = SkillCooldownEndCallback.noOp();
-        private SkillCooldownStartCallback cooldownStartCallback = SkillCooldownStartCallback.noOp();
-        private SkillEntityLoadCallback entityLoadCallback = SkillEntityLoadCallback.noOp();
-        private SkillEntityUnloadCallback entityUnloadCallback = SkillEntityUnloadCallback.noOp();
-        private SkillRemoveCallback removeCallback = SkillRemoveCallback.noOp();
+        private SkillAddedCallback addedCallback = SkillAddedCallback.noOp();
+        private SkillCooldownEndedCallback cooldownEndedCallback = SkillCooldownEndedCallback.noOp();
+        private SkillCooldownStartedCallback cooldownStartedCallback = SkillCooldownStartedCallback.noOp();
+        private SkillEntityLoadedCallback entityLoadedCallback = SkillEntityLoadedCallback.noOp();
+        private SkillEntityUnloadingCallback entityUnloadingCallback = SkillEntityUnloadingCallback.noOp();
+        private SkillRemovedCallback removedCallback = SkillRemovedCallback.noOp();
         private SkillCondition condition = SkillCondition.defaultConditions();
         private SkillCancelPredicate<S> cancelPredicate = SkillCancelPredicate.allowed();
         private SkillInterruptPredicate<S> interruptPredicate = SkillInterruptPredicate.allowed();
@@ -247,57 +247,57 @@ public final class Skill<S> {
             return this;
         }
 
-        public SkillAddCallback getAddCallback() {
-            return addCallback;
+        public SkillAddedCallback getAddedCallback() {
+            return addedCallback;
         }
 
-        public Builder<S> setAddCallback(SkillAddCallback addCallback) {
-            this.addCallback = Objects.requireNonNull(addCallback);
+        public Builder<S> setAddedCallback(SkillAddedCallback addedCallback) {
+            this.addedCallback = Objects.requireNonNull(addedCallback);
             return this;
         }
 
-        public SkillCooldownEndCallback getCooldownEndCallback() {
-            return cooldownEndCallback;
+        public SkillCooldownEndedCallback getCooldownEndedCallback() {
+            return cooldownEndedCallback;
         }
 
-        public Builder<S> setCooldownEndCallback(SkillCooldownEndCallback cooldownEndCallback) {
-            this.cooldownEndCallback = Objects.requireNonNull(cooldownEndCallback);
+        public Builder<S> setCooldownEndedCallback(SkillCooldownEndedCallback cooldownEndedCallback) {
+            this.cooldownEndedCallback = Objects.requireNonNull(cooldownEndedCallback);
             return this;
         }
 
-        public SkillCooldownStartCallback getCooldownStartCallback() {
-            return cooldownStartCallback;
+        public SkillCooldownStartedCallback getCooldownStartedCallback() {
+            return cooldownStartedCallback;
         }
 
-        public Builder<S> setCooldownStartCallback(SkillCooldownStartCallback cooldownStartCallback) {
-            this.cooldownStartCallback = Objects.requireNonNull(cooldownStartCallback);
+        public Builder<S> setCooldownStartedCallback(SkillCooldownStartedCallback cooldownStartedCallback) {
+            this.cooldownStartedCallback = Objects.requireNonNull(cooldownStartedCallback);
             return this;
         }
 
-        public SkillEntityLoadCallback getEntityLoadCallback() {
-            return entityLoadCallback;
+        public SkillEntityLoadedCallback getEntityLoadedCallback() {
+            return entityLoadedCallback;
         }
 
-        public Builder<S> setEntityLoadCallback(SkillEntityLoadCallback entityLoadCallback) {
-            this.entityLoadCallback = Objects.requireNonNull(entityLoadCallback);
+        public Builder<S> setEntityLoadedCallback(SkillEntityLoadedCallback entityLoadedCallback) {
+            this.entityLoadedCallback = Objects.requireNonNull(entityLoadedCallback);
             return this;
         }
 
-        public SkillEntityUnloadCallback getEntityUnloadCallback() {
-            return entityUnloadCallback;
+        public SkillEntityUnloadingCallback getEntityUnloadingCallback() {
+            return entityUnloadingCallback;
         }
 
-        public Builder<S> setEntityUnloadCallback(SkillEntityUnloadCallback entityUnloadCallback) {
-            this.entityUnloadCallback = Objects.requireNonNull(entityUnloadCallback);
+        public Builder<S> setEntityUnloadingCallback(SkillEntityUnloadingCallback entityUnloadingCallback) {
+            this.entityUnloadingCallback = Objects.requireNonNull(entityUnloadingCallback);
             return this;
         }
 
-        public SkillRemoveCallback getRemoveCallback() {
-            return removeCallback;
+        public SkillRemovedCallback getRemovedCallback() {
+            return removedCallback;
         }
 
-        public Builder<S> setRemoveCallback(SkillRemoveCallback removeCallback) {
-            this.removeCallback = Objects.requireNonNull(removeCallback);
+        public Builder<S> setRemovedCallback(SkillRemovedCallback removedCallback) {
+            this.removedCallback = Objects.requireNonNull(removedCallback);
             return this;
         }
 
@@ -354,12 +354,12 @@ public final class Skill<S> {
                     interruptBehavior,
                     startBehavior,
                     tickBehavior,
-                    addCallback,
-                    cooldownEndCallback,
-                    cooldownStartCallback,
-                    entityLoadCallback,
-                    entityUnloadCallback,
-                    removeCallback,
+                    addedCallback,
+                    cooldownEndedCallback,
+                    cooldownStartedCallback,
+                    entityLoadedCallback,
+                    entityUnloadingCallback,
+                    removedCallback,
                     condition,
                     cancelPredicate,
                     interruptPredicate,

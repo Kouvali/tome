@@ -6,15 +6,15 @@ import org.kouv.tome.api.skill.SkillContext;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface SkillCooldownStartCallback {
-    static SkillCooldownStartCallback noOp() {
+public interface SkillCooldownEndedCallback {
+    static SkillCooldownEndedCallback noOp() {
         return context -> {};
     }
 
     void handle(SkillContext<?> context);
 
     @ApiStatus.NonExtendable
-    default SkillCooldownStartCallback andThen(SkillCooldownStartCallback after) {
+    default SkillCooldownEndedCallback andThen(SkillCooldownEndedCallback after) {
         Objects.requireNonNull(after);
         return context -> {
             handle(context);

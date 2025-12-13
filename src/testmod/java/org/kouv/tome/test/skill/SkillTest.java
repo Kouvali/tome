@@ -60,42 +60,42 @@ public final class SkillTest implements ModInitializer {
                             instance.getElapsedTime()
                     )
             )
-            .setAddCallback(context ->
+            .setAddedCallback(context ->
                     LOGGER.info(
                             "skill add behavior called: skill={}, source={}",
                             context.getSkill(),
                             context.getSource()
                     )
             )
-            .setCooldownEndCallback(context ->
+            .setCooldownEndedCallback(context ->
                     LOGGER.info(
                             "skill cooldown end behavior called: skill={}, source={}",
                             context.getSkill(),
                             context.getSource()
                     )
             )
-            .setCooldownStartCallback(context ->
+            .setCooldownStartedCallback(context ->
                     LOGGER.info(
                             "skill cooldown start behavior called: skill={}, source={}",
                             context.getSkill(),
                             context.getSource()
                     )
             )
-            .setEntityLoadCallback(context ->
+            .setEntityLoadedCallback(context ->
                     LOGGER.info(
                             "skill entity load behavior called: skill={}, source={}",
                             context.getSkill(),
                             context.getSource()
                     )
             )
-            .setEntityUnloadCallback(context ->
+            .setEntityUnloadingCallback(context ->
                     LOGGER.info(
                             "skill entity unload behavior called: skill={}, source={}",
                             context.getSkill(),
                             context.getSource()
                     )
             )
-            .setRemoveCallback(context ->
+            .setRemovedCallback(context ->
                     LOGGER.info(
                             "skill remove behavior called: skill={}, source={}",
                             context.getSkill(),

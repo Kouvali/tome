@@ -52,41 +52,41 @@ fun <S : Any> Skill.Builder<S>.tickBehavior(block: SkillInstance<out S>.() -> Un
 fun <S : Any> Skill.Builder<S>.noOpTickBehavior(): SkillTickBehavior<S> =
     noOpSkillTickBehavior<S>().also { tickBehavior = it }
 
-fun Skill.Builder<*>.addCallback(block: SkillContext<*>.() -> Unit): SkillAddCallback =
-    skillAddCallback(block).also { addCallback = it }
+fun Skill.Builder<*>.addedCallback(block: SkillContext<*>.() -> Unit): SkillAddedCallback =
+    skillAddedCallback(block).also { addedCallback = it }
 
-fun Skill.Builder<*>.noOpAddCallback(): SkillAddCallback =
-    noOpSkillAddCallback().also { addCallback = it }
+fun Skill.Builder<*>.noOpAddedCallback(): SkillAddedCallback =
+    noOpSkillAddedCallback().also { addedCallback = it }
 
-fun Skill.Builder<*>.cooldownEndCallback(block: SkillContext<*>.() -> Unit): SkillCooldownEndCallback =
-    skillCooldownEndCallback(block).also { cooldownEndCallback = it }
+fun Skill.Builder<*>.cooldownEndedCallback(block: SkillContext<*>.() -> Unit): SkillCooldownEndedCallback =
+    skillCooldownEndedCallback(block).also { cooldownEndedCallback = it }
 
-fun Skill.Builder<*>.noOpCooldownEndCallback(): SkillCooldownEndCallback =
-    noOpSkillCooldownEndCallback().also { cooldownEndCallback = it }
+fun Skill.Builder<*>.noOpCooldownEndedCallback(): SkillCooldownEndedCallback =
+    noOpSkillCooldownEndedCallback().also { cooldownEndedCallback = it }
 
-fun Skill.Builder<*>.cooldownStartCallback(block: SkillContext<*>.() -> Unit): SkillCooldownStartCallback =
-    skillCooldownStartCallback(block).also { cooldownStartCallback = it }
+fun Skill.Builder<*>.cooldownStartedCallback(block: SkillContext<*>.() -> Unit): SkillCooldownStartedCallback =
+    skillCooldownStartedCallback(block).also { cooldownStartedCallback = it }
 
-fun Skill.Builder<*>.noOpCooldownStartCallback(): SkillCooldownStartCallback =
-    noOpSkillCooldownStartCallback().also { cooldownStartCallback = it }
+fun Skill.Builder<*>.noOpCooldownStartedCallback(): SkillCooldownStartedCallback =
+    noOpSkillCooldownStartedCallback().also { cooldownStartedCallback = it }
 
-fun Skill.Builder<*>.entityLoadCallback(block: SkillContext<*>.() -> Unit): SkillEntityLoadCallback =
-    skillEntityLoadCallback(block).also { entityLoadCallback = it }
+fun Skill.Builder<*>.entityLoadedCallback(block: SkillContext<*>.() -> Unit): SkillEntityLoadedCallback =
+    skillEntityLoadedCallback(block).also { entityLoadedCallback = it }
 
-fun Skill.Builder<*>.noOpEntityLoadCallback(): SkillEntityLoadCallback =
-    noOpSkillEntityLoadCallback().also { entityLoadCallback = it }
+fun Skill.Builder<*>.noOpEntityLoadedCallback(): SkillEntityLoadedCallback =
+    noOpSkillEntityLoadedCallback().also { entityLoadedCallback = it }
 
-fun Skill.Builder<*>.entityUnloadCallback(block: SkillContext<*>.() -> Unit): SkillEntityUnloadCallback =
-    skillEntityUnloadCallback(block).also { entityUnloadCallback = it }
+fun Skill.Builder<*>.entityUnloadingCallback(block: SkillContext<*>.() -> Unit): SkillEntityUnloadingCallback =
+    skillEntityUnloadingCallback(block).also { entityUnloadingCallback = it }
 
-fun Skill.Builder<*>.noOpEntityUnloadCallback(): SkillEntityUnloadCallback =
-    noOpSkillEntityUnloadCallback().also { entityUnloadCallback = it }
+fun Skill.Builder<*>.noOpEntityUnloadingCallback(): SkillEntityUnloadingCallback =
+    noOpSkillEntityUnloadingCallback().also { entityUnloadingCallback = it }
 
-fun Skill.Builder<*>.removeCallback(block: SkillContext<*>.() -> Unit): SkillRemoveCallback =
-    skillRemoveCallback(block).also { removeCallback = it }
+fun Skill.Builder<*>.removedCallback(block: SkillContext<*>.() -> Unit): SkillRemovedCallback =
+    skillRemovedCallback(block).also { removedCallback = it }
 
-fun Skill.Builder<*>.noOpRemoveCallback(): SkillRemoveCallback =
-    noOpSkillRemoveCallback().also { removeCallback = it }
+fun Skill.Builder<*>.noOpRemovedCallback(): SkillRemovedCallback =
+    noOpSkillRemovedCallback().also { removedCallback = it }
 
 fun Skill.Builder<*>.condition(block: SkillContext<*>.() -> SkillResponse): SkillCondition =
     skillCondition(block).also { condition = it }
