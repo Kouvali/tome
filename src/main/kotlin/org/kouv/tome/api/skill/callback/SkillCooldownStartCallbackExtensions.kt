@@ -6,3 +6,5 @@ inline fun skillCooldownStartCallback(crossinline block: SkillContext<*>.() -> U
     SkillCooldownStartCallback { instance -> instance.block() }
 
 fun noOpSkillCooldownStartCallback(): SkillCooldownStartCallback = SkillCooldownStartCallback.noOp()
+
+operator fun SkillCooldownStartCallback.plus(block: SkillContext<*>.() -> Unit): SkillCooldownStartCallback = andThen(block)

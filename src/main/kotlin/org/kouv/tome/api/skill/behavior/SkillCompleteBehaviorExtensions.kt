@@ -6,3 +6,6 @@ inline fun <S : Any> skillCompleteBehavior(crossinline block: SkillInstance<out 
     SkillCompleteBehavior { instance -> instance.block() }
 
 fun <S : Any> noOpSkillCompleteBehavior(): SkillCompleteBehavior<S> = SkillCompleteBehavior.noOp()
+
+operator fun <S : Any> SkillCompleteBehavior<S>.plus(block: SkillInstance<out S>.() -> Unit): SkillCompleteBehavior<S> =
+    andThen(block)

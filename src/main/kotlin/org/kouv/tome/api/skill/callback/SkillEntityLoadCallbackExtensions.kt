@@ -6,3 +6,5 @@ inline fun skillEntityLoadCallback(crossinline block: SkillContext<*>.() -> Unit
     SkillEntityLoadCallback { instance -> instance.block() }
 
 fun noOpSkillEntityLoadCallback(): SkillEntityLoadCallback = SkillEntityLoadCallback.noOp()
+
+operator fun SkillEntityLoadCallback.plus(block: SkillContext<*>.() -> Unit): SkillEntityLoadCallback = andThen(block)

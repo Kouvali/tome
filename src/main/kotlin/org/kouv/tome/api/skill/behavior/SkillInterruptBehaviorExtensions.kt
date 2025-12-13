@@ -6,3 +6,6 @@ inline fun <S : Any> skillInterruptBehavior(crossinline block: SkillInstance<out
     SkillInterruptBehavior { instance -> instance.block() }
 
 fun <S : Any> noOpSkillInterruptBehavior(): SkillInterruptBehavior<S> = SkillInterruptBehavior.noOp()
+
+operator fun <S : Any> SkillInterruptBehavior<S>.plus(block: SkillInstance<out S>.() -> Unit): SkillInterruptBehavior<S> =
+    andThen(block)

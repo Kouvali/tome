@@ -6,3 +6,5 @@ inline fun skillRemoveCallback(crossinline block: SkillContext<*>.() -> Unit): S
     SkillRemoveCallback { instance -> instance.block() }
 
 fun noOpSkillRemoveCallback(): SkillRemoveCallback = SkillRemoveCallback.noOp()
+
+operator fun SkillRemoveCallback.plus(block: SkillContext<*>.() -> Unit): SkillRemoveCallback = andThen(block)
