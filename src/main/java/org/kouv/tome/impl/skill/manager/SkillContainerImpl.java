@@ -106,24 +106,24 @@ public final class SkillContainerImpl implements SkillContainer {
 
     private <S> void handleSkillAdded(RegistryEntry<? extends Skill<S>> skill) {
         SkillContext<S> context = createContext(skill);
-        skill.value().getAddBehavior().execute(context);
+        skill.value().getAddCallback().handle(context);
         SkillEvents.ADDED.invoker().onAdded(context);
     }
 
     private <S> void handleSkillRemoved(RegistryEntry<? extends Skill<S>> skill) {
         SkillContext<S> context = createContext(skill);
-        skill.value().getRemoveBehavior().execute(context);
+        skill.value().getRemoveCallback().handle(context);
         SkillEvents.REMOVED.invoker().onRemoved(context);
     }
 
     private <S> void handleEntityLoaded(RegistryEntry<? extends Skill<S>> skill) {
         SkillContext<S> context = createContext(skill);
-        skill.value().getEntityLoadBehavior().execute(context);
+        skill.value().getEntityLoadCallback().handle(context);
     }
 
     private <S> void handleEntityUnloading(RegistryEntry<? extends Skill<S>> skill) {
         SkillContext<S> context = createContext(skill);
-        skill.value().getEntityUnloadBehavior().execute(context);
+        skill.value().getEntityUnloadCallback().handle(context);
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {

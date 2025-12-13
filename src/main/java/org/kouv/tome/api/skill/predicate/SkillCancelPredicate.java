@@ -1,4 +1,4 @@
-package org.kouv.tome.api.skill.condition;
+package org.kouv.tome.api.skill.predicate;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.kouv.tome.api.skill.SkillInstance;
@@ -6,25 +6,25 @@ import org.kouv.tome.api.skill.SkillInstance;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface SkillInterruptCondition<S> {
-    static <S> SkillInterruptCondition<S> allowed() {
+public interface SkillCancelPredicate<S> {
+    static <S> SkillCancelPredicate<S> allowed() {
         return instance -> true;
     }
 
-    static <S> SkillInterruptCondition<S> denied() {
+    static <S> SkillCancelPredicate<S> denied() {
         return instance -> false;
     }
 
     boolean test(SkillInstance<? extends S> instance);
 
     @ApiStatus.NonExtendable
-    default SkillInterruptCondition<S> and(SkillInterruptCondition<? super S> other) {
+    default SkillCancelPredicate<S> and(SkillCancelPredicate<? super S> other) {
         Objects.requireNonNull(other);
         return instance -> test(instance) && other.test(instance);
     }
 
     @ApiStatus.NonExtendable
-    default SkillInterruptCondition<S> or(SkillInterruptCondition<? super S> other) {
+    default SkillCancelPredicate<S> or(SkillCancelPredicate<? super S> other) {
         Objects.requireNonNull(other);
         return instance -> test(instance) || other.test(instance);
     }

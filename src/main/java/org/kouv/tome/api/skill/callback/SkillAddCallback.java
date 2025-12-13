@@ -1,4 +1,4 @@
-package org.kouv.tome.api.skill.behavior;
+package org.kouv.tome.api.skill.callback;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.kouv.tome.api.skill.SkillContext;
@@ -6,19 +6,19 @@ import org.kouv.tome.api.skill.SkillContext;
 import java.util.Objects;
 
 @FunctionalInterface
-public interface SkillAddBehavior {
-    static SkillAddBehavior noOp() {
+public interface SkillAddCallback {
+    static SkillAddCallback noOp() {
         return context -> {};
     }
 
-    void execute(SkillContext<?> context);
+    void handle(SkillContext<?> context);
 
     @ApiStatus.NonExtendable
-    default SkillAddBehavior andThen(SkillAddBehavior after) {
+    default SkillAddCallback andThen(SkillAddCallback after) {
         Objects.requireNonNull(after);
         return context -> {
-            execute(context);
-            after.execute(context);
+            handle(context);
+            after.handle(context);
         };
     }
 }

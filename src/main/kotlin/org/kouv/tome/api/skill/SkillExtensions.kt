@@ -1,17 +1,20 @@
 package org.kouv.tome.api.skill
 
 import org.kouv.tome.api.skill.behavior.*
+import org.kouv.tome.api.skill.callback.*
 import org.kouv.tome.api.skill.condition.*
+import org.kouv.tome.api.skill.predicate.SkillCancelPredicate
+import org.kouv.tome.api.skill.predicate.SkillInterruptPredicate
+import org.kouv.tome.api.skill.predicate.allowedSkillCancelPredicate
+import org.kouv.tome.api.skill.predicate.allowedSkillInterruptPredicate
+import org.kouv.tome.api.skill.predicate.deniedSkillCancelPredicate
+import org.kouv.tome.api.skill.predicate.deniedSkillInterruptPredicate
+import org.kouv.tome.api.skill.predicate.skillCancelPredicate
+import org.kouv.tome.api.skill.predicate.skillInterruptPredicate
 import org.kouv.tome.api.skill.state.*
 
 inline fun <S : Any> skill(builderAction: Skill.Builder<S>.() -> Unit): Skill<S> =
     Skill.builder<S>().apply(builderAction).build()
-
-inline fun Skill.Builder<*>.addBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillAddBehavior =
-    skillAddBehavior(block).also { addBehavior = it }
-
-fun Skill.Builder<*>.noOpAddBehavior(): SkillAddBehavior =
-    noOpSkillAddBehavior().also { addBehavior = it }
 
 inline fun <S : Any> Skill.Builder<S>.cancelBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillCancelBehavior<S> =
     skillCancelBehavior(block).also { cancelBehavior = it }
@@ -25,47 +28,17 @@ inline fun <S : Any> Skill.Builder<S>.completeBehavior(crossinline block: SkillI
 fun <S : Any> Skill.Builder<S>.noOpCompleteBehavior(): SkillCompleteBehavior<S> =
     noOpSkillCompleteBehavior<S>().also { completeBehavior = it }
 
-inline fun Skill.Builder<*>.cooldownEndBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillCooldownEndBehavior =
-    skillCooldownEndBehavior(block).also { cooldownEndBehavior = it }
-
-fun Skill.Builder<*>.noOpCooldownEndBehavior(): SkillCooldownEndBehavior =
-    noOpSkillCooldownEndBehavior().also { cooldownEndBehavior = it }
-
-inline fun Skill.Builder<*>.cooldownStartBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillCooldownStartBehavior =
-    skillCooldownStartBehavior(block).also { cooldownStartBehavior = it }
-
-fun Skill.Builder<*>.noOpCooldownStartBehavior(): SkillCooldownStartBehavior =
-    noOpSkillCooldownStartBehavior().also { cooldownStartBehavior = it }
-
 inline fun <S : Any> Skill.Builder<S>.endBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillEndBehavior<S> =
     skillEndBehavior(block).also { endBehavior = it }
 
 fun <S : Any> Skill.Builder<S>.noOpEndBehavior(): SkillEndBehavior<S> =
     noOpSkillEndBehavior<S>().also { endBehavior = it }
 
-inline fun Skill.Builder<*>.entityLoadBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillEntityLoadBehavior =
-    skillEntityLoadBehavior(block).also { entityLoadBehavior = it }
-
-fun Skill.Builder<*>.noOpEntityLoadBehavior(): SkillEntityLoadBehavior =
-    noOpSkillEntityLoadBehavior().also { entityLoadBehavior = it }
-
-inline fun Skill.Builder<*>.entityUnloadBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillEntityUnloadBehavior =
-    skillEntityUnloadBehavior(block).also { entityUnloadBehavior = it }
-
-fun Skill.Builder<*>.noOpEntityUnloadBehavior(): SkillEntityUnloadBehavior =
-    noOpSkillEntityUnloadBehavior().also { entityUnloadBehavior = it }
-
 inline fun <S : Any> Skill.Builder<S>.interruptBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillInterruptBehavior<S> =
     skillInterruptBehavior(block).also { interruptBehavior = it }
 
 fun <S : Any> Skill.Builder<S>.noOpInterruptBehavior(): SkillInterruptBehavior<S> =
     noOpSkillInterruptBehavior<S>().also { interruptBehavior = it }
-
-inline fun Skill.Builder<*>.removeBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillRemoveBehavior =
-    skillRemoveBehavior(block).also { removeBehavior = it }
-
-fun Skill.Builder<*>.noOpRemoveBehavior(): SkillRemoveBehavior =
-    noOpSkillRemoveBehavior().also { removeBehavior = it }
 
 inline fun <S : Any> Skill.Builder<S>.startBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillStartBehavior<S> =
     skillStartBehavior(block).also { startBehavior = it }
@@ -79,14 +52,41 @@ inline fun <S : Any> Skill.Builder<S>.tickBehavior(crossinline block: SkillInsta
 fun <S : Any> Skill.Builder<S>.noOpTickBehavior(): SkillTickBehavior<S> =
     noOpSkillTickBehavior<S>().also { tickBehavior = it }
 
-inline fun <S : Any> Skill.Builder<S>.cancelCondition(crossinline block: SkillInstance<out S>.() -> Boolean): SkillCancelCondition<S> =
-    skillCancelCondition(block).also { cancelCondition = it }
+inline fun Skill.Builder<*>.addCallback(crossinline block: SkillContext<*>.() -> Unit): SkillAddCallback =
+    skillAddCallback(block).also { addCallback = it }
 
-fun <S : Any> Skill.Builder<S>.allowedCancelCondition(): SkillCancelCondition<S> =
-    allowedSkillCancelCondition<S>().also { cancelCondition = it }
+fun Skill.Builder<*>.noOpAddCallback(): SkillAddCallback =
+    noOpSkillAddCallback().also { addCallback = it }
 
-fun <S : Any> Skill.Builder<S>.deniedCancelCondition(): SkillCancelCondition<S> =
-    deniedSkillCancelCondition<S>().also { cancelCondition = it }
+inline fun Skill.Builder<*>.cooldownEndCallback(crossinline block: SkillContext<*>.() -> Unit): SkillCooldownEndCallback =
+    skillCooldownEndCallback(block).also { cooldownEndCallback = it }
+
+fun Skill.Builder<*>.noOpCooldownEndCallback(): SkillCooldownEndCallback =
+    noOpSkillCooldownEndCallback().also { cooldownEndCallback = it }
+
+inline fun Skill.Builder<*>.cooldownStartCallback(crossinline block: SkillContext<*>.() -> Unit): SkillCooldownStartCallback =
+    skillCooldownStartCallback(block).also { cooldownStartCallback = it }
+
+fun Skill.Builder<*>.noOpCooldownStartCallback(): SkillCooldownStartCallback =
+    noOpSkillCooldownStartCallback().also { cooldownStartCallback = it }
+
+inline fun Skill.Builder<*>.entityLoadCallback(crossinline block: SkillContext<*>.() -> Unit): SkillEntityLoadCallback =
+    skillEntityLoadCallback(block).also { entityLoadCallback = it }
+
+fun Skill.Builder<*>.noOpEntityLoadCallback(): SkillEntityLoadCallback =
+    noOpSkillEntityLoadCallback().also { entityLoadCallback = it }
+
+inline fun Skill.Builder<*>.entityUnloadCallback(crossinline block: SkillContext<*>.() -> Unit): SkillEntityUnloadCallback =
+    skillEntityUnloadCallback(block).also { entityUnloadCallback = it }
+
+fun Skill.Builder<*>.noOpEntityUnloadCallback(): SkillEntityUnloadCallback =
+    noOpSkillEntityUnloadCallback().also { entityUnloadCallback = it }
+
+inline fun Skill.Builder<*>.removeCallback(crossinline block: SkillContext<*>.() -> Unit): SkillRemoveCallback =
+    skillRemoveCallback(block).also { removeCallback = it }
+
+fun Skill.Builder<*>.noOpRemoveCallback(): SkillRemoveCallback =
+    noOpSkillRemoveCallback().also { removeCallback = it }
 
 inline fun Skill.Builder<*>.condition(crossinline block: SkillContext<*>.() -> SkillResponse): SkillCondition =
     skillCondition(block).also { condition = it }
@@ -103,14 +103,23 @@ fun Skill.Builder<*>.requireInGameCondition(): SkillCondition =
 fun Skill.Builder<*>.defaultCondition(): SkillCondition =
     defaultSkillCondition().also { condition = it }
 
-inline fun <S : Any> Skill.Builder<S>.interruptCondition(crossinline block: SkillInstance<out S>.() -> Boolean): SkillInterruptCondition<S> =
-    skillInterruptCondition(block).also { interruptCondition = it }
+inline fun <S : Any> Skill.Builder<S>.cancelPredicate(crossinline block: SkillInstance<out S>.() -> Boolean): SkillCancelPredicate<S> =
+    skillCancelPredicate(block).also { cancelPredicate = it }
 
-fun <S : Any> Skill.Builder<S>.allowedInterruptCondition(): SkillInterruptCondition<S> =
-    allowedSkillInterruptCondition<S>().also { interruptCondition = it }
+fun <S : Any> Skill.Builder<S>.allowedCancelPredicate(): SkillCancelPredicate<S> =
+    allowedSkillCancelPredicate<S>().also { cancelPredicate = it }
 
-fun <S : Any> Skill.Builder<S>.deniedInterruptCondition(): SkillInterruptCondition<S> =
-    deniedSkillInterruptCondition<S>().also { interruptCondition = it }
+fun <S : Any> Skill.Builder<S>.deniedCancelPredicate(): SkillCancelPredicate<S> =
+    deniedSkillCancelPredicate<S>().also { cancelPredicate = it }
+
+inline fun <S : Any> Skill.Builder<S>.interruptCondition(crossinline block: SkillInstance<out S>.() -> Boolean): SkillInterruptPredicate<S> =
+    skillInterruptPredicate(block).also { interruptPredicate = it }
+
+fun <S : Any> Skill.Builder<S>.allowedInterruptPredicate(): SkillInterruptPredicate<S> =
+    allowedSkillInterruptPredicate<S>().also { interruptPredicate = it }
+
+fun <S : Any> Skill.Builder<S>.deniedInterruptPredicate(): SkillInterruptPredicate<S> =
+    deniedSkillInterruptPredicate<S>().also { interruptPredicate = it }
 
 inline fun <S : Any> Skill.Builder<S>.stateFactory(crossinline block: SkillContext<*>.() -> SkillStateCreationResult<S>): SkillStateFactory<S> =
     skillStateFactory(block).also { stateFactory = it }

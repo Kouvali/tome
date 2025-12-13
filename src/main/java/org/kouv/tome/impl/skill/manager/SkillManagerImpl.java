@@ -122,7 +122,7 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> boolean executeCancel(SkillInstance<S> instance) {
-        if (!instance.getSkill().value().getCancelCondition().test(instance)) {
+        if (!instance.getSkill().value().getCancelPredicate().test(instance)) {
             return false;
         }
 
@@ -132,7 +132,7 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> boolean executeInterrupt(SkillInstance<S> instance) {
-        if (!instance.getSkill().value().getInterruptCondition().test(instance)) {
+        if (!instance.getSkill().value().getInterruptPredicate().test(instance)) {
             return false;
         }
 
