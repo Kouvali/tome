@@ -81,20 +81,6 @@ public final class SkillTest implements ModInitializer {
                             context.getSource()
                     )
             )
-            .setEntityLoadedCallback(context ->
-                    LOGGER.info(
-                            "skill entity load behavior called: skill={}, source={}",
-                            context.getSkill(),
-                            context.getSource()
-                    )
-            )
-            .setEntityUnloadingCallback(context ->
-                    LOGGER.info(
-                            "skill entity unload behavior called: skill={}, source={}",
-                            context.getSkill(),
-                            context.getSource()
-                    )
-            )
             .setRemovedCallback(context ->
                     LOGGER.info(
                             "skill remove behavior called: skill={}, source={}",

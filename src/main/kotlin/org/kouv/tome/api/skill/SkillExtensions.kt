@@ -70,18 +70,6 @@ fun Skill.Builder<*>.cooldownStartedCallback(block: SkillContext<*>.() -> Unit):
 fun Skill.Builder<*>.noOpCooldownStartedCallback(): SkillCooldownStartedCallback =
     noOpSkillCooldownStartedCallback().also { cooldownStartedCallback = it }
 
-fun Skill.Builder<*>.entityLoadedCallback(block: SkillContext<*>.() -> Unit): SkillEntityLoadedCallback =
-    skillEntityLoadedCallback(block).also { entityLoadedCallback = it }
-
-fun Skill.Builder<*>.noOpEntityLoadedCallback(): SkillEntityLoadedCallback =
-    noOpSkillEntityLoadedCallback().also { entityLoadedCallback = it }
-
-fun Skill.Builder<*>.entityUnloadingCallback(block: SkillContext<*>.() -> Unit): SkillEntityUnloadingCallback =
-    skillEntityUnloadingCallback(block).also { entityUnloadingCallback = it }
-
-fun Skill.Builder<*>.noOpEntityUnloadingCallback(): SkillEntityUnloadingCallback =
-    noOpSkillEntityUnloadingCallback().also { entityUnloadingCallback = it }
-
 fun Skill.Builder<*>.removedCallback(block: SkillContext<*>.() -> Unit): SkillRemovedCallback =
     skillRemovedCallback(block).also { removedCallback = it }
 

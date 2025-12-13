@@ -24,8 +24,6 @@ public final class Skill<S> {
     private final SkillAddedCallback addedCallback;
     private final SkillCooldownEndedCallback cooldownEndedCallback;
     private final SkillCooldownStartedCallback cooldownStartedCallback;
-    private final SkillEntityLoadedCallback entityLoadedCallback;
-    private final SkillEntityUnloadingCallback entityUnloadingCallback;
     private final SkillRemovedCallback removedCallback;
     private final SkillCondition condition;
     private final SkillCancelPredicate<S> cancelPredicate;
@@ -47,8 +45,6 @@ public final class Skill<S> {
             SkillAddedCallback addedCallback,
             SkillCooldownEndedCallback cooldownEndedCallback,
             SkillCooldownStartedCallback cooldownStartedCallback,
-            SkillEntityLoadedCallback entityLoadedCallback,
-            SkillEntityUnloadingCallback entityUnloadingCallback,
             SkillRemovedCallback removedCallback,
             SkillCondition condition,
             SkillCancelPredicate<S> cancelPredicate,
@@ -65,8 +61,6 @@ public final class Skill<S> {
         this.addedCallback = Objects.requireNonNull(addedCallback);
         this.cooldownEndedCallback = Objects.requireNonNull(cooldownEndedCallback);
         this.cooldownStartedCallback = Objects.requireNonNull(cooldownStartedCallback);
-        this.entityLoadedCallback = Objects.requireNonNull(entityLoadedCallback);
-        this.entityUnloadingCallback = Objects.requireNonNull(entityUnloadingCallback);
         this.removedCallback = Objects.requireNonNull(removedCallback);
         this.condition = Objects.requireNonNull(condition);
         this.cancelPredicate = Objects.requireNonNull(cancelPredicate);
@@ -113,14 +107,6 @@ public final class Skill<S> {
 
     public SkillCooldownStartedCallback getCooldownStartedCallback() {
         return cooldownStartedCallback;
-    }
-
-    public SkillEntityLoadedCallback getEntityLoadedCallback() {
-        return entityLoadedCallback;
-    }
-
-    public SkillEntityUnloadingCallback getEntityUnloadingCallback() {
-        return entityUnloadingCallback;
     }
 
     public SkillRemovedCallback getRemovedCallback() {
@@ -181,8 +167,6 @@ public final class Skill<S> {
         private SkillAddedCallback addedCallback = SkillAddedCallback.noOp();
         private SkillCooldownEndedCallback cooldownEndedCallback = SkillCooldownEndedCallback.noOp();
         private SkillCooldownStartedCallback cooldownStartedCallback = SkillCooldownStartedCallback.noOp();
-        private SkillEntityLoadedCallback entityLoadedCallback = SkillEntityLoadedCallback.noOp();
-        private SkillEntityUnloadingCallback entityUnloadingCallback = SkillEntityUnloadingCallback.noOp();
         private SkillRemovedCallback removedCallback = SkillRemovedCallback.noOp();
         private SkillCondition condition = SkillCondition.defaultConditions();
         private SkillCancelPredicate<S> cancelPredicate = SkillCancelPredicate.allowed();
@@ -274,24 +258,6 @@ public final class Skill<S> {
             return this;
         }
 
-        public SkillEntityLoadedCallback getEntityLoadedCallback() {
-            return entityLoadedCallback;
-        }
-
-        public Builder<S> setEntityLoadedCallback(SkillEntityLoadedCallback entityLoadedCallback) {
-            this.entityLoadedCallback = Objects.requireNonNull(entityLoadedCallback);
-            return this;
-        }
-
-        public SkillEntityUnloadingCallback getEntityUnloadingCallback() {
-            return entityUnloadingCallback;
-        }
-
-        public Builder<S> setEntityUnloadingCallback(SkillEntityUnloadingCallback entityUnloadingCallback) {
-            this.entityUnloadingCallback = Objects.requireNonNull(entityUnloadingCallback);
-            return this;
-        }
-
         public SkillRemovedCallback getRemovedCallback() {
             return removedCallback;
         }
@@ -357,8 +323,6 @@ public final class Skill<S> {
                     addedCallback,
                     cooldownEndedCallback,
                     cooldownStartedCallback,
-                    entityLoadedCallback,
-                    entityUnloadingCallback,
                     removedCallback,
                     condition,
                     cancelPredicate,
