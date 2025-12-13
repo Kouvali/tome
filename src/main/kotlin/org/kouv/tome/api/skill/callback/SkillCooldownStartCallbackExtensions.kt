@@ -2,9 +2,10 @@ package org.kouv.tome.api.skill.callback
 
 import org.kouv.tome.api.skill.SkillContext
 
-inline fun skillCooldownStartCallback(crossinline block: SkillContext<*>.() -> Unit): SkillCooldownStartCallback =
-    SkillCooldownStartCallback { instance -> instance.block() }
+fun skillCooldownStartCallback(block: SkillContext<*>.() -> Unit): SkillCooldownStartCallback =
+    SkillCooldownStartCallback(block)
 
 fun noOpSkillCooldownStartCallback(): SkillCooldownStartCallback = SkillCooldownStartCallback.noOp()
 
-operator fun SkillCooldownStartCallback.plus(block: SkillContext<*>.() -> Unit): SkillCooldownStartCallback = andThen(block)
+operator fun SkillCooldownStartCallback.plus(block: SkillContext<*>.() -> Unit): SkillCooldownStartCallback =
+    andThen(block)
