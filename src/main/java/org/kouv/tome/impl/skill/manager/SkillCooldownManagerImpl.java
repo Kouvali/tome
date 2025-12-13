@@ -3,13 +3,12 @@ package org.kouv.tome.impl.skill.manager;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.event.SkillEvents;
 import org.kouv.tome.api.skill.manager.SkillCooldownManager;
+import org.kouv.tome.api.skill.registry.SkillRegistries;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -18,13 +17,14 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class SkillCooldownManagerImpl implements SkillCooldownManager {
+    @SuppressWarnings("unchecked")
     public static final Codec<SkillCooldownManager> CODEC = RecordCodecBuilder.<SkillCooldownManagerImpl>create(instance ->
             instance.group(
-                            Codec.unboundedMap(Identifier.CODEC, Codec.INT)
+                            Codec.unboundedMap(SkillRegistries.SKILL.getEntryCodec(), Codec.INT)
                                     .fieldOf("cooldowns")
                                     .forGetter(cooldownManager ->
                                             Map.copyOf(
-                                                    cooldownManager.cooldowns
+                                                    (Map<RegistryEntry<Skill<?>>, Integer>) (Map<?, ?>) cooldownManager.cooldowns
                                             )
                                     )
                     )
@@ -34,11 +34,11 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
             cooldownManager -> (SkillCooldownManagerImpl) cooldownManager
     );
 
-    private final Map<Identifier, Integer> cooldowns;
+    private final Map<RegistryEntry<? extends Skill<?>>, Integer> cooldowns;
     private @Nullable LivingEntity source = null;
 
     private SkillCooldownManagerImpl(
-            Map<? extends Identifier, ? extends Integer> cooldowns
+            Map<? extends RegistryEntry<? extends Skill<?>>, ? extends Integer> cooldowns
     ) {
         this.cooldowns = new ConcurrentHashMap<>(Objects.requireNonNull(cooldowns));
     }
@@ -50,43 +50,25 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     @Override
     public boolean isCoolingDown(RegistryEntry<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
-        return isCoolingDown(getId(skill));
-    }
-
-    @Override
-    public boolean isCoolingDown(Identifier id) {
-        Objects.requireNonNull(id);
-        return getCooldown(id) > 0;
+        return getCooldown(skill) > 0;
     }
 
     @Override
     public int getCooldown(RegistryEntry<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
-        return getCooldown(getId(skill));
-    }
-
-    @Override
-    public int getCooldown(Identifier id) {
-        Objects.requireNonNull(id);
-        return cooldowns.getOrDefault(id, 0);
+        return cooldowns.getOrDefault(skill, 0);
     }
 
     @Override
     public void setCooldown(RegistryEntry<? extends Skill<?>> skill, int cooldown) {
         Objects.requireNonNull(skill);
-        setCooldown(getId(skill), cooldown);
-    }
-
-    @Override
-    public void setCooldown(Identifier id, int cooldown) {
-        Objects.requireNonNull(id);
         if (cooldown > 0) {
-            if (cooldowns.put(id, cooldown) == null) {
-                SkillEvents.COOLDOWN_STARTED.invoker().onCooldownStarted(getSourceOrThrow(), id);
+            if (cooldowns.put(skill, cooldown) == null) {
+                SkillEvents.COOLDOWN_STARTED.invoker().onCooldownStarted(getSourceOrThrow(), skill);
             }
         } else {
-            if (cooldowns.remove(id) != null) {
-                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(getSourceOrThrow(), id);
+            if (cooldowns.remove(skill) != null) {
+                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(getSourceOrThrow(), skill);
             }
         }
     }
@@ -100,9 +82,9 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     }
 
     public void update() {
-        Iterator<Map.Entry<Identifier, Integer>> iterator = cooldowns.entrySet().iterator();
+        Iterator<Map.Entry<RegistryEntry<? extends Skill<?>>, Integer>> iterator = cooldowns.entrySet().iterator();
         while (iterator.hasNext()) {
-            Map.Entry<Identifier, Integer> entry = iterator.next();
+            Map.Entry<RegistryEntry<? extends Skill<?>>, Integer> entry = iterator.next();
             if (entry.getValue() > 1) {
                 entry.setValue(entry.getValue() - 1);
             } else {
@@ -110,11 +92,6 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
                 SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(getSourceOrThrow(), entry.getKey());
             }
         }
-    }
-
-    private Identifier getId(RegistryEntry<? extends Skill<?>> skill) {
-        return skill.getKey().map(RegistryKey::getValue)
-                .orElseThrow();
     }
 
     private LivingEntity getSourceOrThrow() {

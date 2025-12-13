@@ -4,7 +4,6 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import org.kouv.tome.api.skill.Skill;
 
 public interface SkillEvents {
@@ -44,11 +43,11 @@ public interface SkillEvents {
 
     @FunctionalInterface
     interface CooldownStarted {
-        void onCooldownStarted(LivingEntity source, Identifier id);
+        void onCooldownStarted(LivingEntity source, RegistryEntry<? extends Skill<?>> skill);
     }
 
     @FunctionalInterface
     interface CooldownEnded {
-        void onCooldownEnded(LivingEntity source, Identifier id);
+        void onCooldownEnded(LivingEntity source, RegistryEntry<? extends Skill<?>> skill);
     }
 }

@@ -3,7 +3,6 @@ package org.kouv.tome.test.skill.event;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.event.SkillEvents;
 import org.slf4j.Logger;
@@ -36,15 +35,15 @@ public final class SkillEventsTest implements ModInitializer {
 
     public static final class TestCooldownStarted implements SkillEvents.CooldownStarted {
         @Override
-        public void onCooldownStarted(LivingEntity source, Identifier id) {
-            LOGGER.info("skill cooldown started: source={}, id={}", source, id);
+        public void onCooldownStarted(LivingEntity source, RegistryEntry<? extends Skill<?>> skill) {
+            LOGGER.info("skill cooldown started: source={}, skill={}", source, skill);
         }
     }
 
     public static final class TestCooldownEnded implements SkillEvents.CooldownEnded {
         @Override
-        public void onCooldownEnded(LivingEntity source, Identifier id) {
-            LOGGER.info("skill cooldown ended: source={}, id={}", source, id);
+        public void onCooldownEnded(LivingEntity source, RegistryEntry<? extends Skill<?>> skill) {
+            LOGGER.info("skill cooldown ended: source={}, skill={}", source, skill);
         }
     }
 }
