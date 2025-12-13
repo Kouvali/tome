@@ -7,6 +7,12 @@ import org.kouv.tome.api.skill.state.*
 inline fun <S : Any> skill(builderAction: Skill.Builder<S>.() -> Unit): Skill<S> =
     Skill.builder<S>().apply(builderAction).build()
 
+inline fun Skill.Builder<*>.addBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillAddBehavior =
+    skillAddBehavior(block).also { addBehavior = it }
+
+fun Skill.Builder<*>.noOpAddBehavior(): SkillAddBehavior =
+    noOpSkillAddBehavior().also { addBehavior = it }
+
 inline fun <S : Any> Skill.Builder<S>.cancelBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillCancelBehavior<S> =
     skillCancelBehavior(block).also { cancelBehavior = it }
 
@@ -19,11 +25,35 @@ inline fun <S : Any> Skill.Builder<S>.completeBehavior(crossinline block: SkillI
 fun <S : Any> Skill.Builder<S>.noOpCompleteBehavior(): SkillCompleteBehavior<S> =
     noOpSkillCompleteBehavior<S>().also { completeBehavior = it }
 
+inline fun Skill.Builder<*>.cooldownEndBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillCooldownEndBehavior =
+    skillCooldownEndBehavior(block).also { cooldownEndBehavior = it }
+
+fun Skill.Builder<*>.noOpCooldownEndBehavior(): SkillCooldownEndBehavior =
+    noOpSkillCooldownEndBehavior().also { cooldownEndBehavior = it }
+
+inline fun Skill.Builder<*>.cooldownStartBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillCooldownStartBehavior =
+    skillCooldownStartBehavior(block).also { cooldownStartBehavior = it }
+
+fun Skill.Builder<*>.noOpCooldownStartBehavior(): SkillCooldownStartBehavior =
+    noOpSkillCooldownStartBehavior().also { cooldownStartBehavior = it }
+
 inline fun <S : Any> Skill.Builder<S>.endBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillEndBehavior<S> =
     skillEndBehavior(block).also { endBehavior = it }
 
 fun <S : Any> Skill.Builder<S>.noOpEndBehavior(): SkillEndBehavior<S> =
     noOpSkillEndBehavior<S>().also { endBehavior = it }
+
+inline fun Skill.Builder<*>.entityLoadBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillEntityLoadBehavior =
+    skillEntityLoadBehavior(block).also { entityLoadBehavior = it }
+
+fun Skill.Builder<*>.noOpEntityLoadBehavior(): SkillEntityLoadBehavior =
+    noOpSkillEntityLoadBehavior().also { entityLoadBehavior = it }
+
+inline fun Skill.Builder<*>.entityUnloadBehavior(crossinline block: SkillContext<*>.() -> Unit): SkillEntityUnloadBehavior =
+    skillEntityUnloadBehavior(block).also { entityUnloadBehavior = it }
+
+fun Skill.Builder<*>.noOpEntityUnloadBehavior(): SkillEntityUnloadBehavior =
+    noOpSkillEntityUnloadBehavior().also { entityUnloadBehavior = it }
 
 inline fun <S : Any> Skill.Builder<S>.interruptBehavior(crossinline block: SkillInstance<out S>.() -> Unit): SkillInterruptBehavior<S> =
     skillInterruptBehavior(block).also { interruptBehavior = it }

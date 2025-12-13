@@ -67,13 +67,11 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
         Objects.requireNonNull(skill);
         if (cooldown > 0) {
             if (cooldowns.put(skill, cooldown) == null) {
-                SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) skill);
-                SkillEvents.COOLDOWN_STARTED.invoker().onCooldownStarted(context);
+                handleCooldownStarted((RegistryEntry<? extends Skill<Object>>) skill);
             }
         } else {
             if (cooldowns.remove(skill) != null) {
-                SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) skill);
-                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(context);
+                handleCooldownEnded((RegistryEntry<? extends Skill<Object>>) skill);
             }
         }
     }
@@ -95,11 +93,21 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
                 entry.setValue(entry.getValue() - 1);
             } else {
                 iterator.remove();
-
-                SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) entry.getKey());
-                SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(context);
+                handleCooldownEnded((RegistryEntry<? extends Skill<Object>>) entry.getKey());
             }
         }
+    }
+
+    private <S> void handleCooldownStarted(RegistryEntry<? extends Skill<S>> skill) {
+        SkillContext<?> context = createContext(skill);
+        skill.value().getCooldownStartBehavior().execute(context);
+        SkillEvents.COOLDOWN_STARTED.invoker().onCooldownStarted(context);
+    }
+
+    private <S> void handleCooldownEnded(RegistryEntry<? extends Skill<S>> skill) {
+        SkillContext<?> context = createContext(skill);
+        skill.value().getCooldownEndBehavior().execute(context);
+        SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(context);
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {

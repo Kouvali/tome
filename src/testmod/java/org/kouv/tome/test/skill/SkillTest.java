@@ -15,6 +15,13 @@ public final class SkillTest implements ModInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(SkillTest.class);
 
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
+            .setAddBehavior(context ->
+                    LOGGER.info(
+                            "skill add behavior called: skill={}, source={}",
+                            context.getSkill(),
+                            context.getSource()
+                    )
+            )
             .setCancelBehavior(instance ->
                     LOGGER.info(
                             "skill cancel behavior called: state={}, elapsedTime={}",
@@ -32,6 +39,20 @@ public final class SkillTest implements ModInitializer {
                         instance.getElapsedTime()
                 );
             })
+            .setCooldownEndBehavior(context ->
+                    LOGGER.info(
+                            "skill cooldown end behavior called: skill={}, source={}",
+                            context.getSkill(),
+                            context.getSource()
+                    )
+            )
+            .setCooldownStartBehavior(context ->
+                    LOGGER.info(
+                            "skill cooldown start behavior called: skill={}, source={}",
+                            context.getSkill(),
+                            context.getSource()
+                    )
+            )
             .setEndBehavior(instance ->
                     LOGGER.info(
                             "skill end behavior called: state={}, elapsedTime={}",
@@ -44,6 +65,27 @@ public final class SkillTest implements ModInitializer {
                             "skill interrupt behavior called: state={}, elapsedTime={}",
                             instance.getState(),
                             instance.getElapsedTime()
+                    )
+            )
+            .setEntityLoadBehavior(context ->
+                    LOGGER.info(
+                            "skill entity load behavior called: skill={}, source={}",
+                            context.getSkill(),
+                            context.getSource()
+                    )
+            )
+            .setEntityUnloadBehavior(context ->
+                    LOGGER.info(
+                            "skill entity unload behavior called: skill={}, source={}",
+                            context.getSkill(),
+                            context.getSource()
+                    )
+            )
+            .setRemoveBehavior(context ->
+                    LOGGER.info(
+                            "skill remove behavior called: skill={}, source={}",
+                            context.getSkill(),
+                            context.getSource()
                     )
             )
             .setStartBehavior(instance ->

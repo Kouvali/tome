@@ -64,8 +64,7 @@ public final class SkillContainerImpl implements SkillContainer {
         Objects.requireNonNull(skill);
         boolean added = skills.add(skill);
         if (added) {
-            SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) skill);
-            SkillEvents.ADDED.invoker().onAdded(context);
+            handleSkillAdded((RegistryEntry<? extends Skill<Object>>) skill);
         }
 
         return added;
@@ -77,8 +76,7 @@ public final class SkillContainerImpl implements SkillContainer {
         Objects.requireNonNull(skill);
         boolean removed = skills.remove(skill);
         if (removed) {
-            SkillContext<?> context = createContext((RegistryEntry<? extends Skill<Object>>) skill);
-            SkillEvents.REMOVED.invoker().onRemoved(context);
+            handleSkillRemoved((RegistryEntry<? extends Skill<Object>>) skill);
         }
 
         return removed;
@@ -90,6 +88,42 @@ public final class SkillContainerImpl implements SkillContainer {
 
     public void setSource(LivingEntity source) {
         this.source = Objects.requireNonNull(source);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void notifyEntityLoaded() {
+        for (RegistryEntry<? extends Skill<?>> skill : skills) {
+            handleEntityLoaded((RegistryEntry<? extends Skill<Object>>) skill);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void notifyEntityUnloading() {
+        for (RegistryEntry<? extends Skill<?>> skill : skills) {
+            handleEntityUnloading((RegistryEntry<? extends Skill<Object>>) skill);
+        }
+    }
+
+    private <S> void handleSkillAdded(RegistryEntry<? extends Skill<S>> skill) {
+        SkillContext<S> context = createContext(skill);
+        skill.value().getAddBehavior().execute(context);
+        SkillEvents.ADDED.invoker().onAdded(context);
+    }
+
+    private <S> void handleSkillRemoved(RegistryEntry<? extends Skill<S>> skill) {
+        SkillContext<S> context = createContext(skill);
+        skill.value().getRemoveBehavior().execute(context);
+        SkillEvents.REMOVED.invoker().onRemoved(context);
+    }
+
+    private <S> void handleEntityLoaded(RegistryEntry<? extends Skill<S>> skill) {
+        SkillContext<S> context = createContext(skill);
+        skill.value().getEntityLoadBehavior().execute(context);
+    }
+
+    private <S> void handleEntityUnloading(RegistryEntry<? extends Skill<S>> skill) {
+        SkillContext<S> context = createContext(skill);
+        skill.value().getEntityUnloadBehavior().execute(context);
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {

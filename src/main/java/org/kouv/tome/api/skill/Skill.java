@@ -14,12 +14,18 @@ import org.kouv.tome.api.skill.state.SkillStateFactory;
 import java.util.Objects;
 
 public final class Skill<S> {
+    private final SkillAddBehavior addBehavior;
     private final SkillCancelBehavior<S> cancelBehavior;
     private final SkillCompleteBehavior<S> completeBehavior;
+    private final SkillCooldownEndBehavior cooldownEndBehavior;
+    private final SkillCooldownStartBehavior cooldownStartBehavior;
     private final SkillEndBehavior<S> endBehavior;
     private final SkillInterruptBehavior<S> interruptBehavior;
+    private final SkillEntityLoadBehavior entityLoadBehavior;
+    private final SkillRemoveBehavior removeBehavior;
     private final SkillStartBehavior<S> startBehavior;
     private final SkillTickBehavior<S> tickBehavior;
+    private final SkillEntityUnloadBehavior entityUnloadBehavior;
     private final SkillCancelCondition<S> cancelCondition;
     private final SkillCondition condition;
     private final SkillInterruptCondition<S> interruptCondition;
@@ -31,10 +37,16 @@ public final class Skill<S> {
     private @Nullable Text name;
 
     private Skill(
+            SkillAddBehavior addBehavior,
             SkillCancelBehavior<S> cancelBehavior,
             SkillCompleteBehavior<S> completeBehavior,
+            SkillCooldownEndBehavior cooldownEndBehavior,
+            SkillCooldownStartBehavior cooldownStartBehavior,
             SkillEndBehavior<S> endBehavior,
             SkillInterruptBehavior<S> interruptBehavior,
+            SkillEntityLoadBehavior entityLoadBehavior,
+            SkillEntityUnloadBehavior entityUnloadBehavior,
+            SkillRemoveBehavior removeBehavior,
             SkillStartBehavior<S> startBehavior,
             SkillTickBehavior<S> tickBehavior,
             SkillCancelCondition<S> cancelCondition,
@@ -43,12 +55,18 @@ public final class Skill<S> {
             SkillStateFactory<S> stateFactory,
             int totalDuration
     ) {
+        this.addBehavior = Objects.requireNonNull(addBehavior);
         this.cancelBehavior = Objects.requireNonNull(cancelBehavior);
         this.completeBehavior = Objects.requireNonNull(completeBehavior);
+        this.cooldownEndBehavior = Objects.requireNonNull(cooldownEndBehavior);
+        this.cooldownStartBehavior = Objects.requireNonNull(cooldownStartBehavior);
         this.endBehavior = Objects.requireNonNull(endBehavior);
         this.interruptBehavior = Objects.requireNonNull(interruptBehavior);
+        this.entityLoadBehavior = Objects.requireNonNull(entityLoadBehavior);
+        this.removeBehavior = Objects.requireNonNull(removeBehavior);
         this.startBehavior = Objects.requireNonNull(startBehavior);
         this.tickBehavior = Objects.requireNonNull(tickBehavior);
+        this.entityUnloadBehavior = Objects.requireNonNull(entityUnloadBehavior);
         this.cancelCondition = Objects.requireNonNull(cancelCondition);
         this.condition = Objects.requireNonNull(condition);
         this.interruptCondition = Objects.requireNonNull(interruptCondition);
@@ -60,6 +78,10 @@ public final class Skill<S> {
         return new Builder<>();
     }
 
+    public SkillAddBehavior getAddBehavior() {
+        return addBehavior;
+    }
+
     public SkillCancelBehavior<S> getCancelBehavior() {
         return cancelBehavior;
     }
@@ -68,12 +90,32 @@ public final class Skill<S> {
         return completeBehavior;
     }
 
+    public SkillCooldownEndBehavior getCooldownEndBehavior() {
+        return cooldownEndBehavior;
+    }
+
+    public SkillCooldownStartBehavior getCooldownStartBehavior() {
+        return cooldownStartBehavior;
+    }
+
     public SkillEndBehavior<S> getEndBehavior() {
         return endBehavior;
     }
 
     public SkillInterruptBehavior<S> getInterruptBehavior() {
         return interruptBehavior;
+    }
+
+    public SkillEntityLoadBehavior getEntityLoadBehavior() {
+        return entityLoadBehavior;
+    }
+
+    public SkillEntityUnloadBehavior getEntityUnloadBehavior() {
+        return entityUnloadBehavior;
+    }
+
+    public SkillRemoveBehavior getRemoveBehavior() {
+        return removeBehavior;
     }
 
     public SkillStartBehavior<S> getStartBehavior() {
@@ -129,10 +171,16 @@ public final class Skill<S> {
     }
 
     public static final class Builder<S> {
+        private SkillAddBehavior addBehavior = SkillAddBehavior.noOp();
         private SkillCancelBehavior<S> cancelBehavior = SkillCancelBehavior.noOp();
         private SkillCompleteBehavior<S> completeBehavior = SkillCompleteBehavior.noOp();
+        private SkillCooldownEndBehavior cooldownEndBehavior = SkillCooldownEndBehavior.noOp();
+        private SkillCooldownStartBehavior cooldownStartBehavior = SkillCooldownStartBehavior.noOp();
         private SkillEndBehavior<S> endBehavior = SkillEndBehavior.noOp();
         private SkillInterruptBehavior<S> interruptBehavior = SkillInterruptBehavior.noOp();
+        private SkillEntityLoadBehavior entityLoadBehavior = SkillEntityLoadBehavior.noOp();
+        private SkillEntityUnloadBehavior entityUnloadBehavior = SkillEntityUnloadBehavior.noOp();
+        private SkillRemoveBehavior removeBehavior = SkillRemoveBehavior.noOp();
         private SkillStartBehavior<S> startBehavior = SkillStartBehavior.noOp();
         private SkillTickBehavior<S> tickBehavior = SkillTickBehavior.noOp();
         private SkillCancelCondition<S> cancelCondition = SkillCancelCondition.allowed();
@@ -142,6 +190,15 @@ public final class Skill<S> {
         private int totalDuration = 0;
 
         private Builder() {
+        }
+
+        public SkillAddBehavior getAddBehavior() {
+            return addBehavior;
+        }
+
+        public Builder<S> setAddBehavior(SkillAddBehavior addBehavior) {
+            this.addBehavior = Objects.requireNonNull(addBehavior);
+            return this;
         }
 
         public SkillCancelBehavior<S> getCancelBehavior() {
@@ -162,6 +219,24 @@ public final class Skill<S> {
             return this;
         }
 
+        public SkillCooldownEndBehavior getCooldownEndBehavior() {
+            return cooldownEndBehavior;
+        }
+
+        public Builder<S> setCooldownEndBehavior(SkillCooldownEndBehavior cooldownEndBehavior) {
+            this.cooldownEndBehavior = Objects.requireNonNull(cooldownEndBehavior);
+            return this;
+        }
+
+        public SkillCooldownStartBehavior getCooldownStartBehavior() {
+            return cooldownStartBehavior;
+        }
+
+        public Builder<S> setCooldownStartBehavior(SkillCooldownStartBehavior cooldownStartBehavior) {
+            this.cooldownStartBehavior = Objects.requireNonNull(cooldownStartBehavior);
+            return this;
+        }
+
         public SkillEndBehavior<S> getEndBehavior() {
             return endBehavior;
         }
@@ -177,6 +252,33 @@ public final class Skill<S> {
 
         public Builder<S> setInterruptBehavior(SkillInterruptBehavior<S> interruptBehavior) {
             this.interruptBehavior = Objects.requireNonNull(interruptBehavior);
+            return this;
+        }
+
+        public SkillEntityLoadBehavior getEntityLoadBehavior() {
+            return entityLoadBehavior;
+        }
+
+        public Builder<S> setEntityLoadBehavior(SkillEntityLoadBehavior entityLoadBehavior) {
+            this.entityLoadBehavior = Objects.requireNonNull(entityLoadBehavior);
+            return this;
+        }
+
+        public SkillEntityUnloadBehavior getEntityUnloadBehavior() {
+            return entityUnloadBehavior;
+        }
+
+        public Builder<S> setEntityUnloadBehavior(SkillEntityUnloadBehavior entityUnloadBehavior) {
+            this.entityUnloadBehavior = Objects.requireNonNull(entityUnloadBehavior);
+            return this;
+        }
+
+        public SkillRemoveBehavior getRemoveBehavior() {
+            return removeBehavior;
+        }
+
+        public Builder<S> setRemoveBehavior(SkillRemoveBehavior removeBehavior) {
+            this.removeBehavior = Objects.requireNonNull(removeBehavior);
             return this;
         }
 
@@ -245,10 +347,16 @@ public final class Skill<S> {
 
         public Skill<S> build() {
             return new Skill<>(
+                    addBehavior,
                     cancelBehavior,
                     completeBehavior,
+                    cooldownEndBehavior,
+                    cooldownStartBehavior,
                     endBehavior,
                     interruptBehavior,
+                    entityLoadBehavior,
+                    entityUnloadBehavior,
+                    removeBehavior,
                     startBehavior,
                     tickBehavior,
                     cancelCondition,

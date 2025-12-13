@@ -6,6 +6,7 @@ import org.kouv.tome.api.skill.attachment.SkillAttachments;
 import org.kouv.tome.api.skill.registry.SkillRegistries;
 import org.kouv.tome.api.skill.registry.SkillRegistryKeys;
 import org.kouv.tome.impl.skill.command.SkillCommand;
+import org.kouv.tome.impl.skill.event.SkillEventHandlers;
 
 public final class SkillEntrypoint implements ModInitializer {
     @Override
@@ -16,5 +17,6 @@ public final class SkillEntrypoint implements ModInitializer {
         SkillAttachments.initialize();
         SkillRegistries.initialize();
         SkillRegistryKeys.initialize();
+        SkillEventHandlers.initialize();
     }
 }
