@@ -44,16 +44,16 @@ Skill<Vec3d> exampleSkill = Skill.<Vec3d>builder()
                         context.getSource().getRotationVector()
                 )
         )
-        .setTickBehavior(context -> {
-            context.getSource().setVelocity(context.getState());
-            context.getSource().velocityModified = true;
+        .setTickBehavior(instance -> {
+            instance.getSource().setVelocity(instance.getState());
+            instance.getSource().velocityModified = true;
         })
-        .setCompleteBehavior(context -> {
-            context.getSource().setVelocity(Vec3d.ZERO);
-            context.getSource().velocityModified = true;
+        .setCompleteBehavior(instance -> {
+            instance.getSource().setVelocity(Vec3d.ZERO);
+            instance.getSource().velocityModified = true;
         })
-        .setInterruptCondition(context ->
-                !context.getSource().isInvulnerable()
+        .setInterruptPredicate(instance ->
+                !instance.getSource().isInvulnerable()
         )
         .setTotalDuration(10)
         .build();
