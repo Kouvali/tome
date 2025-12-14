@@ -11,10 +11,18 @@ public final class SkillEventsTest implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        SkillEvents.LOADED.register(new TestLoaded());
         SkillEvents.ADDED.register(new TestAdded());
         SkillEvents.REMOVED.register(new TestRemoved());
         SkillEvents.COOLDOWN_STARTED.register(new TestCooldownStarted());
         SkillEvents.COOLDOWN_ENDED.register(new TestCooldownEnded());
+    }
+
+    public static final class TestLoaded implements SkillEvents.Loaded {
+        @Override
+        public void onLoaded(SkillContext<?> context) {
+            LOGGER.info("skill loaded: context={}", context);
+        }
     }
 
     public static final class TestAdded implements SkillEvents.Added {

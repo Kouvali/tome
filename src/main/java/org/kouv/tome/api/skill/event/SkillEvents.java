@@ -5,6 +5,12 @@ import net.fabricmc.fabric.api.event.EventFactory;
 import org.kouv.tome.api.skill.SkillContext;
 
 public interface SkillEvents {
+    Event<Loaded> LOADED = EventFactory.createArrayBacked(Loaded.class, callbacks -> (context) -> {
+        for (Loaded callback : callbacks) {
+            callback.onLoaded(context);
+        }
+    });
+
     Event<Added> ADDED = EventFactory.createArrayBacked(Added.class, callbacks -> (context) -> {
         for (Added callback : callbacks) {
             callback.onAdded(context);
@@ -28,6 +34,11 @@ public interface SkillEvents {
             callback.onCooldownEnded(context);
         }
     });
+
+    @FunctionalInterface
+    interface Loaded {
+        void onLoaded(SkillContext<?> context);
+    }
 
     @FunctionalInterface
     interface Added {

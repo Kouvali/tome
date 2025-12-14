@@ -90,6 +90,13 @@ public final class SkillContainerImpl implements SkillContainer {
         this.source = Objects.requireNonNull(source);
     }
 
+    @SuppressWarnings("unchecked")
+    public void refresh() {
+        for (RegistryEntry<? extends Skill<?>> skill : skills) {
+            handleSkillLoaded((RegistryEntry<? extends Skill<Object>>) skill);
+        }
+    }
+
     private <S> void handleSkillAdded(RegistryEntry<? extends Skill<S>> skill) {
         SkillContext<S> context = createContext(skill);
         skill.value().getAddedCallback().handle(context);
@@ -100,6 +107,12 @@ public final class SkillContainerImpl implements SkillContainer {
         SkillContext<S> context = createContext(skill);
         skill.value().getRemovedCallback().handle(context);
         SkillEvents.REMOVED.invoker().onRemoved(context);
+    }
+
+    private <S> void handleSkillLoaded(RegistryEntry<? extends Skill<S>> skill) {
+        SkillContext<S> context = createContext(skill);
+        skill.value().getLoadedCallback().handle(context);
+        SkillEvents.LOADED.invoker().onLoaded(context);
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {

@@ -70,6 +70,12 @@ fun Skill.Builder<*>.cooldownStartedCallback(block: SkillContext<*>.() -> Unit):
 fun Skill.Builder<*>.noOpCooldownStartedCallback(): SkillCooldownStartedCallback =
     noOpSkillCooldownStartedCallback().also { cooldownStartedCallback = it }
 
+fun Skill.Builder<*>.loadedCallback(block: SkillContext<*>.() -> Unit): SkillLoadedCallback =
+    skillLoadedCallback(block).also { loadedCallback = it }
+
+fun Skill.Builder<*>.noOpLoadedCallback(): SkillLoadedCallback =
+    noOpSkillLoadedCallback().also { loadedCallback = it }
+
 fun Skill.Builder<*>.removedCallback(block: SkillContext<*>.() -> Unit): SkillRemovedCallback =
     skillRemovedCallback(block).also { removedCallback = it }
 

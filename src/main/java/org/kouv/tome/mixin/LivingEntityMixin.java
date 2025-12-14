@@ -88,6 +88,17 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
         }
     }
 
+    @Inject(method = "tick", at = @At(value = "HEAD"))
+    private void tome$firstTick(CallbackInfo ci) {
+        if (getEntityWorld().isClient()) {
+            return;
+        }
+
+        if (firstUpdate) {
+            ((SkillContainerImpl) getSkillContainer()).refresh();
+        }
+    }
+
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void tome$tick(CallbackInfo ci) {
         if (getEntityWorld().isClient()) {
