@@ -65,7 +65,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
     }
 
     @Inject(method = "onDeath", at = @At(value = "TAIL"))
-    private void tome$onDeath(DamageSource damageSource, CallbackInfo ci) {
+    private void tome$stopCasting(DamageSource damageSource, CallbackInfo ci) {
         if (getEntityWorld().isClient()) {
             return;
         }
@@ -77,7 +77,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
     }
 
     @Inject(method = "onRemove", at = @At(value = "TAIL"))
-    private void tome$onRemove(RemovalReason reason, CallbackInfo ci) {
+    private void tome$stopCasting(RemovalReason reason, CallbackInfo ci) {
         if (getEntityWorld().isClient()) {
             return;
         }
@@ -89,7 +89,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
     }
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
-    private void tome$firstTick(CallbackInfo ci) {
+    private void tome$refresh(CallbackInfo ci) {
         if (getEntityWorld().isClient()) {
             return;
         }
@@ -100,7 +100,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
     }
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
-    private void tome$tick(CallbackInfo ci) {
+    private void tome$update(CallbackInfo ci) {
         if (getEntityWorld().isClient()) {
             return;
         }

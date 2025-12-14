@@ -18,7 +18,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity {
     }
 
     @Inject(method = "onDeath", at = @At(value = "TAIL"))
-    private void tome$onDeath(DamageSource damageSource, CallbackInfo ci) {
+    private void tome$stopCasting(DamageSource damageSource, CallbackInfo ci) {
         if (getEntityWorld().isClient()) {
             return;
         }
