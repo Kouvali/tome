@@ -25,4 +25,12 @@ public final class SkillContextImpl<S> implements SkillContext<S> {
     public LivingEntity getSource() {
         return source;
     }
+
+    @Override
+    public String toString() {
+        return "SkillContextImpl{" +
+                "skill=" + skill +
+                ", source=" + source +
+                '}';
+    }
 }

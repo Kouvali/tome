@@ -65,4 +65,15 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     public void update() {
         elapsedTime++;
     }
+
+    @Override
+    public String toString() {
+        return "SkillInstanceImpl{" +
+                "context=" + context +
+                ", state=" + state +
+                ", shouldComplete=" + shouldComplete +
+                ", totalDuration=" + totalDuration +
+                ", elapsedTime=" + elapsedTime +
+                '}';
+    }
 }
