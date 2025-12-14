@@ -17,9 +17,8 @@ public final class SkillTest implements ModInitializer {
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
             .setCancelBehavior(instance ->
                     LOGGER.info(
-                            "skill cancel behavior called: state={}, elapsedTime={}",
-                            instance.getState(),
-                            instance.getElapsedTime()
+                            "SkillCancelBehavior called: instance={}",
+                            instance
                     )
             )
             .setCompleteBehavior(instance -> {
@@ -27,80 +26,69 @@ public final class SkillTest implements ModInitializer {
                 instance.getSource().setVelocity(instance.getState().rotation());
                 instance.getSource().velocityModified = true;
                 LOGGER.info(
-                        "skill complete behavior called: state={}, elapsedTime={}",
-                        instance.getState(),
-                        instance.getElapsedTime()
+                        "SkillCompleteBehavior called: instance={}",
+                        instance
                 );
             })
             .setEndBehavior(instance ->
                     LOGGER.info(
-                            "skill end behavior called: state={}, elapsedTime={}",
-                            instance.getState(),
-                            instance.getElapsedTime()
+                            "SkillEndBehavior called: instance={}",
+                            instance
                     )
             )
             .setInterruptBehavior(instance ->
                     LOGGER.info(
-                            "skill interrupt behavior called: state={}, elapsedTime={}",
-                            instance.getState(),
-                            instance.getElapsedTime()
+                            "SkillInterruptBehavior called: instance={}",
+                            instance
                     )
             )
             .setStartBehavior(instance ->
                     LOGGER.info(
-                            "skill start behavior called: state={}, elapsedTime={}",
-                            instance.getState(),
-                            instance.getElapsedTime()
+                            "SkillStartBehavior called: instance={}",
+                            instance
                     )
             )
             .setTickBehavior(instance ->
                     LOGGER.info(
-                            "skill tick behavior called: state={}, elapsedTime={}",
-                            instance.getState(),
-                            instance.getElapsedTime()
+                            "SkillTickBehavior called: instance={}",
+                            instance
                     )
             )
             .setAddedCallback(context ->
                     LOGGER.info(
-                            "skill add behavior called: skill={}, source={}",
-                            context.getSkill(),
-                            context.getSource()
+                            "SkillAddedCallback called: context={}",
+                            context
                     )
             )
             .setCooldownEndedCallback(context ->
                     LOGGER.info(
-                            "skill cooldown end behavior called: skill={}, source={}",
-                            context.getSkill(),
-                            context.getSource()
+                            "SkillCooldownEndedCallback called: context={}",
+                            context
                     )
             )
             .setCooldownStartedCallback(context ->
                     LOGGER.info(
-                            "skill cooldown start behavior called: skill={}, source={}",
-                            context.getSkill(),
-                            context.getSource()
+                            "SkillCooldownStartedCallback called: context={}",
+                            context
                     )
             )
             .setLoadedCallback(context ->
                     LOGGER.info(
-                            "skill loaded behavior called: skill={}, source={}",
-                            context.getSkill(),
-                            context.getSource()
+                            "SkillLoadedCallback called: context={}",
+                            context.getSkill()
                     )
             )
             .setRemovedCallback(context ->
                     LOGGER.info(
-                            "skill remove behavior called: skill={}, source={}",
-                            context.getSkill(),
-                            context.getSource()
+                            "SkillRemovedCallback called: context={}",
+                            context
                     )
             )
             .setCondition(context -> {
                 SkillResponse response = SkillCondition.defaultConditions().test(context);
                 LOGGER.info(
-                        "skill condition called: skill={}, source={}, response={}",
-                        context.getSkill(),
-                        context.getSource(),
+                        "SkillCondition called: context={}, response={}",
+                        context,
                         response
                 );
                 return response;
@@ -108,9 +96,8 @@ public final class SkillTest implements ModInitializer {
             .setCancelPredicate(instance -> {
                 boolean cancelled = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill cancel condition called: state={}, elapsedTime={}, cancelled={}",
-                        instance.getState(),
-                        instance.getElapsedTime(),
+                        "SkillCancelPredicate called: instance={}, cancelled={}",
+                        instance,
                         cancelled
                 );
                 return cancelled;
@@ -118,9 +105,8 @@ public final class SkillTest implements ModInitializer {
             .setInterruptPredicate(instance -> {
                 boolean interrupted = !instance.getSource().isOnGround();
                 LOGGER.info(
-                        "skill interrupt condition called: state={}, elapsedTime={}, interrupted={}",
-                        instance.getState(),
-                        instance.getElapsedTime(),
+                        "SkillInterruptPredicate called: instance={}, interrupted={}",
+                        instance,
                         interrupted
                 );
                 return interrupted;
@@ -129,9 +115,8 @@ public final class SkillTest implements ModInitializer {
                 SkillStateCreationResult<TestState> creationResult =
                         SkillStateCreationResult.ok(new TestState(context.getSource().getRotationVector()));
                 LOGGER.info(
-                        "skill state factory called: skill={}, source={}, creationResult={}",
-                        context.getSkill(),
-                        context.getSource(),
+                        "SkillStateFactory called: context={}, creationResult={}",
+                        context,
                         creationResult
                 );
                 return creationResult;
