@@ -3,11 +3,11 @@ package org.kouv.tome.api.skill.state
 import org.kouv.tome.api.skill.SkillContext
 import org.kouv.tome.api.skill.SkillResponse
 
-inline fun <S : Any> skillStateFactory(crossinline block: SkillContext<*>.() -> SkillStateCreationResult<S>): SkillStateFactory<S> =
-    SkillStateFactory { context -> context.block() }
+fun <S : Any> skillStateFactory(block: SkillContext<*>.() -> SkillStateCreationResult<S>): SkillStateFactory<S> =
+    SkillStateFactory(block)
 
-inline fun <S : Any> alwaysOkSkillStateFactory(crossinline block: SkillContext<*>.() -> S): SkillStateFactory<S> =
-    SkillStateFactory.alwaysOk { context -> context.block() }
+fun <S : Any> alwaysOkSkillStateFactory(block: SkillContext<*>.() -> S): SkillStateFactory<S> =
+    SkillStateFactory.alwaysOk(block)
 
-inline fun <S : Any> alwaysErrorSkillStateFactory(crossinline block: SkillContext<*>.() -> SkillResponse.Failure): SkillStateFactory<S> =
-    SkillStateFactory.alwaysError { context -> context.block() }
+fun <S : Any> alwaysErrorSkillStateFactory(block: SkillContext<*>.() -> SkillResponse.Failure): SkillStateFactory<S> =
+    SkillStateFactory.alwaysError(block)
