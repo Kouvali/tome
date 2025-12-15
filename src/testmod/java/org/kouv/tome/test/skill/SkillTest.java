@@ -64,14 +64,13 @@ public final class SkillTest implements ModInitializer {
                     )
             )
             .setTickBehavior(instance -> {
-                float progress = (float) instance.getElapsedTime() / (instance.getTotalDuration() - 1);
-
-                instance.getAttributeModifierController().applyModifier(
-                        EntityAttributes.MOVEMENT_SPEED,
-                        ATTRIBUTE_MODIFIER_ID,
-                        -progress,
-                        EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
-                );
+                instance.getAttributeModifierController()
+                        .applyModifier(
+                                EntityAttributes.MOVEMENT_SPEED,
+                                ATTRIBUTE_MODIFIER_ID,
+                                -instance.getProgress(),
+                                EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                        );
 
                 LOGGER.info(
                         "SkillTickBehavior called: instance={}",
