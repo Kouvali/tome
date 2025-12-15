@@ -62,6 +62,31 @@ public final class AttributeModifierTracker {
         }
     }
 
+    public void removeModifier(
+            RegistryEntry<EntityAttribute> attribute,
+            EntityAttributeModifier modifier
+    ) {
+        Objects.requireNonNull(attribute);
+        Objects.requireNonNull(modifier);
+
+        removeModifier(attribute, modifier.id());
+    }
+
+    public void removeModifier(
+            RegistryEntry<EntityAttribute> attribute,
+            Identifier id
+    ) {
+        Objects.requireNonNull(attribute);
+        Objects.requireNonNull(id);
+
+        EntityAttributeInstance instance = container.getCustomInstance(attribute);
+        if (instance != null &&
+                instance.removeModifier(id)
+        ) {
+            records.remove(new Record(attribute, id));
+        }
+    }
+
     public void clearModifiers() {
         for (Record record : records) {
             var instance = container.getCustomInstance(record.attribute());
