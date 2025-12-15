@@ -143,6 +143,7 @@ public final class SkillManagerImpl implements SkillManager {
 
     private <S> void executeEnd(SkillInstance<S> instance) {
         instance.getSkill().value().getEndBehavior().execute(instance);
+        instance.getAttributeModifierController().clearModifiers();
         this.instance = null;
     }
 
@@ -167,7 +168,7 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> SkillInstance<S> createInstance(SkillContext<S> context, S state) {
-        return new SkillInstanceImpl<>(context, state, context.getSkill().value().getTotalDuration());
+        return new SkillInstanceImpl<>(context, state);
     }
 
     private LivingEntity getSourceOrThrow() {

@@ -1,8 +1,12 @@
 package org.kouv.tome.test.skill;
 
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import org.kouv.tome.api.entity.attribute.AttributeModifiers;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillResponse;
 import org.kouv.tome.api.skill.condition.SkillCondition;
@@ -14,7 +18,18 @@ import org.slf4j.LoggerFactory;
 public final class SkillTest implements ModInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(SkillTest.class);
 
+    private static final Identifier ATTRIBUTE_MODIFIER_ID = Identifier.of("tome-testmod", "test_attribute_modifier");
+
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
+            .setAttributeModifiers(
+                    AttributeModifiers.builder()
+                            .addModifier(
+                                    EntityAttributes.SCALE,
+                                    0.5,
+                                    EntityAttributeModifier.Operation.ADD_VALUE
+                            )
+                            .build()
+            )
             .setCancelBehavior(instance ->
                     LOGGER.info(
                             "SkillCancelBehavior called: instance={}",
@@ -48,12 +63,21 @@ public final class SkillTest implements ModInitializer {
                             instance
                     )
             )
-            .setTickBehavior(instance ->
-                    LOGGER.info(
-                            "SkillTickBehavior called: instance={}",
-                            instance
-                    )
-            )
+            .setTickBehavior(instance -> {
+                float progress = (float) instance.getElapsedTime() / (instance.getTotalDuration() - 1);
+
+                instance.getAttributeModifierController().applyModifier(
+                        EntityAttributes.MOVEMENT_SPEED,
+                        ATTRIBUTE_MODIFIER_ID,
+                        -progress,
+                        EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                );
+
+                LOGGER.info(
+                        "SkillTickBehavior called: instance={}",
+                        instance
+                );
+            })
             .setAddedCallback(context ->
                     LOGGER.info(
                             "SkillAddedCallback called: context={}",

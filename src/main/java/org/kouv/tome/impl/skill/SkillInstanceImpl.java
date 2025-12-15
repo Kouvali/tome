@@ -2,6 +2,7 @@ package org.kouv.tome.impl.skill;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
+import org.kouv.tome.api.entity.attribute.AttributeModifierController;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillInstance;
@@ -12,14 +13,17 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final SkillContext<S> context;
     private final S state;
 
-    private boolean shouldComplete;
+    private final AttributeModifierController attributeModifierController;
     private int totalDuration;
+
+    private boolean shouldComplete;
     private int elapsedTime;
 
-    public SkillInstanceImpl(SkillContext<S> context, S state, int totalDuration) {
+    public SkillInstanceImpl(SkillContext<S> context, S state) {
         this.context = Objects.requireNonNull(context);
         this.state = Objects.requireNonNull(state);
-        this.totalDuration = totalDuration;
+        this.attributeModifierController = new AttributeModifierController(getSource().getAttributes());
+        this.totalDuration = getSkill().value().getTotalDuration();
     }
 
     @Override
@@ -28,13 +32,8 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     }
 
     @Override
-    public boolean isShouldComplete() {
-        return shouldComplete;
-    }
-
-    @Override
-    public void setShouldComplete(boolean shouldComplete) {
-        this.shouldComplete = shouldComplete;
+    public AttributeModifierController getAttributeModifierController() {
+        return attributeModifierController;
     }
 
     @Override
@@ -45,6 +44,16 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     @Override
     public void setTotalDuration(int totalDuration) {
         this.totalDuration = totalDuration;
+    }
+
+    @Override
+    public boolean isShouldComplete() {
+        return shouldComplete;
+    }
+
+    @Override
+    public void setShouldComplete(boolean shouldComplete) {
+        this.shouldComplete = shouldComplete;
     }
 
     @Override

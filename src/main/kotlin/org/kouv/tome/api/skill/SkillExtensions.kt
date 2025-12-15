@@ -1,20 +1,17 @@
 package org.kouv.tome.api.skill
 
+import org.kouv.tome.api.entity.attribute.AttributeModifiers
 import org.kouv.tome.api.skill.behavior.*
 import org.kouv.tome.api.skill.callback.*
 import org.kouv.tome.api.skill.condition.*
-import org.kouv.tome.api.skill.predicate.SkillCancelPredicate
-import org.kouv.tome.api.skill.predicate.SkillInterruptPredicate
-import org.kouv.tome.api.skill.predicate.allowedSkillCancelPredicate
-import org.kouv.tome.api.skill.predicate.allowedSkillInterruptPredicate
-import org.kouv.tome.api.skill.predicate.deniedSkillCancelPredicate
-import org.kouv.tome.api.skill.predicate.deniedSkillInterruptPredicate
-import org.kouv.tome.api.skill.predicate.skillCancelPredicate
-import org.kouv.tome.api.skill.predicate.skillInterruptPredicate
+import org.kouv.tome.api.skill.predicate.*
 import org.kouv.tome.api.skill.state.*
 
 fun <S : Any> skill(builderAction: Skill.Builder<S>.() -> Unit): Skill<S> =
     Skill.builder<S>().apply(builderAction).build()
+
+fun Skill.Builder<*>.attributeModifiers(builderAction: AttributeModifiers.Builder.() -> Unit): AttributeModifiers =
+    org.kouv.tome.api.entity.attribute.attributeModifiers(builderAction).also { attributeModifiers = it }
 
 fun <S : Any> Skill.Builder<S>.cancelBehavior(block: SkillInstance<out S>.() -> Unit): SkillCancelBehavior<S> =
     skillCancelBehavior(block).also { cancelBehavior = it }
