@@ -11,12 +11,12 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-public final class AttributeModifiers {
-    private static final AttributeModifiers EMPTY = new AttributeModifiers();
+public final class AttributeModifierSet {
+    private static final AttributeModifierSet EMPTY = new AttributeModifierSet();
 
     private final Map<? extends RegistryEntry<EntityAttribute>, ? extends List<? extends EntityAttributeModifier>> attributeToModifiers;
 
-    private AttributeModifiers(Map<? extends RegistryEntry<EntityAttribute>, ? extends List<? extends EntityAttributeModifier>> attributeToModifiers) {
+    private AttributeModifierSet(Map<? extends RegistryEntry<EntityAttribute>, ? extends List<? extends EntityAttributeModifier>> attributeToModifiers) {
         this.attributeToModifiers = Objects.requireNonNull(attributeToModifiers).entrySet()
                 .stream()
                 .collect(
@@ -27,11 +27,11 @@ public final class AttributeModifiers {
                 );
     }
 
-    private AttributeModifiers() {
+    private AttributeModifierSet() {
         this.attributeToModifiers = Map.of();
     }
 
-    public static AttributeModifiers empty() {
+    public static AttributeModifierSet empty() {
         return EMPTY;
     }
 
@@ -121,8 +121,8 @@ public final class AttributeModifiers {
             return this;
         }
 
-        public AttributeModifiers build() {
-            return new AttributeModifiers(attributeToModifiers);
+        public AttributeModifierSet build() {
+            return new AttributeModifierSet(attributeToModifiers);
         }
     }
 }

@@ -6,7 +6,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
-import org.kouv.tome.api.entity.attribute.AttributeModifiers;
+import org.kouv.tome.api.entity.attribute.AttributeModifierSet;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillResponse;
 import org.kouv.tome.api.skill.condition.SkillCondition;
@@ -21,8 +21,8 @@ public final class SkillTest implements ModInitializer {
     private static final Identifier ATTRIBUTE_MODIFIER_ID = Identifier.of("tome-testmod", "test_attribute_modifier");
 
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
-            .setAttributeModifiers(
-                    AttributeModifiers.builder()
+            .setAttributeModifierSet(
+                    AttributeModifierSet.builder()
                             .addModifier(
                                     EntityAttributes.SCALE,
                                     0.5,

@@ -1,6 +1,6 @@
 package org.kouv.tome.api.skill
 
-import org.kouv.tome.api.entity.attribute.AttributeModifiers
+import org.kouv.tome.api.entity.attribute.AttributeModifierSet
 import org.kouv.tome.api.skill.behavior.*
 import org.kouv.tome.api.skill.callback.*
 import org.kouv.tome.api.skill.condition.*
@@ -10,8 +10,8 @@ import org.kouv.tome.api.skill.state.*
 fun <S : Any> skill(builderAction: Skill.Builder<S>.() -> Unit): Skill<S> =
     Skill.builder<S>().apply(builderAction).build()
 
-fun Skill.Builder<*>.attributeModifiers(builderAction: AttributeModifiers.Builder.() -> Unit): AttributeModifiers =
-    org.kouv.tome.api.entity.attribute.attributeModifiers(builderAction).also { attributeModifiers = it }
+fun Skill.Builder<*>.attributeModifierSet(builderAction: AttributeModifierSet.Builder.() -> Unit): AttributeModifierSet =
+    org.kouv.tome.api.entity.attribute.attributeModifierSet(builderAction).also { attributeModifierSet = it }
 
 fun <S : Any> Skill.Builder<S>.cancelBehavior(block: SkillInstance<out S>.() -> Unit): SkillCancelBehavior<S> =
     skillCancelBehavior(block).also { cancelBehavior = it }

@@ -4,7 +4,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
-import org.kouv.tome.api.entity.attribute.AttributeModifiers;
+import org.kouv.tome.api.entity.attribute.AttributeModifierSet;
 import org.kouv.tome.api.skill.behavior.*;
 import org.kouv.tome.api.skill.callback.*;
 import org.kouv.tome.api.skill.condition.SkillCondition;
@@ -16,7 +16,7 @@ import org.kouv.tome.api.skill.state.SkillStateFactory;
 import java.util.Objects;
 
 public final class Skill<S> {
-    private final AttributeModifiers attributeModifiers;
+    private final AttributeModifierSet attributeModifierSet;
     private final SkillCancelBehavior<S> cancelBehavior;
     private final SkillCompleteBehavior<S> completeBehavior;
     private final SkillEndBehavior<S> endBehavior;
@@ -39,7 +39,7 @@ public final class Skill<S> {
     private @Nullable Text name;
 
     private Skill(
-            AttributeModifiers attributeModifiers,
+            AttributeModifierSet attributeModifierSet,
             SkillCancelBehavior<S> cancelBehavior,
             SkillCompleteBehavior<S> completeBehavior,
             SkillEndBehavior<S> endBehavior,
@@ -57,7 +57,7 @@ public final class Skill<S> {
             SkillStateFactory<S> stateFactory,
             int totalDuration
     ) {
-        this.attributeModifiers = Objects.requireNonNull(attributeModifiers);
+        this.attributeModifierSet = Objects.requireNonNull(attributeModifierSet);
         this.cancelBehavior = Objects.requireNonNull(cancelBehavior);
         this.completeBehavior = Objects.requireNonNull(completeBehavior);
         this.endBehavior = Objects.requireNonNull(endBehavior);
@@ -80,8 +80,8 @@ public final class Skill<S> {
         return new Builder<>();
     }
 
-    public AttributeModifiers getAttributeModifiers() {
-        return attributeModifiers;
+    public AttributeModifierSet getAttributeModifierSet() {
+        return attributeModifierSet;
     }
 
     public SkillCancelBehavior<S> getCancelBehavior() {
@@ -173,7 +173,7 @@ public final class Skill<S> {
     }
 
     public static final class Builder<S> {
-        private AttributeModifiers attributeModifiers = AttributeModifiers.empty();
+        private AttributeModifierSet attributeModifierSet = AttributeModifierSet.empty();
         private SkillCancelBehavior<S> cancelBehavior = SkillCancelBehavior.noOp();
         private SkillCompleteBehavior<S> completeBehavior = SkillCompleteBehavior.noOp();
         private SkillEndBehavior<S> endBehavior = SkillEndBehavior.noOp();
@@ -194,12 +194,12 @@ public final class Skill<S> {
         private Builder() {
         }
 
-        public AttributeModifiers getAttributeModifiers() {
-            return attributeModifiers;
+        public AttributeModifierSet getAttributeModifierSet() {
+            return attributeModifierSet;
         }
 
-        public Builder<S> setAttributeModifiers(AttributeModifiers attributeModifiers) {
-            this.attributeModifiers = Objects.requireNonNull(attributeModifiers);
+        public Builder<S> setAttributeModifierSet(AttributeModifierSet attributeModifierSet) {
+            this.attributeModifierSet = Objects.requireNonNull(attributeModifierSet);
             return this;
         }
 
@@ -349,7 +349,7 @@ public final class Skill<S> {
 
         public Skill<S> build() {
             return new Skill<>(
-                    attributeModifiers,
+                    attributeModifierSet,
                     cancelBehavior,
                     completeBehavior,
                     endBehavior,

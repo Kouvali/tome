@@ -100,7 +100,7 @@ public final class SkillContainerImpl implements SkillContainer {
     private <S> void handleSkillAdded(RegistryEntry<? extends Skill<S>> skill) {
         SkillContext<S> context = createContext(skill);
 
-        skill.value().getAttributeModifiers().applyTemporaryModifiers(getSourceOrThrow().getAttributes());
+        skill.value().getAttributeModifierSet().applyTemporaryModifiers(getSourceOrThrow().getAttributes());
         skill.value().getAddedCallback().handle(context);
 
         SkillEvents.ADDED.invoker().onAdded(context);
@@ -109,7 +109,7 @@ public final class SkillContainerImpl implements SkillContainer {
     private <S> void handleSkillRemoved(RegistryEntry<? extends Skill<S>> skill) {
         SkillContext<S> context = createContext(skill);
 
-        skill.value().getAttributeModifiers().removeModifiers(getSourceOrThrow().getAttributes());
+        skill.value().getAttributeModifierSet().removeModifiers(getSourceOrThrow().getAttributes());
         skill.value().getRemovedCallback().handle(context);
 
         SkillEvents.REMOVED.invoker().onRemoved(context);
@@ -118,7 +118,7 @@ public final class SkillContainerImpl implements SkillContainer {
     private <S> void handleSkillLoaded(RegistryEntry<? extends Skill<S>> skill) {
         SkillContext<S> context = createContext(skill);
 
-        skill.value().getAttributeModifiers().applyTemporaryModifiers(getSourceOrThrow().getAttributes());
+        skill.value().getAttributeModifierSet().applyTemporaryModifiers(getSourceOrThrow().getAttributes());
         skill.value().getLoadedCallback().handle(context);
 
         SkillEvents.LOADED.invoker().onLoaded(context);
