@@ -64,7 +64,7 @@ public final class SkillTest implements ModInitializer {
                     )
             )
             .setTickBehavior(instance -> {
-                instance.getAttributeModifierController()
+                instance.getAttributeModifierTracker()
                         .applyModifier(
                                 EntityAttributes.MOVEMENT_SPEED,
                                 ATTRIBUTE_MODIFIER_ID,

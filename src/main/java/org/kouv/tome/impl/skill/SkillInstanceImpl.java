@@ -2,7 +2,7 @@ package org.kouv.tome.impl.skill;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
-import org.kouv.tome.api.entity.attribute.AttributeModifierController;
+import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillInstance;
@@ -13,7 +13,7 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final SkillContext<S> context;
     private final S state;
 
-    private final AttributeModifierController attributeModifierController;
+    private final AttributeModifierTracker attributeModifierTracker;
     private int totalDuration;
 
     private boolean shouldComplete;
@@ -22,7 +22,7 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     public SkillInstanceImpl(SkillContext<S> context, S state) {
         this.context = Objects.requireNonNull(context);
         this.state = Objects.requireNonNull(state);
-        this.attributeModifierController = new AttributeModifierController(getSource().getAttributes());
+        this.attributeModifierTracker = new AttributeModifierTracker(getSource().getAttributes());
         this.totalDuration = getSkill().value().getTotalDuration();
     }
 
@@ -32,8 +32,8 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     }
 
     @Override
-    public AttributeModifierController getAttributeModifierController() {
-        return attributeModifierController;
+    public AttributeModifierTracker getAttributeModifierTracker() {
+        return attributeModifierTracker;
     }
 
     @Override

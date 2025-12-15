@@ -13,12 +13,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-public final class AttributeModifierController {
+public final class AttributeModifierTracker {
     private final AttributeContainer container;
     private final Set<Record> records = new HashSet<>();
 
     @ApiStatus.Internal
-    public AttributeModifierController(AttributeContainer container) {
+    public AttributeModifierTracker(AttributeContainer container) {
         this.container = Objects.requireNonNull(container);
     }
 

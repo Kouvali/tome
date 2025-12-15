@@ -143,7 +143,7 @@ public final class SkillManagerImpl implements SkillManager {
 
     private <S> void executeEnd(SkillInstance<S> instance) {
         instance.getSkill().value().getEndBehavior().execute(instance);
-        instance.getAttributeModifierController().clearModifiers();
+        instance.getAttributeModifierTracker().clearModifiers();
         this.instance = null;
     }
 

@@ -1,11 +1,11 @@
 package org.kouv.tome.api.skill;
 
-import org.kouv.tome.api.entity.attribute.AttributeModifierController;
+import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 
 public interface SkillInstance<S> extends SkillContext<S> {
     S getState();
 
-    AttributeModifierController getAttributeModifierController();
+    AttributeModifierTracker getAttributeModifierTracker();
 
     int getTotalDuration();
 
