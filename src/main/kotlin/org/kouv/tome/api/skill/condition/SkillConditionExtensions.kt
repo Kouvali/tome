@@ -3,12 +3,17 @@ package org.kouv.tome.api.skill.condition
 import org.kouv.tome.api.skill.SkillContext
 import org.kouv.tome.api.skill.SkillResponse
 
-fun skillCondition(block: SkillContext<*>.() -> SkillResponse): SkillCondition = SkillCondition(block)
+fun SkillCondition(block: SkillContext<*>.() -> SkillResponse): SkillCondition =
+    SkillCondition { context -> context.block() }
 
-fun requireLearnedSkillCondition(): SkillCondition = SkillCondition.requireLearned()
+@Suppress("FunctionName")
+fun RequireLearnedSkillCondition(): SkillCondition = SkillCondition.requireLearned()
 
-fun requireNoCooldownSkillCondition(): SkillCondition = SkillCondition.requireNoCooldown()
+@Suppress("FunctionName")
+fun RequireNoCooldownSkillCondition(): SkillCondition = SkillCondition.requireNoCooldown()
 
-fun requireInGameSkillCondition(): SkillCondition = SkillCondition.requireInGame()
+@Suppress("FunctionName")
+fun RequireInGameSkillCondition(): SkillCondition = SkillCondition.requireInGame()
 
-fun defaultSkillCondition(): SkillCondition = SkillCondition.defaultConditions()
+@Suppress("FunctionName")
+fun DefaultSkillCondition(): SkillCondition = SkillCondition.defaultConditions()
