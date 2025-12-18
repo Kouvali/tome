@@ -62,7 +62,7 @@ Skill<Vec3d> exampleSkill = Skill.<Vec3d>builder()
 ### Kotlin
 
 ```kotlin
-val exampleSkill: Skill<Vec3d> = skill {
+val exampleSkill: Skill<Vec3d> = Skill {
     alwaysOkStateFactory {
         source.rotationVector
     }
@@ -77,7 +77,7 @@ val exampleSkill: Skill<Vec3d> = skill {
         source.velocityModified = true
     }
 
-    interruptCondition {
+    interruptPredicate {
         !source.isInvulnerable
     }
 
