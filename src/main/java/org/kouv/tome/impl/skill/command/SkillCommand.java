@@ -55,7 +55,7 @@ public final class SkillCommand {
 
     private static LiteralArgumentBuilder<ServerCommandSource> argumentSkill() {
         return CommandManager.literal("skill")
-                .requires(source -> source.hasPermissionLevel(2))
+                .requires(CommandManager.requirePermissionLevel(CommandManager.GAMEMASTERS_CHECK))
                 .then(argumentAdd())
                 .then(argumentRemove())
                 .then(argumentTest())
