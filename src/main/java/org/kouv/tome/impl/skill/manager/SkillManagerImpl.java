@@ -3,6 +3,7 @@ package org.kouv.tome.impl.skill.manager;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
+import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillInstance;
@@ -164,11 +165,19 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {
-        return new SkillContextImpl<>(skill, getSourceOrThrow());
+        return new SkillContextImpl<>(
+                skill,
+                getSourceOrThrow()
+        );
     }
 
     private <S> SkillInstance<S> createInstance(SkillContext<S> context, S state) {
-        return new SkillInstanceImpl<>(context, state);
+        return new SkillInstanceImpl<>(
+                context,
+                state,
+                new AttributeModifierTracker(context.getSource().getAttributes()),
+                context.getSkill().value().getDurationProvider().get(context)
+        );
     }
 
     private LivingEntity getSourceOrThrow() {

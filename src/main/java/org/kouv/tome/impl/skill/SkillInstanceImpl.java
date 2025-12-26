@@ -19,11 +19,11 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private boolean shouldComplete;
     private int elapsedTime;
 
-    public SkillInstanceImpl(SkillContext<S> context, S state) {
+    public SkillInstanceImpl(SkillContext<S> context, S state, AttributeModifierTracker attributeModifierTracker, int duration) {
         this.context = Objects.requireNonNull(context);
         this.state = Objects.requireNonNull(state);
-        this.attributeModifierTracker = new AttributeModifierTracker(getSource().getAttributes());
-        this.duration = getSkill().value().getDuration();
+        this.attributeModifierTracker = Objects.requireNonNull(attributeModifierTracker);
+        this.duration = duration;
     }
 
     @Override

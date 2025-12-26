@@ -4,6 +4,10 @@ import org.kouv.tome.api.entity.attribute.AttributeModifierSet
 import org.kouv.tome.api.skill.behavior.*
 import org.kouv.tome.api.skill.callback.*
 import org.kouv.tome.api.skill.condition.*
+import org.kouv.tome.api.skill.duration.ConstantSkillDurationProvider
+import org.kouv.tome.api.skill.duration.InfiniteSkillDurationProvider
+import org.kouv.tome.api.skill.duration.InstantSkillDurationProvider
+import org.kouv.tome.api.skill.duration.SkillDurationProvider
 import org.kouv.tome.api.skill.predicate.*
 import org.kouv.tome.api.skill.state.*
 
@@ -81,6 +85,18 @@ fun Skill.Builder<*>.noOpRemovedCallback(): SkillRemovedCallback =
 
 fun Skill.Builder<*>.condition(block: SkillContext<*>.() -> SkillResponse): SkillCondition =
     SkillCondition(block).also { condition = it }
+
+fun Skill.Builder<*>.durationProvider(block: SkillContext<*>.() -> Int): SkillDurationProvider =
+    SkillDurationProvider(block).also { durationProvider = it }
+
+fun Skill.Builder<*>.constantDurationProvider(duration: Int): SkillDurationProvider =
+    ConstantSkillDurationProvider(duration).also { durationProvider = it }
+
+fun Skill.Builder<*>.infiniteDurationProvider(): SkillDurationProvider =
+    InfiniteSkillDurationProvider().also { durationProvider = it }
+
+fun Skill.Builder<*>.instantDurationProvider(): SkillDurationProvider =
+    InstantSkillDurationProvider().also { durationProvider = it }
 
 fun Skill.Builder<*>.requireLearnedCondition(): SkillCondition =
     RequireLearnedSkillCondition().also { condition = it }

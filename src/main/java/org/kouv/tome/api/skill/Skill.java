@@ -8,6 +8,7 @@ import org.kouv.tome.api.entity.attribute.AttributeModifierSet;
 import org.kouv.tome.api.skill.behavior.*;
 import org.kouv.tome.api.skill.callback.*;
 import org.kouv.tome.api.skill.condition.SkillCondition;
+import org.kouv.tome.api.skill.duration.SkillDurationProvider;
 import org.kouv.tome.api.skill.predicate.SkillCancelPredicate;
 import org.kouv.tome.api.skill.predicate.SkillInterruptPredicate;
 import org.kouv.tome.api.skill.registry.SkillRegistries;
@@ -29,10 +30,10 @@ public final class Skill<S> {
     private final SkillLoadedCallback loadedCallback;
     private final SkillRemovedCallback removedCallback;
     private final SkillCondition condition;
+    private final SkillDurationProvider durationProvider;
     private final SkillCancelPredicate<S> cancelPredicate;
     private final SkillInterruptPredicate<S> interruptPredicate;
     private final SkillStateFactory<S> stateFactory;
-    private final int duration;
 
     private @Nullable Identifier id;
     private @Nullable String translationKey;
@@ -51,11 +52,10 @@ public final class Skill<S> {
             SkillCooldownStartedCallback cooldownStartedCallback,
             SkillLoadedCallback loadedCallback,
             SkillRemovedCallback removedCallback,
-            SkillCondition condition,
+            SkillCondition condition, SkillDurationProvider durationProvider,
             SkillCancelPredicate<S> cancelPredicate,
             SkillInterruptPredicate<S> interruptPredicate,
-            SkillStateFactory<S> stateFactory,
-            int duration
+            SkillStateFactory<S> stateFactory
     ) {
         this.attributeModifierSet = Objects.requireNonNull(attributeModifierSet);
         this.cancelBehavior = Objects.requireNonNull(cancelBehavior);
@@ -70,10 +70,10 @@ public final class Skill<S> {
         this.loadedCallback = Objects.requireNonNull(loadedCallback);
         this.removedCallback = Objects.requireNonNull(removedCallback);
         this.condition = Objects.requireNonNull(condition);
+        this.durationProvider = Objects.requireNonNull(durationProvider);
         this.cancelPredicate = Objects.requireNonNull(cancelPredicate);
         this.interruptPredicate = Objects.requireNonNull(interruptPredicate);
         this.stateFactory = Objects.requireNonNull(stateFactory);
-        this.duration = duration;
     }
 
     public static <S> Builder<S> builder() {
@@ -132,6 +132,10 @@ public final class Skill<S> {
         return condition;
     }
 
+    public SkillDurationProvider getDurationProvider() {
+        return durationProvider;
+    }
+
     public SkillCancelPredicate<S> getCancelPredicate() {
         return cancelPredicate;
     }
@@ -142,10 +146,6 @@ public final class Skill<S> {
 
     public SkillStateFactory<S> getStateFactory() {
         return stateFactory;
-    }
-
-    public int getDuration() {
-        return duration;
     }
 
     public Identifier getId() {
@@ -186,10 +186,10 @@ public final class Skill<S> {
         private SkillLoadedCallback loadedCallback = SkillLoadedCallback.noOp();
         private SkillRemovedCallback removedCallback = SkillRemovedCallback.noOp();
         private SkillCondition condition = SkillCondition.defaultConditions();
+        private SkillDurationProvider durationProvider = SkillDurationProvider.instant();
         private SkillCancelPredicate<S> cancelPredicate = SkillCancelPredicate.allowed();
         private SkillInterruptPredicate<S> interruptPredicate = SkillInterruptPredicate.allowed();
         private @Nullable SkillStateFactory<S> stateFactory = null;
-        private int duration = 0;
 
         private Builder() {
         }
@@ -311,6 +311,15 @@ public final class Skill<S> {
             return this;
         }
 
+        public SkillDurationProvider getDurationProvider() {
+            return durationProvider;
+        }
+
+        public Builder<S> setDurationProvider(SkillDurationProvider durationProvider) {
+            this.durationProvider = Objects.requireNonNull(durationProvider);
+            return this;
+        }
+
         public SkillCancelPredicate<S> getCancelPredicate() {
             return cancelPredicate;
         }
@@ -338,15 +347,6 @@ public final class Skill<S> {
             return this;
         }
 
-        public int getDuration() {
-            return duration;
-        }
-
-        public Builder<S> setDuration(int duration) {
-            this.duration = duration;
-            return this;
-        }
-
         public Skill<S> build() {
             return new Skill<>(
                     attributeModifierSet,
@@ -362,10 +362,10 @@ public final class Skill<S> {
                     loadedCallback,
                     removedCallback,
                     condition,
+                    durationProvider,
                     cancelPredicate,
                     interruptPredicate,
-                    Objects.requireNonNull(stateFactory),
-                    duration
+                    Objects.requireNonNull(stateFactory)
             );
         }
     }

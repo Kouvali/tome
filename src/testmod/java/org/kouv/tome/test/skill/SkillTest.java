@@ -144,7 +144,15 @@ public final class SkillTest implements ModInitializer {
                 );
                 return creationResult;
             })
-            .setDuration(50)
+            .setDurationProvider(context -> {
+                int duration = context.getSource().getRandom().nextBetween(40, 80);
+                LOGGER.info(
+                        "SkillDurationProvider called: context={}, duration={}",
+                        context,
+                        duration
+                );
+                return duration;
+            })
             .build();
 
     @Override
