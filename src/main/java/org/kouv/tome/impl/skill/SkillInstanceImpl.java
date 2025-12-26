@@ -14,7 +14,7 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final S state;
 
     private final AttributeModifierTracker attributeModifierTracker;
-    private int totalDuration;
+    private int duration;
 
     private boolean shouldComplete;
     private int elapsedTime;
@@ -23,7 +23,7 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
         this.context = Objects.requireNonNull(context);
         this.state = Objects.requireNonNull(state);
         this.attributeModifierTracker = new AttributeModifierTracker(getSource().getAttributes());
-        this.totalDuration = getSkill().value().getTotalDuration();
+        this.duration = getSkill().value().getDuration();
     }
 
     @Override
@@ -37,13 +37,13 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     }
 
     @Override
-    public int getTotalDuration() {
-        return totalDuration;
+    public int getDuration() {
+        return duration;
     }
 
     @Override
-    public void setTotalDuration(int totalDuration) {
-        this.totalDuration = totalDuration;
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     @Override
@@ -81,7 +81,7 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
                 "context=" + context +
                 ", state=" + state +
                 ", shouldComplete=" + shouldComplete +
-                ", totalDuration=" + totalDuration +
+                ", duration=" + duration +
                 ", elapsedTime=" + elapsedTime +
                 '}';
     }

@@ -159,8 +159,8 @@ public final class SkillManagerImpl implements SkillManager {
 
     private boolean isReadyToComplete(SkillInstance<?> instance) {
         return instance.isShouldComplete() ||
-                (instance.getTotalDuration() >= 0 &&
-                        instance.getTotalDuration() <= instance.getElapsedTime());
+                (instance.getDuration() >= 0 &&
+                        instance.getDuration() <= instance.getElapsedTime());
     }
 
     private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {
