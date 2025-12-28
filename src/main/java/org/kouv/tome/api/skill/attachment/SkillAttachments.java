@@ -2,7 +2,7 @@ package org.kouv.tome.api.skill.attachment;
 
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.kouv.tome.api.skill.manager.SkillContainer;
 import org.kouv.tome.api.skill.manager.SkillCooldownManager;
@@ -14,7 +14,7 @@ public interface SkillAttachments {
     @SuppressWarnings("UnstableApiUsage")
     AttachmentType<SkillContainer> SKILL_CONTAINER = AttachmentRegistry
             .create(
-                    Identifier.of("tome", "skill_container"),
+                    Identifier.fromNamespaceAndPath("tome", "skill_container"),
                     builder -> builder
                             .persistent(SkillContainerImpl.CODEC)
                             .copyOnDeath()
@@ -23,7 +23,7 @@ public interface SkillAttachments {
     @SuppressWarnings("UnstableApiUsage")
     AttachmentType<SkillCooldownManager> SKILL_COOLDOWN_MANAGER = AttachmentRegistry
             .create(
-                    Identifier.of("tome", "skill_cooldown_manager"),
+                    Identifier.fromNamespaceAndPath("tome", "skill_cooldown_manager"),
                     builder -> builder
                             .persistent(SkillCooldownManagerImpl.CODEC)
                             .copyOnDeath()
@@ -32,7 +32,7 @@ public interface SkillAttachments {
     @SuppressWarnings("UnstableApiUsage")
     AttachmentType<SkillManager> SKILL_MANAGER = AttachmentRegistry
             .create(
-                    Identifier.of("tome", "skill_manager")
+                    Identifier.fromNamespaceAndPath("tome", "skill_manager")
             );
 
     @ApiStatus.Internal

@@ -1,13 +1,13 @@
 package org.kouv.tome.impl.skill;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.entry.RegistryEntry;
 import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillInstance;
 
 import java.util.Objects;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 
 public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final SkillContext<S> context;
@@ -62,7 +62,7 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     }
 
     @Override
-    public RegistryEntry<? extends Skill<S>> getSkill() {
+    public Holder<? extends Skill<S>> getSkill() {
         return context.getSkill();
     }
 

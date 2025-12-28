@@ -1,70 +1,70 @@
 package org.kouv.tome.api.entity.attribute;
 
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public final class AttributeModifierTracker {
-    private final AttributeContainer container;
+    private final AttributeMap container;
     private final Set<Record> records = new HashSet<>();
 
     @ApiStatus.Internal
-    public AttributeModifierTracker(AttributeContainer container) {
+    public AttributeModifierTracker(AttributeMap container) {
         this.container = Objects.requireNonNull(container);
     }
 
     public void applyModifier(
-            RegistryEntry<EntityAttribute> attribute,
+            Holder<Attribute> attribute,
             double value,
-            EntityAttributeModifier.Operation operation
+            AttributeModifier.Operation operation
     ) {
         Objects.requireNonNull(attribute);
         Objects.requireNonNull(operation);
 
-        applyModifier(attribute, Identifier.of("tome", UUID.randomUUID().toString()), value, operation);
+        applyModifier(attribute, Identifier.fromNamespaceAndPath("tome", UUID.randomUUID().toString()), value, operation);
     }
 
     public void applyModifier(
-            RegistryEntry<EntityAttribute> attribute,
+            Holder<Attribute> attribute,
             Identifier id,
             double value,
-            EntityAttributeModifier.Operation operation
+            AttributeModifier.Operation operation
     ) {
         Objects.requireNonNull(attribute);
         Objects.requireNonNull(id);
         Objects.requireNonNull(operation);
 
-        applyModifier(attribute, new EntityAttributeModifier(id, value, operation));
+        applyModifier(attribute, new AttributeModifier(id, value, operation));
     }
 
     public void applyModifier(
-            RegistryEntry<EntityAttribute> attribute,
-            EntityAttributeModifier modifier
+            Holder<Attribute> attribute,
+            AttributeModifier modifier
     ) {
         Objects.requireNonNull(attribute);
         Objects.requireNonNull(modifier);
 
-        EntityAttributeInstance instance = container.getCustomInstance(attribute);
+        AttributeInstance instance = container.getInstance(attribute);
         if (instance != null) {
             instance.removeModifier(modifier);
-            instance.addTemporaryModifier(modifier);
+            instance.addTransientModifier(modifier);
 
             records.add(new Record(attribute, modifier.id()));
         }
     }
 
     public void removeModifier(
-            RegistryEntry<EntityAttribute> attribute,
-            EntityAttributeModifier modifier
+            Holder<Attribute> attribute,
+            AttributeModifier modifier
     ) {
         Objects.requireNonNull(attribute);
         Objects.requireNonNull(modifier);
@@ -73,13 +73,13 @@ public final class AttributeModifierTracker {
     }
 
     public void removeModifier(
-            RegistryEntry<EntityAttribute> attribute,
+            Holder<Attribute> attribute,
             Identifier id
     ) {
         Objects.requireNonNull(attribute);
         Objects.requireNonNull(id);
 
-        EntityAttributeInstance instance = container.getCustomInstance(attribute);
+        AttributeInstance instance = container.getInstance(attribute);
         if (instance != null &&
                 instance.removeModifier(id)
         ) {
@@ -89,7 +89,7 @@ public final class AttributeModifierTracker {
 
     public void clearModifiers() {
         for (Record record : records) {
-            var instance = container.getCustomInstance(record.attribute());
+            var instance = container.getInstance(record.attribute());
             if (instance != null) {
                 instance.removeModifier(record.id());
             }
@@ -99,7 +99,7 @@ public final class AttributeModifierTracker {
     }
 
     private record Record(
-            RegistryEntry<EntityAttribute> attribute,
+            Holder<Attribute> attribute,
             Identifier id
     ) {
         private Record {

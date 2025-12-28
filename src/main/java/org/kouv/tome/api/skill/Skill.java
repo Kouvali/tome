@@ -1,7 +1,7 @@
 package org.kouv.tome.api.skill;
 
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.entity.attribute.AttributeModifierSet;
@@ -37,7 +37,7 @@ public final class Skill<S> {
 
     private @Nullable Identifier id;
     private @Nullable String translationKey;
-    private @Nullable Text name;
+    private @Nullable Component name;
 
     private Skill(
             AttributeModifierSet attributeModifierSet,
@@ -150,7 +150,7 @@ public final class Skill<S> {
 
     public Identifier getId() {
         if (id == null) {
-            id = SkillRegistries.SKILL.getId(this);
+            id = SkillRegistries.SKILL.getKey(this);
         }
 
         return id;
@@ -158,15 +158,15 @@ public final class Skill<S> {
 
     public String getTranslationKey() {
         if (translationKey == null) {
-            translationKey = Util.createTranslationKey("skill", getId());
+            translationKey = Util.makeDescriptionId("skill", getId());
         }
 
         return translationKey;
     }
 
-    public Text getName() {
+    public Component getName() {
         if (name == null) {
-            name = Text.translatable(getTranslationKey());
+            name = Component.translatable(getTranslationKey());
         }
 
         return name;

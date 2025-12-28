@@ -1,7 +1,5 @@
 package org.kouv.tome.impl.skill.manager;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.entry.RegistryEntry;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 import org.kouv.tome.api.skill.Skill;
@@ -15,6 +13,8 @@ import org.kouv.tome.impl.skill.SkillInstanceImpl;
 
 import java.util.Objects;
 import java.util.Optional;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 
 public final class SkillManagerImpl implements SkillManager {
     private @Nullable SkillInstance<?> instance = null;
@@ -27,7 +27,7 @@ public final class SkillManagerImpl implements SkillManager {
 
     @SuppressWarnings("unchecked")
     @Override
-    public @Nullable <S> SkillInstance<S> getCastingInstance(RegistryEntry<? extends Skill<S>> skill) {
+    public @Nullable <S> SkillInstance<S> getCastingInstance(Holder<? extends Skill<S>> skill) {
         Objects.requireNonNull(skill);
         return instance == null || !instance.getSkill().equals(skill) ?
                 null :
@@ -36,19 +36,19 @@ public final class SkillManagerImpl implements SkillManager {
 
     @SuppressWarnings("unchecked")
     @Override
-    public SkillResponse testSkill(RegistryEntry<? extends Skill<?>> skill) {
+    public SkillResponse testSkill(Holder<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
         return executeTest(
-                (RegistryEntry<? extends Skill<Object>>) skill
+                (Holder<? extends Skill<Object>>) skill
         );
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public SkillResponse castSkill(RegistryEntry<? extends Skill<?>> skill) {
+    public SkillResponse castSkill(Holder<? extends Skill<?>> skill) {
         Objects.requireNonNull(skill);
         return executeCast(
-                (RegistryEntry<? extends Skill<Object>>) skill
+                (Holder<? extends Skill<Object>>) skill
         );
     }
 
@@ -86,13 +86,13 @@ public final class SkillManagerImpl implements SkillManager {
         }
     }
 
-    private <S> SkillResponse executeTest(RegistryEntry<? extends Skill<S>> skill) {
+    private <S> SkillResponse executeTest(Holder<? extends Skill<S>> skill) {
         return isCasting() ?
                 SkillResponse.inProgress() :
                 skill.value().getCondition().test(createContext(skill));
     }
 
-    private <S> SkillResponse executeCast(RegistryEntry<? extends Skill<S>> skill) {
+    private <S> SkillResponse executeCast(Holder<? extends Skill<S>> skill) {
         if (testSkill(skill) instanceof SkillResponse.Failure failure) {
             return failure;
         }
@@ -164,7 +164,7 @@ public final class SkillManagerImpl implements SkillManager {
                         instance.getDuration() <= instance.getElapsedTime());
     }
 
-    private <S> SkillContext<S> createContext(RegistryEntry<? extends Skill<S>> skill) {
+    private <S> SkillContext<S> createContext(Holder<? extends Skill<S>> skill) {
         return new SkillContextImpl<>(
                 skill,
                 getSourceOrThrow()

@@ -1,10 +1,10 @@
 package org.kouv.tome.api.skill
 
-import net.minecraft.text.Text
+import net.minecraft.network.chat.Component
 
 fun Success(): SkillResponse.Success = SkillResponse.success()
 
-fun Failure(reason: Text): SkillResponse.Failure = SkillResponse.failure(reason)
+fun Failure(reason: Component): SkillResponse.Failure = SkillResponse.failure(reason)
 
 @Suppress("FunctionName")
 fun InProgress(): SkillResponse.Failure = SkillResponse.inProgress()

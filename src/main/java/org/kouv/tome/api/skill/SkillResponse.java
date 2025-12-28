@@ -1,33 +1,33 @@
 package org.kouv.tome.api.skill;
 
-import net.minecraft.text.Text;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
+import net.minecraft.network.chat.Component;
 
 public sealed interface SkillResponse {
     static Success success() {
         return new Success();
     }
 
-    static Failure failure(Text reason) {
+    static Failure failure(Component reason) {
         return new Failure(reason);
     }
 
     static Failure inProgress() {
-        return failure(Text.translatable("skill.failure.in_progress"));
+        return failure(Component.translatable("skill.failure.in_progress"));
     }
 
     static Failure notLearned() {
-        return failure(Text.translatable("skill.failure.not_learned"));
+        return failure(Component.translatable("skill.failure.not_learned"));
     }
 
     static Failure cooldown() {
-        return failure(Text.translatable("skill.failure.cooldown"));
+        return failure(Component.translatable("skill.failure.cooldown"));
     }
 
     static Failure unavailable() {
-        return failure(Text.translatable("skill.failure.unavailable"));
+        return failure(Component.translatable("skill.failure.unavailable"));
     }
 
     record Success() implements SkillResponse {
@@ -36,7 +36,7 @@ public sealed interface SkillResponse {
         }
     }
 
-    record Failure(Text reason) implements SkillResponse {
+    record Failure(Component reason) implements SkillResponse {
         @ApiStatus.Internal
         public Failure {
             Objects.requireNonNull(reason);

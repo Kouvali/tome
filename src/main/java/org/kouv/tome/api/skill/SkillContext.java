@@ -1,13 +1,13 @@
 package org.kouv.tome.api.skill;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 import org.kouv.tome.api.skill.manager.SkillContainer;
 import org.kouv.tome.api.skill.manager.SkillCooldownManager;
 import org.kouv.tome.api.skill.manager.SkillManager;
 
 public interface SkillContext<S> {
-    RegistryEntry<? extends Skill<S>> getSkill();
+    Holder<? extends Skill<S>> getSkill();
 
     LivingEntity getSource();
 

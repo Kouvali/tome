@@ -1,11 +1,11 @@
 package org.kouv.tome.test.skill;
 
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.phys.Vec3;
 import org.kouv.tome.api.entity.attribute.AttributeModifierSet;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillResponse;
@@ -18,15 +18,15 @@ import org.slf4j.LoggerFactory;
 public final class SkillTest implements ModInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(SkillTest.class);
 
-    private static final Identifier ATTRIBUTE_MODIFIER_ID = Identifier.of("tome-testmod", "test_attribute_modifier");
+    private static final Identifier ATTRIBUTE_MODIFIER_ID = Identifier.fromNamespaceAndPath("tome-testmod", "test_attribute_modifier");
 
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
             .setAttributeModifierSet(
                     AttributeModifierSet.builder()
                             .addModifier(
-                                    EntityAttributes.SCALE,
+                                    Attributes.SCALE,
                                     0.5,
-                                    EntityAttributeModifier.Operation.ADD_VALUE
+                                    AttributeModifier.Operation.ADD_VALUE
                             )
                             .build()
             )
@@ -38,8 +38,8 @@ public final class SkillTest implements ModInitializer {
             )
             .setCompleteBehavior(instance -> {
                 instance.getSkillCooldownManager().setCooldown(instance.getSkill(), 50);
-                instance.getSource().setVelocity(instance.getState().rotation());
-                instance.getSource().knockedBack = true;
+                instance.getSource().setDeltaMovement(instance.getState().rotation());
+                instance.getSource().hurtMarked = true;
                 LOGGER.info(
                         "SkillCompleteBehavior called: instance={}",
                         instance
@@ -66,10 +66,10 @@ public final class SkillTest implements ModInitializer {
             .setTickBehavior(instance -> {
                 instance.getAttributeModifierTracker()
                         .applyModifier(
-                                EntityAttributes.MOVEMENT_SPEED,
+                                Attributes.MOVEMENT_SPEED,
                                 ATTRIBUTE_MODIFIER_ID,
                                 -instance.getProgress(),
-                                EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                                AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
                         );
 
                 LOGGER.info(
@@ -117,7 +117,7 @@ public final class SkillTest implements ModInitializer {
                 return response;
             })
             .setCancelPredicate(instance -> {
-                boolean cancelled = !instance.getSource().isOnGround();
+                boolean cancelled = !instance.getSource().onGround();
                 LOGGER.info(
                         "SkillCancelPredicate called: instance={}, cancelled={}",
                         instance,
@@ -126,7 +126,7 @@ public final class SkillTest implements ModInitializer {
                 return cancelled;
             })
             .setInterruptPredicate(instance -> {
-                boolean interrupted = !instance.getSource().isOnGround();
+                boolean interrupted = !instance.getSource().onGround();
                 LOGGER.info(
                         "SkillInterruptPredicate called: instance={}, interrupted={}",
                         instance,
@@ -136,7 +136,7 @@ public final class SkillTest implements ModInitializer {
             })
             .setStateFactory(context -> {
                 SkillStateCreationResult<TestState> creationResult =
-                        SkillStateCreationResult.ok(new TestState(context.getSource().getRotationVector()));
+                        SkillStateCreationResult.ok(new TestState(context.getSource().getForward()));
                 LOGGER.info(
                         "SkillStateFactory called: context={}, creationResult={}",
                         context,
@@ -145,7 +145,7 @@ public final class SkillTest implements ModInitializer {
                 return creationResult;
             })
             .setDurationProvider(context -> {
-                int duration = context.getSource().getRandom().nextBetween(40, 80);
+                int duration = context.getSource().getRandom().nextInt(40, 80);
                 LOGGER.info(
                         "SkillDurationProvider called: context={}, duration={}",
                         context,
@@ -160,6 +160,6 @@ public final class SkillTest implements ModInitializer {
         Registry.register(SkillRegistries.SKILL, "tome-testmod:test", testSkill);
     }
 
-    private record TestState(Vec3d rotation) {
+    private record TestState(Vec3 rotation) {
     }
 }

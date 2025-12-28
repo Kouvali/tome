@@ -1,22 +1,21 @@
 package org.kouv.tome.api.entity.attribute;
 
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.util.Identifier;
-
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
 public final class AttributeModifierSet {
     private static final AttributeModifierSet EMPTY = new AttributeModifierSet();
 
-    private final Map<? extends RegistryEntry<EntityAttribute>, ? extends List<? extends EntityAttributeModifier>> attributeToModifiers;
+    private final Map<? extends Holder<Attribute>, ? extends List<? extends AttributeModifier>> attributeToModifiers;
 
-    private AttributeModifierSet(Map<? extends RegistryEntry<EntityAttribute>, ? extends List<? extends EntityAttributeModifier>> attributeToModifiers) {
+    private AttributeModifierSet(Map<? extends Holder<Attribute>, ? extends List<? extends AttributeModifier>> attributeToModifiers) {
         this.attributeToModifiers = Objects.requireNonNull(attributeToModifiers).entrySet()
                 .stream()
                 .collect(
@@ -39,44 +38,44 @@ public final class AttributeModifierSet {
         return new Builder();
     }
 
-    public void applyTemporaryModifiers(AttributeContainer container) {
+    public void applyTemporaryModifiers(AttributeMap container) {
         Objects.requireNonNull(container);
         processModifiers(
                 container,
                 (instance, modifier) -> {
                     instance.removeModifier(modifier);
-                    instance.addTemporaryModifier(modifier);
+                    instance.addTransientModifier(modifier);
                 }
         );
     }
 
-    public void applyPersistentModifiers(AttributeContainer container) {
+    public void applyPersistentModifiers(AttributeMap container) {
         Objects.requireNonNull(container);
         processModifiers(
                 container,
                 (instance, modifier) -> {
                     instance.removeModifier(modifier);
-                    instance.addPersistentModifier(modifier);
+                    instance.addPermanentModifier(modifier);
                 }
         );
     }
 
-    public void removeModifiers(AttributeContainer container) {
+    public void removeModifiers(AttributeMap container) {
         Objects.requireNonNull(container);
         processModifiers(
                 container,
-                EntityAttributeInstance::removeModifier
+                AttributeInstance::removeModifier
         );
     }
 
     private void processModifiers(
-            AttributeContainer container,
-            BiConsumer<? super EntityAttributeInstance, ? super EntityAttributeModifier> consumer
+            AttributeMap container,
+            BiConsumer<? super AttributeInstance, ? super AttributeModifier> consumer
     ) {
         for (var entry : attributeToModifiers.entrySet()) {
-            var instance = container.getCustomInstance(entry.getKey());
+            var instance = container.getInstance(entry.getKey());
             if (instance != null) {
-                for (EntityAttributeModifier modifier : entry.getValue()) {
+                for (AttributeModifier modifier : entry.getValue()) {
                     consumer.accept(instance, modifier);
                 }
             }
@@ -84,36 +83,36 @@ public final class AttributeModifierSet {
     }
 
     public static final class Builder {
-        private final Map<RegistryEntry<EntityAttribute>, List<EntityAttributeModifier>> attributeToModifiers = new HashMap<>();
+        private final Map<Holder<Attribute>, List<AttributeModifier>> attributeToModifiers = new HashMap<>();
 
         private Builder() {
         }
 
         public Builder addModifier(
-                RegistryEntry<EntityAttribute> attribute,
+                Holder<Attribute> attribute,
                 double value,
-                EntityAttributeModifier.Operation operation
+                AttributeModifier.Operation operation
         ) {
             Objects.requireNonNull(attribute);
             Objects.requireNonNull(operation);
-            return addModifier(attribute, Identifier.of("tome", UUID.randomUUID().toString()), value, operation);
+            return addModifier(attribute, Identifier.fromNamespaceAndPath("tome", UUID.randomUUID().toString()), value, operation);
         }
 
         public Builder addModifier(
-                RegistryEntry<EntityAttribute> attribute,
+                Holder<Attribute> attribute,
                 Identifier id,
                 double value,
-                EntityAttributeModifier.Operation operation
+                AttributeModifier.Operation operation
         ) {
             Objects.requireNonNull(attribute);
             Objects.requireNonNull(id);
             Objects.requireNonNull(operation);
-            return addModifier(attribute, new EntityAttributeModifier(id, value, operation));
+            return addModifier(attribute, new AttributeModifier(id, value, operation));
         }
 
         public Builder addModifier(
-                RegistryEntry<EntityAttribute> attribute,
-                EntityAttributeModifier modifier
+                Holder<Attribute> attribute,
+                AttributeModifier modifier
         ) {
             Objects.requireNonNull(attribute);
             Objects.requireNonNull(modifier);

@@ -21,7 +21,7 @@ public interface SkillCondition {
     }
 
     static SkillCondition requireInGame() {
-        return context -> context.getSource().isPartOfGame() ?
+        return context -> context.getSource().canBeSeenByAnyone() ?
                 SkillResponse.success() :
                 SkillResponse.unavailable();
     }
