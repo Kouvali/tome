@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final SkillContext<S> context;
-    private final S state;
+    private S state;
 
     private final AttributeModifierTracker attributeModifierTracker;
     private int duration;
@@ -29,6 +29,11 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     @Override
     public S getState() {
         return state;
+    }
+
+    @Override
+    public void setState(S state) {
+        this.state = Objects.requireNonNull(state);
     }
 
     @Override

@@ -5,6 +5,8 @@ import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 public interface SkillInstance<S> extends SkillContext<S> {
     S getState();
 
+    void setState(S state);
+
     AttributeModifierTracker getAttributeModifierTracker();
 
     int getDuration();
