@@ -55,7 +55,9 @@ Skill<Vec3d> exampleSkill = Skill.<Vec3d>builder()
         .setInterruptPredicate(instance ->
                 !instance.getSource().isInvulnerable()
         )
-        .setTotalDuration(10)
+        .setDurationProvider(
+                SkillDurationProvider.constant(20)
+        )
         .build();
 ```
 
@@ -69,18 +71,18 @@ val exampleSkill: Skill<Vec3d> = Skill {
 
     tickBehavior {
         source.velocity = state
-        source.velocityModified = true
+        source.knockedBack = true
     }
 
     completeBehavior {
         source.velocity = Vec3d.ZERO
-        source.velocityModified = true
+        source.knockedBack = true
     }
 
     interruptPredicate {
         !source.isInvulnerable
     }
 
-    totalDuration = 10
+    constantDurationProvider(20)
 }
 ```
