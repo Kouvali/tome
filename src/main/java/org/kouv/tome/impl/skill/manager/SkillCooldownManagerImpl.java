@@ -2,6 +2,8 @@ package org.kouv.tome.impl.skill.manager;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
@@ -15,8 +17,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import net.minecraft.core.Holder;
-import net.minecraft.world.entity.LivingEntity;
 
 public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     @SuppressWarnings("unchecked")

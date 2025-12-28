@@ -1,13 +1,13 @@
 package org.kouv.tome.impl.skill;
 
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillInstance;
 
 import java.util.Objects;
-import net.minecraft.core.Holder;
-import net.minecraft.world.entity.LivingEntity;
 
 public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final SkillContext<S> context;

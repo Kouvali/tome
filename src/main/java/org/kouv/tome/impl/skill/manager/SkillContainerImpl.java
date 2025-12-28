@@ -2,6 +2,8 @@ package org.kouv.tome.impl.skill.manager;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
@@ -12,8 +14,6 @@ import org.kouv.tome.impl.skill.SkillContextImpl;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
-import net.minecraft.core.Holder;
-import net.minecraft.world.entity.LivingEntity;
 
 public final class SkillContainerImpl implements SkillContainer {
     @SuppressWarnings("unchecked")

@@ -1,14 +1,15 @@
 package org.kouv.tome.api.entity.attribute;
 
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public final class AttributeModifierSet {
     private static final AttributeModifierSet EMPTY = new AttributeModifierSet();

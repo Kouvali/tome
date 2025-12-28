@@ -1,5 +1,7 @@
 package org.kouv.tome.impl.skill.manager;
 
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 import org.kouv.tome.api.skill.Skill;
@@ -13,8 +15,6 @@ import org.kouv.tome.impl.skill.SkillInstanceImpl;
 
 import java.util.Objects;
 import java.util.Optional;
-import net.minecraft.core.Holder;
-import net.minecraft.world.entity.LivingEntity;
 
 public final class SkillManagerImpl implements SkillManager {
     private @Nullable SkillInstance<?> instance = null;

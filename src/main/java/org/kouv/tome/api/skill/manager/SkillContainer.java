@@ -1,9 +1,9 @@
 package org.kouv.tome.api.skill.manager;
 
+import net.minecraft.core.Holder;
 import org.kouv.tome.api.skill.Skill;
 
 import java.util.Set;
-import net.minecraft.core.Holder;
 
 public interface SkillContainer {
     Set<? extends Holder<? extends Skill<?>>> getSkills();

@@ -1,9 +1,9 @@
 package org.kouv.tome.api.skill;
 
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Objects;
-import net.minecraft.network.chat.Component;
 
 public sealed interface SkillResponse {
     static Success success() {

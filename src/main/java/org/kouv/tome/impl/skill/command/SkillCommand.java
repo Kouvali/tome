@@ -5,13 +5,6 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import org.kouv.tome.api.skill.Skill;
-import org.kouv.tome.api.skill.SkillResponse;
-import org.kouv.tome.api.skill.registry.SkillRegistries;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.function.Predicate;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -22,6 +15,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import org.kouv.tome.api.skill.Skill;
+import org.kouv.tome.api.skill.SkillResponse;
+import org.kouv.tome.api.skill.registry.SkillRegistries;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
 
 public final class SkillCommand {
     private static final DynamicCommandExceptionType ENTITY_FAILED_EXCEPTION = new DynamicCommandExceptionType(

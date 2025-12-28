@@ -1,11 +1,11 @@
 package org.kouv.tome.impl.skill;
 
+import net.minecraft.core.Holder;
+import net.minecraft.world.entity.LivingEntity;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
 
 import java.util.Objects;
-import net.minecraft.core.Holder;
-import net.minecraft.world.entity.LivingEntity;
 
 public final class SkillContextImpl<S> implements SkillContext<S> {
     private final Holder<? extends Skill<S>> skill;
