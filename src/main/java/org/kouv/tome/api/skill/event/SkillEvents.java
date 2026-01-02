@@ -3,8 +3,19 @@ package org.kouv.tome.api.skill.event;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import org.kouv.tome.api.skill.SkillContext;
+import org.kouv.tome.api.skill.SkillResponse;
 
 public interface SkillEvents {
+    Event<Test> TEST = EventFactory.createArrayBacked(Test.class, callbacks -> context -> {
+        for (Test callback : callbacks) {
+            if (callback.onTest(context) instanceof SkillResponse.Failure failure) {
+                return failure;
+            }
+        }
+
+        return SkillResponse.success();
+    });
+
     Event<Loaded> LOADED = EventFactory.createArrayBacked(Loaded.class, callbacks -> context -> {
         for (Loaded callback : callbacks) {
             callback.onLoaded(context);
@@ -34,6 +45,11 @@ public interface SkillEvents {
             callback.onCooldownEnded(context);
         }
     });
+
+    @FunctionalInterface
+    interface Test {
+        SkillResponse onTest(SkillContext<?> context);
+    }
 
     @FunctionalInterface
     interface Loaded {
