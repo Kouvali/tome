@@ -1,5 +1,6 @@
 package org.kouv.tome.api.skill;
 
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
@@ -17,6 +18,7 @@ import org.kouv.tome.api.skill.state.SkillStateFactory;
 import java.util.Objects;
 
 public final class Skill<S> {
+    private final DataComponentMap components;
     private final AttributeModifierSet attributeModifierSet;
     private final SkillCancelBehavior<S> cancelBehavior;
     private final SkillCompleteBehavior<S> completeBehavior;
@@ -40,6 +42,7 @@ public final class Skill<S> {
     private @Nullable Component name;
 
     private Skill(
+            DataComponentMap components,
             AttributeModifierSet attributeModifierSet,
             SkillCancelBehavior<S> cancelBehavior,
             SkillCompleteBehavior<S> completeBehavior,
@@ -57,6 +60,7 @@ public final class Skill<S> {
             SkillInterruptPredicate<S> interruptPredicate,
             SkillStateFactory<S> stateFactory
     ) {
+        this.components = Objects.requireNonNull(components);
         this.attributeModifierSet = Objects.requireNonNull(attributeModifierSet);
         this.cancelBehavior = Objects.requireNonNull(cancelBehavior);
         this.completeBehavior = Objects.requireNonNull(completeBehavior);
@@ -78,6 +82,10 @@ public final class Skill<S> {
 
     public static <S> Builder<S> builder() {
         return new Builder<>();
+    }
+
+    public DataComponentMap getComponents() {
+        return components;
     }
 
     public AttributeModifierSet getAttributeModifierSet() {
@@ -173,6 +181,7 @@ public final class Skill<S> {
     }
 
     public static final class Builder<S> {
+        private DataComponentMap components = DataComponentMap.EMPTY;
         private AttributeModifierSet attributeModifierSet = AttributeModifierSet.empty();
         private SkillCancelBehavior<S> cancelBehavior = SkillCancelBehavior.noOp();
         private SkillCompleteBehavior<S> completeBehavior = SkillCompleteBehavior.noOp();
@@ -192,6 +201,15 @@ public final class Skill<S> {
         private @Nullable SkillStateFactory<S> stateFactory = null;
 
         private Builder() {
+        }
+
+        public DataComponentMap getComponents() {
+            return components;
+        }
+
+        public Builder<S> setComponents(DataComponentMap components) {
+            this.components = Objects.requireNonNull(components);
+            return this;
         }
 
         public AttributeModifierSet getAttributeModifierSet() {
@@ -349,6 +367,7 @@ public final class Skill<S> {
 
         public Skill<S> build() {
             return new Skill<>(
+                    components,
                     attributeModifierSet,
                     cancelBehavior,
                     completeBehavior,

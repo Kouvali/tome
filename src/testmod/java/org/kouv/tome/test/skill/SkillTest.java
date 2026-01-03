@@ -1,7 +1,11 @@
 package org.kouv.tome.test.skill;
 
+import com.mojang.serialization.Codec;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -20,7 +24,16 @@ public final class SkillTest implements ModInitializer {
 
     private static final Identifier ATTRIBUTE_MODIFIER_ID = Identifier.fromNamespaceAndPath("tome-testmod", "test_attribute_modifier");
 
+    private final DataComponentType<Double> testComponent = DataComponentType.<Double>builder()
+            .persistent(Codec.DOUBLE)
+            .build();
+
     private final Skill<TestState> testSkill = Skill.<TestState>builder()
+            .setComponents(
+                    DataComponentMap.builder()
+                            .set(testComponent, 3.0)
+                            .build()
+            )
             .setAttributeModifierSet(
                     AttributeModifierSet.builder()
                             .addModifier(
@@ -38,7 +51,11 @@ public final class SkillTest implements ModInitializer {
             )
             .setCompleteBehavior(instance -> {
                 instance.getSkillCooldownManager().setCooldown(instance.getSkill(), 50);
-                instance.getSource().setDeltaMovement(instance.getState().rotation());
+                instance.getSource().setDeltaMovement(
+                        instance.getState().rotation().scale(
+                                instance.getSkill().value().getComponents().getOrDefault(testComponent, 3.0)
+                        )
+                );
                 instance.getSource().hurtMarked = true;
                 LOGGER.info(
                         "SkillCompleteBehavior called: instance={}",
@@ -157,6 +174,7 @@ public final class SkillTest implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, "tome-testmod:test", testComponent);
         Registry.register(SkillRegistries.SKILL, "tome-testmod:test", testSkill);
     }
 
