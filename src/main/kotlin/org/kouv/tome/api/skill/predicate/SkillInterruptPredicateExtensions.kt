@@ -2,11 +2,9 @@ package org.kouv.tome.api.skill.predicate
 
 import org.kouv.tome.api.skill.SkillInstance
 
-fun <S : Any> SkillInterruptPredicate(block: SkillInstance<out S>.() -> Boolean): SkillInterruptPredicate<S> =
+fun <S : Any> skillInterruptPredicate(block: SkillInstance<out S>.() -> Boolean): SkillInterruptPredicate<S> =
     SkillInterruptPredicate { instance -> instance.block() }
 
-@Suppress("FunctionName")
-fun <S : Any> AllowedSkillInterruptPredicate(): SkillInterruptPredicate<S> = SkillInterruptPredicate.allowed()
+fun <S : Any> allowedSkillInterruptPredicate(): SkillInterruptPredicate<S> = SkillInterruptPredicate.allowed()
 
-@Suppress("FunctionName")
-fun <S : Any> DeniedSkillInterruptPredicate(): SkillInterruptPredicate<S> = SkillInterruptPredicate.denied()
+fun <S : Any> deniedSkillInterruptPredicate(): SkillInterruptPredicate<S> = SkillInterruptPredicate.denied()

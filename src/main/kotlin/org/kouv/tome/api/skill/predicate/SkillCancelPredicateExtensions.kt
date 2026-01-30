@@ -2,11 +2,9 @@ package org.kouv.tome.api.skill.predicate
 
 import org.kouv.tome.api.skill.SkillInstance
 
-fun <S : Any> SkillCancelPredicate(block: SkillInstance<out S>.() -> Boolean): SkillCancelPredicate<S> =
+fun <S : Any> skillCancelPredicate(block: SkillInstance<out S>.() -> Boolean): SkillCancelPredicate<S> =
     SkillCancelPredicate { instance -> instance.block() }
 
-@Suppress("FunctionName")
-fun <S : Any> AllowedSkillCancelPredicate(): SkillCancelPredicate<S> = SkillCancelPredicate.allowed()
+fun <S : Any> allowedSkillCancelPredicate(): SkillCancelPredicate<S> = SkillCancelPredicate.allowed()
 
-@Suppress("FunctionName")
-fun <S : Any> DeniedSkillCancelPredicate(): SkillCancelPredicate<S> = SkillCancelPredicate.denied()
+fun <S : Any> deniedSkillCancelPredicate(): SkillCancelPredicate<S> = SkillCancelPredicate.denied()
