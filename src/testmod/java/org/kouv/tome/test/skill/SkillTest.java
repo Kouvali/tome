@@ -34,7 +34,7 @@ public final class SkillTest implements ModInitializer {
                             .set(testComponent, 3.0)
                             .build()
             )
-            .setAttributeModifierSet(
+            .setAttributeModifiers(
                     AttributeModifierSet.builder()
                             .addModifier(
                                     Attributes.SCALE,

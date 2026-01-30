@@ -14,8 +14,8 @@ import org.kouv.tome.api.skill.state.*
 fun <S : Any> Skill(builderAction: Skill.Builder<S>.() -> Unit): Skill<S> =
     Skill.builder<S>().apply(builderAction).build()
 
-fun Skill.Builder<*>.attributeModifierSet(builderAction: AttributeModifierSet.Builder.() -> Unit): AttributeModifierSet =
-    AttributeModifierSet(builderAction).also { attributeModifierSet = it }
+fun Skill.Builder<*>.attributeModifiers(builderAction: AttributeModifierSet.Builder.() -> Unit): AttributeModifierSet =
+    AttributeModifierSet(builderAction).also { attributeModifiers = it }
 
 fun <S : Any> Skill.Builder<S>.cancelBehavior(block: SkillInstance<out S>.() -> Unit): SkillCancelBehavior<S> =
     SkillCancelBehavior(block).also { cancelBehavior = it }

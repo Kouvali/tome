@@ -19,7 +19,7 @@ import java.util.Objects;
 
 public final class Skill<S> {
     private final DataComponentMap components;
-    private final AttributeModifierSet attributeModifierSet;
+    private final AttributeModifierSet attributeModifiers;
     private final SkillCancelBehavior<S> cancelBehavior;
     private final SkillCompleteBehavior<S> completeBehavior;
     private final SkillEndBehavior<S> endBehavior;
@@ -43,7 +43,7 @@ public final class Skill<S> {
 
     private Skill(
             DataComponentMap components,
-            AttributeModifierSet attributeModifierSet,
+            AttributeModifierSet attributeModifiers,
             SkillCancelBehavior<S> cancelBehavior,
             SkillCompleteBehavior<S> completeBehavior,
             SkillEndBehavior<S> endBehavior,
@@ -61,7 +61,7 @@ public final class Skill<S> {
             SkillStateFactory<S> stateFactory
     ) {
         this.components = Objects.requireNonNull(components);
-        this.attributeModifierSet = Objects.requireNonNull(attributeModifierSet);
+        this.attributeModifiers = Objects.requireNonNull(attributeModifiers);
         this.cancelBehavior = Objects.requireNonNull(cancelBehavior);
         this.completeBehavior = Objects.requireNonNull(completeBehavior);
         this.endBehavior = Objects.requireNonNull(endBehavior);
@@ -88,8 +88,8 @@ public final class Skill<S> {
         return components;
     }
 
-    public AttributeModifierSet getAttributeModifierSet() {
-        return attributeModifierSet;
+    public AttributeModifierSet getAttributeModifiers() {
+        return attributeModifiers;
     }
 
     public SkillCancelBehavior<S> getCancelBehavior() {
@@ -182,7 +182,7 @@ public final class Skill<S> {
 
     public static final class Builder<S> {
         private DataComponentMap components = DataComponentMap.EMPTY;
-        private AttributeModifierSet attributeModifierSet = AttributeModifierSet.empty();
+        private AttributeModifierSet attributeModifiers = AttributeModifierSet.empty();
         private SkillCancelBehavior<S> cancelBehavior = SkillCancelBehavior.noOp();
         private SkillCompleteBehavior<S> completeBehavior = SkillCompleteBehavior.noOp();
         private SkillEndBehavior<S> endBehavior = SkillEndBehavior.noOp();
@@ -212,12 +212,12 @@ public final class Skill<S> {
             return this;
         }
 
-        public AttributeModifierSet getAttributeModifierSet() {
-            return attributeModifierSet;
+        public AttributeModifierSet getAttributeModifiers() {
+            return attributeModifiers;
         }
 
-        public Builder<S> setAttributeModifierSet(AttributeModifierSet attributeModifierSet) {
-            this.attributeModifierSet = Objects.requireNonNull(attributeModifierSet);
+        public Builder<S> setAttributeModifiers(AttributeModifierSet attributeModifiers) {
+            this.attributeModifiers = Objects.requireNonNull(attributeModifiers);
             return this;
         }
 
@@ -368,7 +368,7 @@ public final class Skill<S> {
         public Skill<S> build() {
             return new Skill<>(
                     components,
-                    attributeModifierSet,
+                    attributeModifiers,
                     cancelBehavior,
                     completeBehavior,
                     endBehavior,
