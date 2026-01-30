@@ -13,3 +13,5 @@ fun requireNoCooldownSkillCondition(): SkillCondition = SkillCondition.requireNo
 fun requireInGameSkillCondition(): SkillCondition = SkillCondition.requireInGame()
 
 fun defaultSkillCondition(): SkillCondition = SkillCondition.defaultConditions()
+
+operator fun SkillCondition.plus(other: SkillCondition): SkillCondition = and(other)
