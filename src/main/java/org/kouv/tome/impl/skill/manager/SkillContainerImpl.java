@@ -7,7 +7,9 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
-import org.kouv.tome.api.skill.event.SkillEvents;
+import org.kouv.tome.api.skill.event.SkillAddedCallback;
+import org.kouv.tome.api.skill.event.SkillLoadedCallback;
+import org.kouv.tome.api.skill.event.SkillRemovedCallback;
 import org.kouv.tome.api.skill.manager.SkillContainer;
 import org.kouv.tome.api.skill.registry.SkillRegistries;
 import org.kouv.tome.impl.skill.SkillContextImpl;
@@ -103,7 +105,7 @@ public final class SkillContainerImpl implements SkillContainer {
         skill.value().getAttributeModifiers().applyTemporaryModifiers(getSourceOrThrow().getAttributes());
         skill.value().getAddedCallback().handle(context);
 
-        SkillEvents.ADDED.invoker().onAdded(context);
+        SkillAddedCallback.EVENT.invoker().onAdded(context);
     }
 
     private <S> void handleSkillRemoved(Holder<? extends Skill<S>> skill) {
@@ -112,7 +114,7 @@ public final class SkillContainerImpl implements SkillContainer {
         skill.value().getAttributeModifiers().removeModifiers(getSourceOrThrow().getAttributes());
         skill.value().getRemovedCallback().handle(context);
 
-        SkillEvents.REMOVED.invoker().onRemoved(context);
+        SkillRemovedCallback.EVENT.invoker().onRemoved(context);
     }
 
     private <S> void handleSkillLoaded(Holder<? extends Skill<S>> skill) {
@@ -121,7 +123,7 @@ public final class SkillContainerImpl implements SkillContainer {
         skill.value().getAttributeModifiers().applyTemporaryModifiers(getSourceOrThrow().getAttributes());
         skill.value().getLoadedCallback().handle(context);
 
-        SkillEvents.LOADED.invoker().onLoaded(context);
+        SkillLoadedCallback.EVENT.invoker().onLoaded(context);
     }
 
     private <S> SkillContext<S> createContext(Holder<? extends Skill<S>> skill) {

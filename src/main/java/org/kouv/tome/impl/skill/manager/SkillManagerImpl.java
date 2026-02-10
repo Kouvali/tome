@@ -8,7 +8,7 @@ import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillInstance;
 import org.kouv.tome.api.skill.SkillResponse;
-import org.kouv.tome.api.skill.event.SkillEvents;
+import org.kouv.tome.api.skill.event.SkillTestCallback;
 import org.kouv.tome.api.skill.manager.SkillManager;
 import org.kouv.tome.api.skill.state.SkillStateCreationResult;
 import org.kouv.tome.impl.skill.SkillContextImpl;
@@ -93,7 +93,7 @@ public final class SkillManagerImpl implements SkillManager {
         }
 
         SkillContext<S> context = createContext(skill);
-        return SkillEvents.TEST.invoker().onTest(context) instanceof SkillResponse.Failure failure ?
+        return SkillTestCallback.EVENT.invoker().onTest(context) instanceof SkillResponse.Failure failure ?
                 failure :
                 skill.value().getCondition().test(context);
     }

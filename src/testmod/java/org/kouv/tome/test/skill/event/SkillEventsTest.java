@@ -3,7 +3,7 @@ package org.kouv.tome.test.skill.event;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.world.effect.MobEffects;
 import org.kouv.tome.api.skill.SkillResponse;
-import org.kouv.tome.api.skill.event.SkillEvents;
+import org.kouv.tome.api.skill.event.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,44 +12,44 @@ public final class SkillEventsTest implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        SkillEvents.TEST.register(context -> {
+        SkillTestCallback.EVENT.register(context -> {
             SkillResponse response = context.getSource().hasEffect(MobEffects.BLINDNESS) ?
                     SkillResponse.unavailable() :
                     SkillResponse.success();
             LOGGER.info(
-                    "Test called: context={}, response={}",
+                    "SkillTestCallback called: context={}, response={}",
                     context,
                     response
             );
             return response;
         });
-        SkillEvents.LOADED.register(context ->
+        SkillLoadedCallback.EVENT.register(context ->
                 LOGGER.info(
-                        "Loaded called: context={}",
+                        "SkillLoadedCallback called: context={}",
                         context
                 )
         );
-        SkillEvents.ADDED.register(context ->
+        SkillAddedCallback.EVENT.register(context ->
                 LOGGER.info(
-                        "Added called: context={}",
+                        "SkillAddedCallback called: context={}",
                         context
                 )
         );
-        SkillEvents.REMOVED.register(context ->
+        SkillRemovedCallback.EVENT.register(context ->
                 LOGGER.info(
-                        "Removed called: context={}",
+                        "SkillRemovedCallback called: context={}",
                         context
                 )
         );
-        SkillEvents.COOLDOWN_STARTED.register(context ->
+        SkillCooldownStartedCallback.EVENT.register(context ->
                 LOGGER.info(
-                        "CooldownStarted called: context={}",
+                        "SkillCooldownStartedCallback called: context={}",
                         context
                 )
         );
-        SkillEvents.COOLDOWN_ENDED.register(context ->
+        SkillCooldownEndedCallback.EVENT.register(context ->
                 LOGGER.info(
-                        "CooldownEnded called: context={}",
+                        "SkillCooldownEndedCallback called: context={}",
                         context
                 )
         );

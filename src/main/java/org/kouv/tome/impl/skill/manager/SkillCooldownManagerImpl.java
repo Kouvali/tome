@@ -7,7 +7,8 @@ import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.skill.Skill;
 import org.kouv.tome.api.skill.SkillContext;
-import org.kouv.tome.api.skill.event.SkillEvents;
+import org.kouv.tome.api.skill.event.SkillCooldownEndedCallback;
+import org.kouv.tome.api.skill.event.SkillCooldownStartedCallback;
 import org.kouv.tome.api.skill.manager.SkillCooldownManager;
 import org.kouv.tome.api.skill.registry.SkillRegistries;
 import org.kouv.tome.impl.skill.SkillContextImpl;
@@ -101,13 +102,15 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
     private <S> void handleCooldownStarted(Holder<? extends Skill<S>> skill) {
         SkillContext<?> context = createContext(skill);
         skill.value().getCooldownStartedCallback().handle(context);
-        SkillEvents.COOLDOWN_STARTED.invoker().onCooldownStarted(context);
+
+        SkillCooldownStartedCallback.EVENT.invoker().onCooldownStarted(context);
     }
 
     private <S> void handleCooldownEnded(Holder<? extends Skill<S>> skill) {
         SkillContext<?> context = createContext(skill);
         skill.value().getCooldownEndedCallback().handle(context);
-        SkillEvents.COOLDOWN_ENDED.invoker().onCooldownEnded(context);
+
+        SkillCooldownEndedCallback.EVENT.invoker().onCooldownEnded(context);
     }
 
     private <S> SkillContext<S> createContext(Holder<? extends Skill<S>> skill) {
