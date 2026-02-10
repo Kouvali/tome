@@ -103,7 +103,7 @@ public final class SkillContainerImpl implements SkillContainer {
         SkillContext<S> context = createContext(skill);
 
         skill.value().getAttributeModifiers().applyTemporaryModifiers(getSourceOrThrow().getAttributes());
-        skill.value().getAddedCallback().handle(context);
+        skill.value().getAddBehavior().execute(context);
 
         SkillAddedCallback.EVENT.invoker().onAdded(context);
     }
@@ -112,7 +112,7 @@ public final class SkillContainerImpl implements SkillContainer {
         SkillContext<S> context = createContext(skill);
 
         skill.value().getAttributeModifiers().removeModifiers(getSourceOrThrow().getAttributes());
-        skill.value().getRemovedCallback().handle(context);
+        skill.value().getRemoveBehavior().execute(context);
 
         SkillRemovedCallback.EVENT.invoker().onRemoved(context);
     }
@@ -121,7 +121,7 @@ public final class SkillContainerImpl implements SkillContainer {
         SkillContext<S> context = createContext(skill);
 
         skill.value().getAttributeModifiers().applyTemporaryModifiers(getSourceOrThrow().getAttributes());
-        skill.value().getLoadedCallback().handle(context);
+        skill.value().getLoadBehavior().execute(context);
 
         SkillLoadedCallback.EVENT.invoker().onLoaded(context);
     }

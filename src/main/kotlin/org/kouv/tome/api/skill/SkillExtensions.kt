@@ -3,7 +3,6 @@ package org.kouv.tome.api.skill
 import org.kouv.tome.api.entity.attribute.AttributeModifierSet
 import org.kouv.tome.api.entity.attribute.attributeModifierSet
 import org.kouv.tome.api.skill.behavior.*
-import org.kouv.tome.api.skill.callback.*
 import org.kouv.tome.api.skill.condition.*
 import org.kouv.tome.api.skill.duration.*
 import org.kouv.tome.api.skill.predicate.*
@@ -14,6 +13,12 @@ fun <S : Any> skill(builderAction: Skill.Builder<S>.() -> Unit): Skill<S> =
 
 fun Skill.Builder<*>.attributeModifiers(builderAction: AttributeModifierSet.Builder.() -> Unit): AttributeModifierSet =
     attributeModifierSet(builderAction).also { attributeModifiers = it }
+
+fun Skill.Builder<*>.addBehavior(block: SkillContext<*>.() -> Unit): SkillAddBehavior =
+    skillAddBehavior(block).also { addBehavior = it }
+
+fun Skill.Builder<*>.noOpAddBehavior(): SkillAddBehavior =
+    noOpSkillAddBehavior().also { addBehavior = it }
 
 fun <S : Any> Skill.Builder<S>.cancelBehavior(block: SkillInstance<out S>.() -> Unit): SkillCancelBehavior<S> =
     skillCancelBehavior(block).also { cancelBehavior = it }
@@ -27,6 +32,18 @@ fun <S : Any> Skill.Builder<S>.completeBehavior(block: SkillInstance<out S>.() -
 fun <S : Any> Skill.Builder<S>.noOpCompleteBehavior(): SkillCompleteBehavior<S> =
     noOpSkillCompleteBehavior<S>().also { completeBehavior = it }
 
+fun Skill.Builder<*>.cooldownEndBehavior(block: SkillContext<*>.() -> Unit): SkillCooldownEndBehavior =
+    skillCooldownEndBehavior(block).also { cooldownEndBehavior = it }
+
+fun Skill.Builder<*>.noOpCooldownEndBehavior(): SkillCooldownEndBehavior =
+    noOpSkillCooldownEndBehavior().also { cooldownEndBehavior = it }
+
+fun Skill.Builder<*>.cooldownStartBehavior(block: SkillContext<*>.() -> Unit): SkillCooldownStartBehavior =
+    skillCooldownStartBehavior(block).also { cooldownStartBehavior = it }
+
+fun Skill.Builder<*>.noOpCooldownStartBehavior(): SkillCooldownStartBehavior =
+    noOpSkillCooldownStartBehavior().also { cooldownStartBehavior = it }
+
 fun <S : Any> Skill.Builder<S>.endBehavior(block: SkillInstance<out S>.() -> Unit): SkillEndBehavior<S> =
     skillEndBehavior(block).also { endBehavior = it }
 
@@ -38,6 +55,18 @@ fun <S : Any> Skill.Builder<S>.interruptBehavior(block: SkillInstance<out S>.() 
 
 fun <S : Any> Skill.Builder<S>.noOpInterruptBehavior(): SkillInterruptBehavior<S> =
     noOpSkillInterruptBehavior<S>().also { interruptBehavior = it }
+
+fun Skill.Builder<*>.loadBehavior(block: SkillContext<*>.() -> Unit): SkillLoadBehavior =
+    skillLoadBehavior(block).also { loadBehavior = it }
+
+fun Skill.Builder<*>.noOpLoadBehavior(): SkillLoadBehavior =
+    noOpSkillLoadBehavior().also { loadBehavior = it }
+
+fun Skill.Builder<*>.removeBehavior(block: SkillContext<*>.() -> Unit): SkillRemoveBehavior =
+    skillRemoveBehavior(block).also { removeBehavior = it }
+
+fun Skill.Builder<*>.noOpRemoveBehavior(): SkillRemoveBehavior =
+    noOpSkillRemoveBehavior().also { removeBehavior = it }
 
 fun <S : Any> Skill.Builder<S>.startBehavior(block: SkillInstance<out S>.() -> Unit): SkillStartBehavior<S> =
     skillStartBehavior(block).also { startBehavior = it }
@@ -51,50 +80,8 @@ fun <S : Any> Skill.Builder<S>.tickBehavior(block: SkillInstance<out S>.() -> Un
 fun <S : Any> Skill.Builder<S>.noOpTickBehavior(): SkillTickBehavior<S> =
     noOpSkillTickBehavior<S>().also { tickBehavior = it }
 
-fun Skill.Builder<*>.addedCallback(block: SkillContext<*>.() -> Unit): SkillAddedCallback =
-    skillAddedCallback(block).also { addedCallback = it }
-
-fun Skill.Builder<*>.noOpAddedCallback(): SkillAddedCallback =
-    noOpSkillAddedCallback().also { addedCallback = it }
-
-fun Skill.Builder<*>.cooldownEndedCallback(block: SkillContext<*>.() -> Unit): SkillCooldownEndedCallback =
-    skillCooldownEndedCallback(block).also { cooldownEndedCallback = it }
-
-fun Skill.Builder<*>.noOpCooldownEndedCallback(): SkillCooldownEndedCallback =
-    noOpSkillCooldownEndedCallback().also { cooldownEndedCallback = it }
-
-fun Skill.Builder<*>.cooldownStartedCallback(block: SkillContext<*>.() -> Unit): SkillCooldownStartedCallback =
-    skillCooldownStartedCallback(block).also { cooldownStartedCallback = it }
-
-fun Skill.Builder<*>.noOpCooldownStartedCallback(): SkillCooldownStartedCallback =
-    noOpSkillCooldownStartedCallback().also { cooldownStartedCallback = it }
-
-fun Skill.Builder<*>.loadedCallback(block: SkillContext<*>.() -> Unit): SkillLoadedCallback =
-    skillLoadedCallback(block).also { loadedCallback = it }
-
-fun Skill.Builder<*>.noOpLoadedCallback(): SkillLoadedCallback =
-    noOpSkillLoadedCallback().also { loadedCallback = it }
-
-fun Skill.Builder<*>.removedCallback(block: SkillContext<*>.() -> Unit): SkillRemovedCallback =
-    skillRemovedCallback(block).also { removedCallback = it }
-
-fun Skill.Builder<*>.noOpRemovedCallback(): SkillRemovedCallback =
-    noOpSkillRemovedCallback().also { removedCallback = it }
-
 fun Skill.Builder<*>.condition(block: SkillContext<*>.() -> SkillResponse): SkillCondition =
     skillCondition(block).also { condition = it }
-
-fun Skill.Builder<*>.durationProvider(block: SkillContext<*>.() -> Int): SkillDurationProvider =
-    skillDurationProvider(block).also { durationProvider = it }
-
-fun Skill.Builder<*>.constantDurationProvider(duration: Int): SkillDurationProvider =
-    constantSkillDurationProvider(duration).also { durationProvider = it }
-
-fun Skill.Builder<*>.infiniteDurationProvider(): SkillDurationProvider =
-    infiniteSkillDurationProvider().also { durationProvider = it }
-
-fun Skill.Builder<*>.instantDurationProvider(): SkillDurationProvider =
-    instantSkillDurationProvider().also { durationProvider = it }
 
 fun Skill.Builder<*>.requireLearnedCondition(): SkillCondition =
     requireLearnedSkillCondition().also { condition = it }
@@ -107,6 +94,18 @@ fun Skill.Builder<*>.requireInGameCondition(): SkillCondition =
 
 fun Skill.Builder<*>.defaultCondition(): SkillCondition =
     defaultSkillCondition().also { condition = it }
+
+fun Skill.Builder<*>.durationProvider(block: SkillContext<*>.() -> Int): SkillDurationProvider =
+    skillDurationProvider(block).also { durationProvider = it }
+
+fun Skill.Builder<*>.constantDurationProvider(duration: Int): SkillDurationProvider =
+    constantSkillDurationProvider(duration).also { durationProvider = it }
+
+fun Skill.Builder<*>.infiniteDurationProvider(): SkillDurationProvider =
+    infiniteSkillDurationProvider().also { durationProvider = it }
+
+fun Skill.Builder<*>.instantDurationProvider(): SkillDurationProvider =
+    instantSkillDurationProvider().also { durationProvider = it }
 
 fun <S : Any> Skill.Builder<S>.cancelPredicate(block: SkillInstance<out S>.() -> Boolean): SkillCancelPredicate<S> =
     skillCancelPredicate(block).also { cancelPredicate = it }
