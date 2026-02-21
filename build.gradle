@@ -3,6 +3,7 @@ plugins {
     id 'fabric-loom'
     id 'maven-publish'
     id 'org.jreleaser'
+    id 'com.modrinth.minotaur'
 }
 
 sourceSets {
@@ -107,5 +108,19 @@ jreleaser {
                 }
             }
         }
+    }
+}
+
+modrinth {
+    projectId = 'tome-mod'
+
+    versionNumber = "$version"
+    versionName = "v$version"
+
+    gameVersions = [minecraft_version]
+    uploadFile = remapJar
+
+    dependencies {
+        required.version('fabric-api', fabric_api_version)
     }
 }
