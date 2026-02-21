@@ -60,6 +60,18 @@ public final class SkillContainerImpl implements SkillContainer {
         return skills.contains(skill);
     }
 
+    @Override
+    public boolean hasSkills(Collection<? extends Holder<? extends Skill<?>>> skills) {
+        Objects.requireNonNull(skills);
+        for (Holder<? extends Skill<?>> skill : skills) {
+            if (!hasSkill(skill)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public boolean addSkill(Holder<? extends Skill<?>> skill) {
@@ -72,6 +84,19 @@ public final class SkillContainerImpl implements SkillContainer {
         return added;
     }
 
+    @Override
+    public boolean addSkills(Collection<? extends Holder<? extends Skill<?>>> skills) {
+        Objects.requireNonNull(skills);
+        boolean changed = false;
+        for (Holder<? extends Skill<?>> skill : skills) {
+            if (addSkill(skill)) {
+                changed = true;
+            }
+        }
+
+        return changed;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public boolean removeSkill(Holder<? extends Skill<?>> skill) {
@@ -82,6 +107,18 @@ public final class SkillContainerImpl implements SkillContainer {
         }
 
         return removed;
+    }
+
+    @Override
+    public boolean removeSkills(Collection<? extends Holder<? extends Skill<?>>> skills) {
+        boolean changed = false;
+        for (Holder<? extends Skill<?>> skill : skills) {
+            if (removeSkill(skill)) {
+                changed = true;
+            }
+        }
+
+        return changed;
     }
 
     public @Nullable LivingEntity getSource() {

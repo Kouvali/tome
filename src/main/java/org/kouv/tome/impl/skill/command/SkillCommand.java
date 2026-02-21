@@ -76,7 +76,7 @@ public final class SkillCommand {
                                         executeAdd(
                                                 context.getSource(),
                                                 List.of(context.getSource().getEntityOrException()),
-                                                getSkill(IdentifierArgument.getId(context, "skill"))
+                                                List.of(getSkill(IdentifierArgument.getId(context, "skill")))
                                         )
                                 )
                                 .then(
@@ -85,7 +85,27 @@ public final class SkillCommand {
                                                         executeAdd(
                                                                 context.getSource(),
                                                                 EntityArgument.getEntities(context, "targets"),
-                                                                getSkill(IdentifierArgument.getId(context, "skill"))
+                                                                List.of(getSkill(IdentifierArgument.getId(context, "skill")))
+                                                        )
+                                                )
+                                )
+                )
+                .then(
+                        Commands.literal("*")
+                                .executes(context ->
+                                        executeAdd(
+                                                context.getSource(),
+                                                List.of(context.getSource().getEntityOrException()),
+                                                SkillRegistries.SKILL.listElements().toList()
+                                        )
+                                )
+                                .then(
+                                        Commands.argument("targets", EntityArgument.entities())
+                                                .executes(context ->
+                                                        executeAdd(
+                                                                context.getSource(),
+                                                                EntityArgument.getEntities(context, "targets"),
+                                                                SkillRegistries.SKILL.listElements().toList()
                                                         )
                                                 )
                                 )
@@ -103,7 +123,7 @@ public final class SkillCommand {
                                         executeRemove(
                                                 context.getSource(),
                                                 List.of(context.getSource().getEntityOrException()),
-                                                getSkill(IdentifierArgument.getId(context, "skill"))
+                                                List.of(getSkill(IdentifierArgument.getId(context, "skill")))
                                         )
                                 )
                                 .then(
@@ -112,7 +132,27 @@ public final class SkillCommand {
                                                         executeRemove(
                                                                 context.getSource(),
                                                                 EntityArgument.getEntities(context, "targets"),
-                                                                getSkill(IdentifierArgument.getId(context, "skill"))
+                                                                List.of(getSkill(IdentifierArgument.getId(context, "skill")))
+                                                        )
+                                                )
+                                )
+                )
+                .then(
+                        Commands.literal("*")
+                                .executes(context ->
+                                        executeRemove(
+                                                context.getSource(),
+                                                List.of(context.getSource().getEntityOrException()),
+                                                SkillRegistries.SKILL.listElements().toList()
+                                        )
+                                )
+                                .then(
+                                        Commands.argument("targets", EntityArgument.entities())
+                                                .executes(context ->
+                                                        executeRemove(
+                                                                context.getSource(),
+                                                                EntityArgument.getEntities(context, "targets"),
+                                                                SkillRegistries.SKILL.listElements().toList()
                                                         )
                                                 )
                                 )
@@ -233,19 +273,19 @@ public final class SkillCommand {
     private static int executeAdd(
             CommandSourceStack source,
             Collection<? extends Entity> targets,
-            Holder<? extends Skill<?>> skill
+            Collection<? extends Holder<? extends Skill<?>>> skills
     ) throws CommandSyntaxException {
         List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillContainer().addSkill(skill));
+                filterLivingEntities(targets, entity -> entity.getSkillContainer().addSkills(skills));
 
         if (entities.isEmpty()) {
             throw ADD_FAILED_EXCEPTION.create();
         }
 
         if (entities.size() == 1) {
-            source.sendSuccess(() -> Component.translatable("commands.skill.add.success.single", skill.value().getName(), entities.getFirst().getName()), true);
+            source.sendSuccess(() -> Component.translatable("commands.skill.add.success.single", skills.size(), entities.getFirst().getName()), true);
         } else {
-            source.sendSuccess(() -> Component.translatable("commands.skill.add.success.multiple", skill.value().getName(), entities.size()), true);
+            source.sendSuccess(() -> Component.translatable("commands.skill.add.success.multiple", skills.size(), entities.size()), true);
         }
 
         return entities.size();
@@ -254,19 +294,19 @@ public final class SkillCommand {
     private static int executeRemove(
             CommandSourceStack source,
             Collection<? extends Entity> targets,
-            Holder<? extends Skill<?>> skill
+            Collection<? extends Holder<? extends Skill<?>>> skills
     ) throws CommandSyntaxException {
         List<? extends LivingEntity> entities =
-                filterLivingEntities(targets, entity -> entity.getSkillContainer().removeSkill(skill));
+                filterLivingEntities(targets, entity -> entity.getSkillContainer().removeSkills(skills));
 
         if (entities.isEmpty()) {
             throw REMOVE_FAILED_EXCEPTION.create();
         }
 
         if (entities.size() == 1) {
-            source.sendSuccess(() -> Component.translatable("commands.skill.remove.success.single", skill.value().getName(), entities.getFirst().getName()), true);
+            source.sendSuccess(() -> Component.translatable("commands.skill.remove.success.single", skills.size(), entities.getFirst().getName()), true);
         } else {
-            source.sendSuccess(() -> Component.translatable("commands.skill.remove.success.multiple", skill.value().getName(), entities.size()), true);
+            source.sendSuccess(() -> Component.translatable("commands.skill.remove.success.multiple", skills.size(), entities.size()), true);
         }
 
         return entities.size();
