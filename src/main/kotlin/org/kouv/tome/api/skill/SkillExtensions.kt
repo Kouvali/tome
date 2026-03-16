@@ -14,12 +14,6 @@ fun <S : Any> skill(builderAction: Skill.Builder<S>.() -> Unit): Skill<S> =
 fun Skill.Builder<*>.attributeModifiers(builderAction: AttributeModifierSet.Builder.() -> Unit): AttributeModifierSet =
     attributeModifierSet(builderAction).also { attributeModifiers = it }
 
-fun Skill.Builder<*>.addBehavior(block: SkillContext<*>.() -> Unit): SkillAddBehavior =
-    skillAddBehavior(block).also { addBehavior = it }
-
-fun Skill.Builder<*>.noOpAddBehavior(): SkillAddBehavior =
-    noOpSkillAddBehavior().also { addBehavior = it }
-
 fun <S : Any> Skill.Builder<S>.cancelBehavior(block: SkillInstance<out S>.() -> Unit): SkillCancelBehavior<S> =
     skillCancelBehavior(block).also { cancelBehavior = it }
 
@@ -32,18 +26,6 @@ fun <S : Any> Skill.Builder<S>.completeBehavior(block: SkillInstance<out S>.() -
 fun <S : Any> Skill.Builder<S>.noOpCompleteBehavior(): SkillCompleteBehavior<S> =
     noOpSkillCompleteBehavior<S>().also { completeBehavior = it }
 
-fun Skill.Builder<*>.cooldownEndBehavior(block: SkillContext<*>.() -> Unit): SkillCooldownEndBehavior =
-    skillCooldownEndBehavior(block).also { cooldownEndBehavior = it }
-
-fun Skill.Builder<*>.noOpCooldownEndBehavior(): SkillCooldownEndBehavior =
-    noOpSkillCooldownEndBehavior().also { cooldownEndBehavior = it }
-
-fun Skill.Builder<*>.cooldownStartBehavior(block: SkillContext<*>.() -> Unit): SkillCooldownStartBehavior =
-    skillCooldownStartBehavior(block).also { cooldownStartBehavior = it }
-
-fun Skill.Builder<*>.noOpCooldownStartBehavior(): SkillCooldownStartBehavior =
-    noOpSkillCooldownStartBehavior().also { cooldownStartBehavior = it }
-
 fun <S : Any> Skill.Builder<S>.endBehavior(block: SkillInstance<out S>.() -> Unit): SkillEndBehavior<S> =
     skillEndBehavior(block).also { endBehavior = it }
 
@@ -55,18 +37,6 @@ fun <S : Any> Skill.Builder<S>.interruptBehavior(block: SkillInstance<out S>.() 
 
 fun <S : Any> Skill.Builder<S>.noOpInterruptBehavior(): SkillInterruptBehavior<S> =
     noOpSkillInterruptBehavior<S>().also { interruptBehavior = it }
-
-fun Skill.Builder<*>.loadBehavior(block: SkillContext<*>.() -> Unit): SkillLoadBehavior =
-    skillLoadBehavior(block).also { loadBehavior = it }
-
-fun Skill.Builder<*>.noOpLoadBehavior(): SkillLoadBehavior =
-    noOpSkillLoadBehavior().also { loadBehavior = it }
-
-fun Skill.Builder<*>.removeBehavior(block: SkillContext<*>.() -> Unit): SkillRemoveBehavior =
-    skillRemoveBehavior(block).also { removeBehavior = it }
-
-fun Skill.Builder<*>.noOpRemoveBehavior(): SkillRemoveBehavior =
-    noOpSkillRemoveBehavior().also { removeBehavior = it }
 
 fun <S : Any> Skill.Builder<S>.startBehavior(block: SkillInstance<out S>.() -> Unit): SkillStartBehavior<S> =
     skillStartBehavior(block).also { startBehavior = it }

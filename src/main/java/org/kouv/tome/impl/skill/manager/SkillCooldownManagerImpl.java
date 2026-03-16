@@ -101,14 +101,12 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
 
     private <S> void handleCooldownStarted(Holder<? extends Skill<S>> skill) {
         SkillContext<?> context = createContext(skill);
-        skill.value().getCooldownStartBehavior().execute(context);
 
         SkillCooldownStartedCallback.EVENT.invoker().onCooldownStarted(context);
     }
 
     private <S> void handleCooldownEnded(Holder<? extends Skill<S>> skill) {
         SkillContext<?> context = createContext(skill);
-        skill.value().getCooldownEndBehavior().execute(context);
 
         SkillCooldownEndedCallback.EVENT.invoker().onCooldownEnded(context);
     }

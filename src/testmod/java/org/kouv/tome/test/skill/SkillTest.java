@@ -94,36 +94,6 @@ public final class SkillTest implements ModInitializer {
                         instance
                 );
             })
-            .setAddBehavior(context ->
-                    LOGGER.info(
-                            "SkillAddedCallback called: context={}",
-                            context
-                    )
-            )
-            .setCooldownEndBehavior(context ->
-                    LOGGER.info(
-                            "SkillCooldownEndedCallback called: context={}",
-                            context
-                    )
-            )
-            .setCooldownStartBehavior(context ->
-                    LOGGER.info(
-                            "SkillCooldownStartedCallback called: context={}",
-                            context
-                    )
-            )
-            .setLoadBehavior(context ->
-                    LOGGER.info(
-                            "SkillLoadedCallback called: context={}",
-                            context.getSkill()
-                    )
-            )
-            .setRemoveBehavior(context ->
-                    LOGGER.info(
-                            "SkillRemovedCallback called: context={}",
-                            context
-                    )
-            )
             .setCondition(context -> {
                 SkillResponse response = SkillCondition.defaultConditions().test(context);
                 LOGGER.info(

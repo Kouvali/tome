@@ -19,15 +19,10 @@ import java.util.Objects;
 public final class Skill<S> {
     private final DataComponentMap components;
     private final AttributeModifierSet attributeModifiers;
-    private final SkillAddBehavior addBehavior;
     private final SkillCancelBehavior<S> cancelBehavior;
     private final SkillCompleteBehavior<S> completeBehavior;
-    private final SkillCooldownEndBehavior cooldownEndBehavior;
-    private final SkillCooldownStartBehavior cooldownStartBehavior;
     private final SkillEndBehavior<S> endBehavior;
     private final SkillInterruptBehavior<S> interruptBehavior;
-    private final SkillLoadBehavior loadBehavior;
-    private final SkillRemoveBehavior removeBehavior;
     private final SkillStartBehavior<S> startBehavior;
     private final SkillTickBehavior<S> tickBehavior;
     private final SkillCondition condition;
@@ -43,15 +38,10 @@ public final class Skill<S> {
     private Skill(
             DataComponentMap components,
             AttributeModifierSet attributeModifiers,
-            SkillAddBehavior addBehavior,
             SkillCancelBehavior<S> cancelBehavior,
             SkillCompleteBehavior<S> completeBehavior,
-            SkillCooldownEndBehavior cooldownEndBehavior,
-            SkillCooldownStartBehavior cooldownStartBehavior,
             SkillEndBehavior<S> endBehavior,
             SkillInterruptBehavior<S> interruptBehavior,
-            SkillLoadBehavior loadBehavior,
-            SkillRemoveBehavior removeBehavior,
             SkillStartBehavior<S> startBehavior,
             SkillTickBehavior<S> tickBehavior,
             SkillCondition condition, SkillDurationProvider durationProvider,
@@ -61,15 +51,10 @@ public final class Skill<S> {
     ) {
         this.components = Objects.requireNonNull(components);
         this.attributeModifiers = Objects.requireNonNull(attributeModifiers);
-        this.addBehavior = Objects.requireNonNull(addBehavior);
         this.cancelBehavior = Objects.requireNonNull(cancelBehavior);
         this.completeBehavior = Objects.requireNonNull(completeBehavior);
-        this.cooldownEndBehavior = Objects.requireNonNull(cooldownEndBehavior);
-        this.cooldownStartBehavior = Objects.requireNonNull(cooldownStartBehavior);
         this.endBehavior = Objects.requireNonNull(endBehavior);
         this.interruptBehavior = Objects.requireNonNull(interruptBehavior);
-        this.loadBehavior = Objects.requireNonNull(loadBehavior);
-        this.removeBehavior = Objects.requireNonNull(removeBehavior);
         this.startBehavior = Objects.requireNonNull(startBehavior);
         this.tickBehavior = Objects.requireNonNull(tickBehavior);
         this.condition = Objects.requireNonNull(condition);
@@ -91,10 +76,6 @@ public final class Skill<S> {
         return attributeModifiers;
     }
 
-    public SkillAddBehavior getAddBehavior() {
-        return addBehavior;
-    }
-
     public SkillCancelBehavior<S> getCancelBehavior() {
         return cancelBehavior;
     }
@@ -103,28 +84,12 @@ public final class Skill<S> {
         return completeBehavior;
     }
 
-    public SkillCooldownEndBehavior getCooldownEndBehavior() {
-        return cooldownEndBehavior;
-    }
-
-    public SkillCooldownStartBehavior getCooldownStartBehavior() {
-        return cooldownStartBehavior;
-    }
-
     public SkillEndBehavior<S> getEndBehavior() {
         return endBehavior;
     }
 
     public SkillInterruptBehavior<S> getInterruptBehavior() {
         return interruptBehavior;
-    }
-
-    public SkillLoadBehavior getLoadBehavior() {
-        return loadBehavior;
-    }
-
-    public SkillRemoveBehavior getRemoveBehavior() {
-        return removeBehavior;
     }
 
     public SkillStartBehavior<S> getStartBehavior() {
@@ -182,15 +147,10 @@ public final class Skill<S> {
     public static final class Builder<S> {
         private DataComponentMap components = DataComponentMap.EMPTY;
         private AttributeModifierSet attributeModifiers = AttributeModifierSet.empty();
-        private SkillAddBehavior addBehavior = SkillAddBehavior.noOp();
         private SkillCancelBehavior<S> cancelBehavior = SkillCancelBehavior.noOp();
         private SkillCompleteBehavior<S> completeBehavior = SkillCompleteBehavior.noOp();
-        private SkillCooldownEndBehavior cooldownEndBehavior = SkillCooldownEndBehavior.noOp();
-        private SkillCooldownStartBehavior cooldownStartBehavior = SkillCooldownStartBehavior.noOp();
         private SkillEndBehavior<S> endBehavior = SkillEndBehavior.noOp();
         private SkillInterruptBehavior<S> interruptBehavior = SkillInterruptBehavior.noOp();
-        private SkillLoadBehavior loadBehavior = SkillLoadBehavior.noOp();
-        private SkillRemoveBehavior removeBehavior = SkillRemoveBehavior.noOp();
         private SkillStartBehavior<S> startBehavior = SkillStartBehavior.noOp();
         private SkillTickBehavior<S> tickBehavior = SkillTickBehavior.noOp();
         private SkillCondition condition = SkillCondition.defaultConditions();
@@ -220,15 +180,6 @@ public final class Skill<S> {
             return this;
         }
 
-        public SkillAddBehavior getAddBehavior() {
-            return addBehavior;
-        }
-
-        public Builder<S> setAddBehavior(SkillAddBehavior addBehavior) {
-            this.addBehavior = Objects.requireNonNull(addBehavior);
-            return this;
-        }
-
         public SkillCancelBehavior<S> getCancelBehavior() {
             return cancelBehavior;
         }
@@ -247,24 +198,6 @@ public final class Skill<S> {
             return this;
         }
 
-        public SkillCooldownEndBehavior getCooldownEndBehavior() {
-            return cooldownEndBehavior;
-        }
-
-        public Builder<S> setCooldownEndBehavior(SkillCooldownEndBehavior cooldownEndBehavior) {
-            this.cooldownEndBehavior = Objects.requireNonNull(cooldownEndBehavior);
-            return this;
-        }
-
-        public SkillCooldownStartBehavior getCooldownStartBehavior() {
-            return cooldownStartBehavior;
-        }
-
-        public Builder<S> setCooldownStartBehavior(SkillCooldownStartBehavior cooldownStartBehavior) {
-            this.cooldownStartBehavior = Objects.requireNonNull(cooldownStartBehavior);
-            return this;
-        }
-
         public SkillEndBehavior<S> getEndBehavior() {
             return endBehavior;
         }
@@ -280,24 +213,6 @@ public final class Skill<S> {
 
         public Builder<S> setInterruptBehavior(SkillInterruptBehavior<S> interruptBehavior) {
             this.interruptBehavior = Objects.requireNonNull(interruptBehavior);
-            return this;
-        }
-
-        public SkillLoadBehavior getLoadBehavior() {
-            return loadBehavior;
-        }
-
-        public Builder<S> setLoadBehavior(SkillLoadBehavior loadBehavior) {
-            this.loadBehavior = Objects.requireNonNull(loadBehavior);
-            return this;
-        }
-
-        public SkillRemoveBehavior getRemoveBehavior() {
-            return removeBehavior;
-        }
-
-        public Builder<S> setRemoveBehavior(SkillRemoveBehavior removeBehavior) {
-            this.removeBehavior = Objects.requireNonNull(removeBehavior);
             return this;
         }
 
@@ -368,15 +283,10 @@ public final class Skill<S> {
             return new Skill<>(
                     components,
                     attributeModifiers,
-                    addBehavior,
                     cancelBehavior,
                     completeBehavior,
-                    cooldownEndBehavior,
-                    cooldownStartBehavior,
                     endBehavior,
                     interruptBehavior,
-                    loadBehavior,
-                    removeBehavior,
                     startBehavior,
                     tickBehavior,
                     condition,
