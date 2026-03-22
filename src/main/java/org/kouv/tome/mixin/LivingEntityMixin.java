@@ -25,7 +25,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
         super(type, world);
     }
 
-    @SuppressWarnings({"AddedMixinMembersNamePattern", "UnstableApiUsage"})
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
     public SkillContainer getSkillContainer() {
         SkillContainerImpl skillContainer =
@@ -38,7 +38,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
         return skillContainer;
     }
 
-    @SuppressWarnings({"AddedMixinMembersNamePattern", "UnstableApiUsage"})
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
     public SkillCooldownManager getSkillCooldownManager() {
         SkillCooldownManagerImpl skillCooldownManager =
@@ -51,7 +51,7 @@ public abstract class LivingEntityMixin extends Entity implements SkillEntity {
         return skillCooldownManager;
     }
 
-    @SuppressWarnings({"AddedMixinMembersNamePattern", "UnstableApiUsage"})
+    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
     public SkillManager getSkillManager() {
         SkillManagerImpl skillManager =

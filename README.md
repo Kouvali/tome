@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation("io.github.kouvali:tome:YOUR_VERSION")
+    implementation("io.github.kouvali:tome:YOUR_VERSION")
 }
 ```
 
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation "io.github.kouvali:tome:YOUR_VERSION"
+    implementation "io.github.kouvali:tome:YOUR_VERSION"
 }
 ```
 
