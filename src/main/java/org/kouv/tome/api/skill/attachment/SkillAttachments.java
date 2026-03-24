@@ -11,7 +11,6 @@ import org.kouv.tome.impl.skill.manager.SkillContainerImpl;
 import org.kouv.tome.impl.skill.manager.SkillCooldownManagerImpl;
 
 public interface SkillAttachments {
-    @SuppressWarnings("UnstableApiUsage")
     AttachmentType<SkillContainer> SKILL_CONTAINER = AttachmentRegistry
             .create(
                     Identifier.fromNamespaceAndPath("tome", "skill_container"),
@@ -20,7 +19,6 @@ public interface SkillAttachments {
                             .copyOnDeath()
             );
 
-    @SuppressWarnings("UnstableApiUsage")
     AttachmentType<SkillCooldownManager> SKILL_COOLDOWN_MANAGER = AttachmentRegistry
             .create(
                     Identifier.fromNamespaceAndPath("tome", "skill_cooldown_manager"),
@@ -29,7 +27,6 @@ public interface SkillAttachments {
                             .copyOnDeath()
             );
 
-    @SuppressWarnings("UnstableApiUsage")
     AttachmentType<SkillManager> SKILL_MANAGER = AttachmentRegistry
             .create(
                     Identifier.fromNamespaceAndPath("tome", "skill_manager")
