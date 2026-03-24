@@ -64,7 +64,7 @@ Skill<Vec3> exampleSkill = Skill.<Vec3>builder()
 ### Kotlin
 
 ```kotlin
-val exampleSkill: Skill<Vec3> = Skill {
+val exampleSkill: Skill<Vec3> = skill {
     alwaysOkStateFactory {
         source.forward
     }
