@@ -6,6 +6,7 @@ import org.kouv.tome.api.skill.SkillContext;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
+@FunctionalInterface
 public interface SkillDurationProvider {
     static SkillDurationProvider constant(int duration) {
         return context -> duration;
