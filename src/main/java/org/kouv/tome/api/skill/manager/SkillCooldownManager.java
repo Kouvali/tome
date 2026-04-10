@@ -9,4 +9,6 @@ public interface SkillCooldownManager {
     int getCooldown(Holder<? extends Skill<?>> skill);
 
     void setCooldown(Holder<? extends Skill<?>> skill, int cooldown);
+
+    void clearCooldowns();
 }

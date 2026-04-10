@@ -77,6 +77,17 @@ public final class SkillCooldownManagerImpl implements SkillCooldownManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void clearCooldowns() {
+        Iterator<Map.Entry<Holder<? extends Skill<?>>, Integer>> iterator = cooldowns.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<Holder<? extends Skill<?>>, Integer> entry = iterator.next();
+            iterator.remove();
+            handleCooldownEnded((Holder<? extends Skill<Object>>) entry.getKey());
+        }
+    }
+
     public @Nullable LivingEntity getSource() {
         return source;
     }

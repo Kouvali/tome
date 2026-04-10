@@ -1,6 +1,7 @@
 package org.kouv.tome.impl.skill.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
@@ -45,6 +46,12 @@ public final class SkillCommand {
     private static final SimpleCommandExceptionType TERMINATE_FAILED_EXCEPTION = new SimpleCommandExceptionType(
             Component.translatable("commands.skill.terminate.failed")
     );
+    private static final SimpleCommandExceptionType COOLDOWN_SET_FAILED_EXCEPTION = new SimpleCommandExceptionType(
+            Component.translatable("commands.skill.cooldown.set.failed")
+    );
+    private static final SimpleCommandExceptionType COOLDOWN_CLEAR_FAILED_EXCEPTION = new SimpleCommandExceptionType(
+            Component.translatable("commands.skill.cooldown.clear.failed")
+    );
 
     private SkillCommand() {
     }
@@ -62,7 +69,8 @@ public final class SkillCommand {
                 .then(argumentCast())
                 .then(argumentCancel())
                 .then(argumentInterrupt())
-                .then(argumentTerminate());
+                .then(argumentTerminate())
+                .then(argumentCooldown());
     }
 
     private static LiteralArgumentBuilder<CommandSourceStack> argumentAdd() {
@@ -270,6 +278,91 @@ public final class SkillCommand {
                 );
     }
 
+    private static LiteralArgumentBuilder<CommandSourceStack> argumentCooldown() {
+        return Commands.literal("cooldown")
+                .then(argumentCooldownSet())
+                .then(argumentCooldownGet())
+                .then(argumentCooldownClear());
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> argumentCooldownGet() {
+        return Commands.literal("get")
+                .then(
+                        Commands.argument("skill", IdentifierArgument.id())
+                                .suggests((context, builder) ->
+                                        SharedSuggestionProvider.suggestResource(SkillRegistries.SKILL.keySet(), builder)
+                                )
+                                .executes(context ->
+                                        executeCooldownGet(
+                                                context.getSource(),
+                                                context.getSource().getEntityOrException(),
+                                                getSkill(IdentifierArgument.getId(context, "skill"))
+                                        )
+                                )
+                                .then(
+                                        Commands.argument("target", EntityArgument.entity())
+                                                .executes(context ->
+                                                        executeCooldownGet(
+                                                                context.getSource(),
+                                                                EntityArgument.getEntity(context, "target"),
+                                                                getSkill(IdentifierArgument.getId(context, "skill"))
+                                                        )
+                                                )
+                                )
+                );
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> argumentCooldownSet() {
+        return Commands.literal("set")
+                .then(
+                        Commands.argument("skill", IdentifierArgument.id())
+                                .suggests((context, builder) ->
+                                        SharedSuggestionProvider.suggestResource(SkillRegistries.SKILL.keySet(), builder)
+                                )
+                                .then(
+                                        Commands.argument("ticks", IntegerArgumentType.integer(0))
+                                                .executes(context ->
+                                                        executeCooldownSet(
+                                                                context.getSource(),
+                                                                List.of(context.getSource().getEntityOrException()),
+                                                                getSkill(IdentifierArgument.getId(context, "skill")),
+                                                                IntegerArgumentType.getInteger(context, "ticks")
+                                                        )
+                                                )
+                                                .then(
+                                                        Commands.argument("targets", EntityArgument.entities())
+                                                                .executes(context ->
+                                                                        executeCooldownSet(
+                                                                                context.getSource(),
+                                                                                EntityArgument.getEntities(context, "targets"),
+                                                                                getSkill(IdentifierArgument.getId(context, "skill")),
+                                                                                IntegerArgumentType.getInteger(context, "ticks")
+                                                                        )
+                                                                )
+                                                )
+                                )
+                );
+    }
+
+    private static LiteralArgumentBuilder<CommandSourceStack> argumentCooldownClear() {
+        return Commands.literal("clear")
+                .executes(context ->
+                        executeCooldownClear(
+                                context.getSource(),
+                                List.of(context.getSource().getEntityOrException())
+                        )
+                )
+                .then(
+                        Commands.argument("targets", EntityArgument.entities())
+                                .executes(context ->
+                                        executeCooldownClear(
+                                                context.getSource(),
+                                                EntityArgument.getEntities(context, "targets")
+                                        )
+                                )
+                );
+    }
+
     private static int executeAdd(
             CommandSourceStack source,
             Collection<? extends Entity> targets,
@@ -401,6 +494,71 @@ public final class SkillCommand {
             source.sendSuccess(() -> Component.translatable("commands.skill.terminate.success.single", entities.getFirst().getName()), true);
         } else {
             source.sendSuccess(() -> Component.translatable("commands.skill.terminate.success.multiple", entities.size()), true);
+        }
+
+        return entities.size();
+    }
+
+    private static int executeCooldownGet(
+            CommandSourceStack source,
+            Entity target,
+            Holder<? extends Skill<?>> skill
+    ) throws CommandSyntaxException {
+        LivingEntity livingEntity = getLivingEntity(target);
+        int cooldown = livingEntity.getSkillCooldownManager().getCooldown(skill);
+
+        if (cooldown > 0) {
+            source.sendSuccess(() -> Component.translatable("commands.skill.cooldown.get.success", skill.value().getName(), target.getName(), cooldown), true);
+        } else {
+            source.sendSuccess(() -> Component.translatable("commands.skill.cooldown.get.none", skill.value().getName(), target.getName()), true);
+        }
+
+        return cooldown;
+    }
+
+    private static int executeCooldownSet(
+            CommandSourceStack source,
+            Collection<? extends Entity> targets,
+            Holder<? extends Skill<?>> skill,
+            int ticks
+    ) throws CommandSyntaxException {
+        List<? extends LivingEntity> entities =
+                filterLivingEntities(targets, entity -> {
+                    entity.getSkillCooldownManager().setCooldown(skill, ticks);
+                    return true;
+                });
+
+        if (entities.isEmpty()) {
+            throw COOLDOWN_SET_FAILED_EXCEPTION.create();
+        }
+
+        if (entities.size() == 1) {
+            source.sendSuccess(() -> Component.translatable("commands.skill.cooldown.set.success.single", skill.value().getName(), ticks, entities.getFirst().getName()), true);
+        } else {
+            source.sendSuccess(() -> Component.translatable("commands.skill.cooldown.set.success.multiple", skill.value().getName(), ticks, entities.size()), true);
+        }
+
+        return entities.size();
+    }
+
+    private static int executeCooldownClear(
+            CommandSourceStack source,
+            Collection<? extends Entity> targets
+    ) throws CommandSyntaxException {
+        List<? extends LivingEntity> entities =
+                filterLivingEntities(targets, entity -> {
+                    entity.getSkillCooldownManager().clearCooldowns();
+                    return true;
+                });
+
+        if (entities.isEmpty()) {
+            throw COOLDOWN_CLEAR_FAILED_EXCEPTION.create();
+        }
+
+        if (entities.size() == 1) {
+            source.sendSuccess(() -> Component.translatable("commands.skill.cooldown.clear.success.single", entities.getFirst().getName()), true);
+        } else {
+            source.sendSuccess(() -> Component.translatable("commands.skill.cooldown.clear.success.multiple", entities.size()), true);
         }
 
         return entities.size();
