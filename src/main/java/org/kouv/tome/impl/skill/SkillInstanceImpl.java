@@ -16,7 +16,7 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private final AttributeModifierTracker attributeModifierTracker;
     private int duration;
 
-    private boolean shouldComplete;
+    private boolean markedForCompletion;
     private int elapsedTime;
 
     public SkillInstanceImpl(SkillContext<S> context, S state, AttributeModifierTracker attributeModifierTracker, int duration) {
@@ -52,13 +52,13 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     }
 
     @Override
-    public boolean isShouldComplete() {
-        return shouldComplete;
+    public boolean isMarkedForCompletion() {
+        return markedForCompletion;
     }
 
     @Override
-    public void setShouldComplete(boolean shouldComplete) {
-        this.shouldComplete = shouldComplete;
+    public void setMarkedForCompletion(boolean markedForCompletion) {
+        this.markedForCompletion = markedForCompletion;
     }
 
     @Override
@@ -85,7 +85,7 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
         return "SkillInstanceImpl{" +
                 "context=" + context +
                 ", state=" + state +
-                ", shouldComplete=" + shouldComplete +
+                ", markedForCompletion=" + markedForCompletion +
                 ", duration=" + duration +
                 ", elapsedTime=" + elapsedTime +
                 '}';

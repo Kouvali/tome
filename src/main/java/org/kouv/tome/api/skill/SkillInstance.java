@@ -13,9 +13,9 @@ public interface SkillInstance<S> extends SkillContext<S> {
 
     void setDuration(int duration);
 
-    boolean isShouldComplete();
+    boolean isMarkedForCompletion();
 
-    void setShouldComplete(boolean shouldComplete);
+    void setMarkedForCompletion(boolean markedForCompletion);
 
     int getElapsedTime();
 

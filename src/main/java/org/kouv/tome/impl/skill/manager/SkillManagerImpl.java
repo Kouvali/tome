@@ -165,7 +165,7 @@ public final class SkillManagerImpl implements SkillManager {
     }
 
     private boolean isReadyToComplete(SkillInstance<?> instance) {
-        return instance.isShouldComplete() ||
+        return instance.isMarkedForCompletion() ||
                 (instance.getDuration() >= 0 &&
                         instance.getDuration() <= instance.getElapsedTime());
     }
