@@ -10,7 +10,7 @@
   "entrypoints": {
     "main": [
       "org.kouv.tome.test.skill.SkillTest",
-      "org.kouv.tome.test.skill.event.SkillEventsTest"
+      "org.kouv.tome.test.skill.event.SkillEventTest"
     ]
   },
   "depends": {

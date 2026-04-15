@@ -7,8 +7,8 @@ import org.kouv.tome.api.skill.event.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class SkillEventsTest implements ModInitializer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SkillEventsTest.class);
+public final class SkillEventTest implements ModInitializer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SkillEventTest.class);
 
     @Override
     public void onInitialize() {
