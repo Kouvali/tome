@@ -85,8 +85,9 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
         return "SkillInstanceImpl{" +
                 "context=" + context +
                 ", state=" + state +
-                ", markedForCompletion=" + markedForCompletion +
+                ", attributeModifierTracker=" + attributeModifierTracker +
                 ", duration=" + duration +
+                ", markedForCompletion=" + markedForCompletion +
                 ", elapsedTime=" + elapsedTime +
                 '}';
     }
