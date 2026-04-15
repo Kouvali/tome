@@ -3,7 +3,7 @@ package org.kouv.tome.api.skill.predicate
 import org.kouv.tome.api.skill.SkillInstance
 
 fun <S : Any> skillCancelPredicate(block: SkillInstance<out S>.() -> Boolean): SkillCancelPredicate<S> =
-    SkillCancelPredicate { instance -> instance.block() }
+    SkillCancelPredicate(block)
 
 fun <S : Any> allowedSkillCancelPredicate(): SkillCancelPredicate<S> = SkillCancelPredicate.allowed()
 

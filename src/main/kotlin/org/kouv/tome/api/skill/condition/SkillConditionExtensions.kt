@@ -4,7 +4,7 @@ import org.kouv.tome.api.skill.SkillContext
 import org.kouv.tome.api.skill.SkillResponse
 
 fun skillCondition(block: SkillContext<*>.() -> SkillResponse): SkillCondition =
-    SkillCondition { context -> context.block() }
+    SkillCondition(block)
 
 fun requireLearnedSkillCondition(): SkillCondition = SkillCondition.requireLearned()
 

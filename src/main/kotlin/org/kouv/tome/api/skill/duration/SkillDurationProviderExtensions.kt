@@ -3,7 +3,7 @@ package org.kouv.tome.api.skill.duration
 import org.kouv.tome.api.skill.SkillContext
 
 fun skillDurationProvider(block: SkillContext<*>.() -> Int): SkillDurationProvider =
-    SkillDurationProvider { context -> context.block() }
+    SkillDurationProvider(block)
 
 fun constantSkillDurationProvider(duration: Int): SkillDurationProvider = SkillDurationProvider.constant(duration)
 
