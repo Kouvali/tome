@@ -1,6 +1,5 @@
 package org.kouv.tome.api.skill.condition;
 
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillResponse;
@@ -9,12 +8,6 @@ import java.util.Objects;
 
 @FunctionalInterface
 public interface SkillCondition {
-    static SkillCondition requireCreativeMode() {
-        return context -> context.getSource() instanceof Player player && player.isCreative() ?
-                SkillResponse.success() :
-                SkillResponse.unavailable();
-    }
-
     static SkillCondition requireLearned() {
         return context -> context.getSource().getSkillContainer().hasSkill(context.getSkill()) ?
                 SkillResponse.success() :
@@ -22,11 +15,9 @@ public interface SkillCondition {
     }
 
     static SkillCondition requireNoCooldown() {
-        return requireCreativeMode().or(context ->
-                context.getSource().getSkillCooldownManager().isCoolingDown(context.getSkill()) ?
-                        SkillResponse.cooldown() :
-                        SkillResponse.success()
-        );
+        return context -> context.getSource().getSkillCooldownManager().isCoolingDown(context.getSkill()) ?
+                SkillResponse.cooldown() :
+                SkillResponse.success();
     }
 
     static SkillCondition requireInGame() {
