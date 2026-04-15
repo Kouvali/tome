@@ -116,9 +116,8 @@ public final class SkillManagerImpl implements SkillManager {
     private <S> void executeStart(SkillInstance<S> instance) {
         this.instance = instance;
         instance.getSkill().value().getStartBehavior().execute(instance);
-        if (isCasting() &&
-                isReadyToComplete(instance)
-        ) {
+
+        if (isCasting() && isReadyToComplete(instance)) {
             executeComplete(instance);
         }
     }
@@ -157,9 +156,8 @@ public final class SkillManagerImpl implements SkillManager {
     private <S> void executeTick(SkillInstance<S> instance) {
         ((SkillInstanceImpl<?>) instance).update();
         instance.getSkill().value().getTickBehavior().execute(instance);
-        if (isCasting() &&
-                isReadyToComplete(instance)
-        ) {
+
+        if (isCasting() && isReadyToComplete(instance)) {
             executeComplete(instance);
         }
     }
