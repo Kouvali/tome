@@ -1,2 +1,3 @@
 classTweaker v1 official
+transitive-inject-interface net/minecraft/world/entity/LivingEntity org/kouv/tome/api/buff/entity/BuffEntity
 transitive-inject-interface net/minecraft/world/entity/LivingEntity org/kouv/tome/api/skill/entity/SkillEntity

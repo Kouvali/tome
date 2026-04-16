@@ -9,6 +9,8 @@
   "environment": "*",
   "entrypoints": {
     "main": [
+      "org.kouv.tome.test.buff.BuffTest",
+      "org.kouv.tome.test.buff.event.BuffEventTest",
       "org.kouv.tome.test.skill.SkillTest",
       "org.kouv.tome.test.skill.event.SkillEventTest"
     ]

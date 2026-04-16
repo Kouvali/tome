@@ -1,4 +1,11 @@
 {
+  "buff.notFound": "Unknown buff: %s",
+  "commands.buff.clear.failed": "No buffs were cleared",
+  "commands.buff.clear.success.multiple": "Cleared all buffs from %s entities",
+  "commands.buff.clear.success.single": "Cleared all buffs from %s",
+  "commands.buff.remove.failed": "No buffs were removed",
+  "commands.buff.remove.success.multiple": "Removed buff %s from %s entities",
+  "commands.buff.remove.success.single": "Removed buff %s from %s",
   "commands.skill.add.failed": "No skills were added",
   "commands.skill.add.success.multiple": "Added %s skill(s) to %s entities",
   "commands.skill.add.success.single": "Added %s skill(s) to %s",

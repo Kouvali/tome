@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.kouv.tome.api.buff.manager.BuffManager;
 import org.kouv.tome.api.skill.manager.SkillManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,6 +23,9 @@ public abstract class ServerPlayerEntityMixin extends Player {
         if (level().isClientSide()) {
             return;
         }
+
+        BuffManager buffManager = getBuffManager();
+        buffManager.clearBuffs();
 
         SkillManager skillManager = getSkillManager();
         if (!skillManager.interruptCasting()) {

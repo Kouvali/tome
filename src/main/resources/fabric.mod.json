@@ -11,6 +11,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
+      "org.kouv.tome.impl.buff.BuffEntrypoint",
       "org.kouv.tome.impl.skill.SkillEntrypoint"
     ]
   },
