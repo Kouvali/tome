@@ -77,6 +77,11 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
         return elapsedTime;
     }
 
+    @Override
+    public void setElapsedTime(int elapsedTime) {
+        this.elapsedTime = elapsedTime;
+    }
+
     public void update() {
         elapsedTime++;
     }

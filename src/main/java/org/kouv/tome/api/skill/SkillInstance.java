@@ -19,6 +19,8 @@ public interface SkillInstance<S> extends SkillContext<S> {
 
     int getElapsedTime();
 
+    void setElapsedTime(int elapsedTime);
+
     default int getRemainingDuration() {
         int duration = getDuration();
         return duration < 0 ?
