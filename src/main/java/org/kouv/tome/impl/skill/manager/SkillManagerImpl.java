@@ -177,7 +177,8 @@ public final class SkillManagerImpl implements SkillManager {
 
     private <S> SkillInstance<S> createInstance(SkillContext<S> context, S state) {
         return new SkillInstanceImpl<>(
-                context,
+                context.getSkill(),
+                context.getSource(),
                 state,
                 new AttributeModifierTracker(context.getSource().getAttributes()),
                 context.getSkill().value().getDurationProvider().get(context)

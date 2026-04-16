@@ -4,13 +4,13 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 import org.kouv.tome.api.skill.Skill;
-import org.kouv.tome.api.skill.SkillContext;
 import org.kouv.tome.api.skill.SkillInstance;
 
 import java.util.Objects;
 
 public final class SkillInstanceImpl<S> implements SkillInstance<S> {
-    private final SkillContext<S> context;
+    private final Holder<? extends Skill<S>> skill;
+    private final LivingEntity source;
     private S state;
 
     private final AttributeModifierTracker attributeModifierTracker;
@@ -19,11 +19,22 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private boolean markedForCompletion;
     private int elapsedTime;
 
-    public SkillInstanceImpl(SkillContext<S> context, S state, AttributeModifierTracker attributeModifierTracker, int duration) {
-        this.context = Objects.requireNonNull(context);
+    public SkillInstanceImpl(Holder<? extends Skill<S>> skill, LivingEntity source, S state, AttributeModifierTracker attributeModifierTracker, int duration) {
+        this.skill = Objects.requireNonNull(skill);
+        this.source = Objects.requireNonNull(source);
         this.state = Objects.requireNonNull(state);
         this.attributeModifierTracker = Objects.requireNonNull(attributeModifierTracker);
         this.duration = duration;
+    }
+
+    @Override
+    public Holder<? extends Skill<S>> getSkill() {
+        return skill;
+    }
+
+    @Override
+    public LivingEntity getSource() {
+        return source;
     }
 
     @Override
@@ -66,16 +77,6 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
         return elapsedTime;
     }
 
-    @Override
-    public Holder<? extends Skill<S>> getSkill() {
-        return context.getSkill();
-    }
-
-    @Override
-    public LivingEntity getSource() {
-        return context.getSource();
-    }
-
     public void update() {
         elapsedTime++;
     }
@@ -83,7 +84,8 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     @Override
     public String toString() {
         return "SkillInstanceImpl{" +
-                "context=" + context +
+                "skill=" + skill +
+                ", source=" + source +
                 ", state=" + state +
                 ", attributeModifierTracker=" + attributeModifierTracker +
                 ", duration=" + duration +
