@@ -9,15 +9,15 @@ import java.util.function.BiFunction;
 @FunctionalInterface
 public interface SkillDurationProvider {
     static SkillDurationProvider constant(int duration) {
-        return context -> duration;
+        return _ -> duration;
     }
 
     static SkillDurationProvider infinite() {
-        return context -> -1;
+        return _ -> -1;
     }
 
     static SkillDurationProvider instant() {
-        return context -> 0;
+        return _ -> 0;
     }
 
     int get(SkillContext<?> context);

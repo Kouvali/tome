@@ -26,7 +26,7 @@ public interface SkillStateFactory<S> {
 
     static <S> SkillStateFactory<S> constant(S state) {
         Objects.requireNonNull(state);
-        return alwaysOk(context -> state);
+        return alwaysOk(_ -> state);
     }
 
     SkillStateCreationResult<S> create(SkillContext<?> context);

@@ -9,7 +9,7 @@ import java.util.Objects;
 @FunctionalInterface
 public interface BuffEndBehavior<P> {
     static <P> BuffEndBehavior<P> noOp() {
-        return instance -> {};
+        return _ -> {};
     }
 
     void execute(BuffInstance<? extends P> instance);

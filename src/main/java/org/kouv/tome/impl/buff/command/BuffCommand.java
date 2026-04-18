@@ -51,7 +51,7 @@ public final class BuffCommand {
         return Commands.literal("remove")
                 .then(
                         Commands.argument("buff", IdentifierArgument.id())
-                                .suggests((context, builder) ->
+                                .suggests((_, builder) ->
                                         SharedSuggestionProvider.suggestResource(BuffRegistries.BUFF.keySet(), builder)
                                 )
                                 .executes(context ->

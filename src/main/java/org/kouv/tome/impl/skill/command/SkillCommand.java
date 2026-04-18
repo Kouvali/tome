@@ -77,7 +77,7 @@ public final class SkillCommand {
         return Commands.literal("add")
                 .then(
                         Commands.argument("skill", IdentifierArgument.id())
-                                .suggests((context, builder) ->
+                                .suggests((_, builder) ->
                                         SharedSuggestionProvider.suggestResource(SkillRegistries.SKILL.keySet(), builder)
                                 )
                                 .executes(context ->
@@ -124,7 +124,7 @@ public final class SkillCommand {
         return Commands.literal("remove")
                 .then(
                         Commands.argument("skill", IdentifierArgument.id())
-                                .suggests((context, builder) ->
+                                .suggests((_, builder) ->
                                         SharedSuggestionProvider.suggestResource(SkillRegistries.SKILL.keySet(), builder)
                                 )
                                 .executes(context ->
@@ -171,7 +171,7 @@ public final class SkillCommand {
         return Commands.literal("test")
                 .then(
                         Commands.argument("skill", IdentifierArgument.id())
-                                .suggests((context, builder) ->
+                                .suggests((_, builder) ->
                                         SharedSuggestionProvider.suggestResource(SkillRegistries.SKILL.keySet(), builder)
                                 )
                                 .executes(context ->
@@ -198,7 +198,7 @@ public final class SkillCommand {
         return Commands.literal("cast")
                 .then(
                         Commands.argument("skill", IdentifierArgument.id())
-                                .suggests((context, builder) ->
+                                .suggests((_, builder) ->
                                         SharedSuggestionProvider.suggestResource(SkillRegistries.SKILL.keySet(), builder)
                                 )
                                 .executes(context ->
@@ -289,7 +289,7 @@ public final class SkillCommand {
         return Commands.literal("get")
                 .then(
                         Commands.argument("skill", IdentifierArgument.id())
-                                .suggests((context, builder) ->
+                                .suggests((_, builder) ->
                                         SharedSuggestionProvider.suggestResource(SkillRegistries.SKILL.keySet(), builder)
                                 )
                                 .executes(context ->
@@ -316,7 +316,7 @@ public final class SkillCommand {
         return Commands.literal("set")
                 .then(
                         Commands.argument("skill", IdentifierArgument.id())
-                                .suggests((context, builder) ->
+                                .suggests((_, builder) ->
                                         SharedSuggestionProvider.suggestResource(SkillRegistries.SKILL.keySet(), builder)
                                 )
                                 .then(

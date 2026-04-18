@@ -9,7 +9,7 @@ import java.util.Objects;
 @FunctionalInterface
 public interface BuffTickBehavior<P> {
     static <P> BuffTickBehavior<P> noOp() {
-        return instance -> {};
+        return _ -> {};
     }
 
     void execute(BuffInstance<? extends P> instance);

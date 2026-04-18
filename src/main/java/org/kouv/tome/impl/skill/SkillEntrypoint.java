@@ -10,7 +10,7 @@ import org.kouv.tome.impl.skill.command.SkillCommand;
 public final class SkillEntrypoint implements ModInitializer {
     @Override
     public void onInitialize() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+        CommandRegistrationCallback.EVENT.register((dispatcher, _, _) ->
                 SkillCommand.register(dispatcher)
         );
         SkillAttachments.initialize();
