@@ -82,7 +82,7 @@ public abstract class LivingEntityMixin extends Entity implements BuffEntity, Sk
     }
 
     @Inject(method = "die", at = @At(value = "TAIL"))
-    private void tome$onDeath(DamageSource damageSource, CallbackInfo ci) {
+    private void tome$onDeath(DamageSource source, CallbackInfo ci) {
         if (level().isClientSide()) {
             return;
         }
