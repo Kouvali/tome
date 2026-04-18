@@ -139,7 +139,7 @@ public final class BuffTest implements ModInitializer {
     }
 
     private int executeUpdate(CommandSourceStack source, ServerPlayer target) {
-        if (target.getBuffManager().updateBuff(testBuff, params -> params, duration -> duration + 100)) {
+        if (target.getBuffManager().updateBuff(testBuff, instance -> instance.setElapsedTime(0))) {
             source.sendSuccess(() -> Component.literal("Updated buff"), false);
         } else {
             source.sendSuccess(() -> Component.literal("Failed to update buff"), false);

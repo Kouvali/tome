@@ -7,8 +7,7 @@ import org.kouv.tome.api.buff.Buff;
 import org.kouv.tome.api.buff.BuffInstance;
 
 import java.util.Collection;
-import java.util.function.IntUnaryOperator;
-import java.util.function.UnaryOperator;
+import java.util.function.Consumer;
 
 @ApiStatus.Experimental
 public interface BuffManager {
@@ -26,8 +25,7 @@ public interface BuffManager {
 
     <P> boolean updateBuff(
             Holder<? extends Buff<P>> buff,
-            UnaryOperator<P> paramsMapper,
-            IntUnaryOperator durationMapper
+            Consumer<? super BuffInstance<P>> updater
     );
 
     boolean removeBuff(Holder<? extends Buff<?>> buff);

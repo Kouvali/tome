@@ -14,8 +14,7 @@ import org.kouv.tome.impl.buff.BuffInstanceImpl;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.IntUnaryOperator;
-import java.util.function.UnaryOperator;
+import java.util.function.Consumer;
 
 public final class BuffManagerImpl implements BuffManager {
     private final Map<Holder<? extends Buff<?>>, BuffInstance<?>> instances = new ConcurrentHashMap<>();
@@ -63,22 +62,21 @@ public final class BuffManagerImpl implements BuffManager {
     @Override
     public <P> boolean updateBuff(
             Holder<? extends Buff<P>> buff,
-            UnaryOperator<P> paramsMapper,
-            IntUnaryOperator durationMapper
+            Consumer<? super BuffInstance<P>> updater
     ) {
         Objects.requireNonNull(buff);
-        Objects.requireNonNull(paramsMapper);
-        Objects.requireNonNull(durationMapper);
+        Objects.requireNonNull(updater);
         BuffInstance<P> instance = getBuffInstance(buff);
         if (instance == null) {
             return false;
         }
 
-        executeUpdate(
-                instance,
-                paramsMapper.apply(instance.getParams()),
-                durationMapper.applyAsInt(instance.getDuration())
-        );
+        updater.accept(instance);
+        if (!hasBuff(buff)) {
+            return true;
+        }
+
+        executeUpdate(instance);
         return true;
     }
 
@@ -128,9 +126,7 @@ public final class BuffManagerImpl implements BuffManager {
         }
     }
 
-    private <P> void executeUpdate(BuffInstance<P> instance, P params, int duration) {
-        instance.setParams(params);
-        instance.setDuration(duration);
+    private <P> void executeUpdate(BuffInstance<P> instance) {
         instance.getBuff().value().getUpdateBehavior().execute(instance);
 
         if (hasBuff(instance.getBuff()) && isReadyToExpire(instance)) {
