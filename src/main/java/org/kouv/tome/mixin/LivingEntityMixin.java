@@ -82,7 +82,7 @@ public abstract class LivingEntityMixin extends Entity implements BuffEntity, Sk
     }
 
     @Inject(method = "die", at = @At(value = "TAIL"))
-    private void tome$stopCasting(DamageSource damageSource, CallbackInfo ci) {
+    private void tome$onDeath(DamageSource damageSource, CallbackInfo ci) {
         if (level().isClientSide()) {
             return;
         }
@@ -97,7 +97,7 @@ public abstract class LivingEntityMixin extends Entity implements BuffEntity, Sk
     }
 
     @Inject(method = "onRemoval", at = @At(value = "TAIL"))
-    private void tome$stopCasting(RemovalReason reason, CallbackInfo ci) {
+    private void tome$onRemoval(RemovalReason reason, CallbackInfo ci) {
         if (level().isClientSide()) {
             return;
         }
@@ -112,7 +112,7 @@ public abstract class LivingEntityMixin extends Entity implements BuffEntity, Sk
     }
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
-    private void tome$refresh(CallbackInfo ci) {
+    private void tome$onFirstTick(CallbackInfo ci) {
         if (level().isClientSide()) {
             return;
         }
@@ -123,7 +123,7 @@ public abstract class LivingEntityMixin extends Entity implements BuffEntity, Sk
     }
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
-    private void tome$update(CallbackInfo ci) {
+    private void tome$onTick(CallbackInfo ci) {
         if (level().isClientSide()) {
             return;
         }

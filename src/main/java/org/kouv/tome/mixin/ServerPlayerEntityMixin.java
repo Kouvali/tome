@@ -19,7 +19,7 @@ public abstract class ServerPlayerEntityMixin extends Player {
     }
 
     @Inject(method = "die", at = @At(value = "TAIL"))
-    private void tome$stopCasting(DamageSource damageSource, CallbackInfo ci) {
+    private void tome$onDeath(DamageSource damageSource, CallbackInfo ci) {
         if (level().isClientSide()) {
             return;
         }
