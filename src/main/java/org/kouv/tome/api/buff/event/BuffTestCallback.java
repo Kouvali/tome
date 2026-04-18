@@ -7,10 +7,10 @@ import org.kouv.tome.api.buff.BuffContext;
 
 @ApiStatus.Experimental
 @FunctionalInterface
-public interface BuffApplyCallback {
-    Event<BuffApplyCallback> EVENT = EventFactory.createArrayBacked(BuffApplyCallback.class, callbacks -> context -> {
-        for (BuffApplyCallback callback : callbacks) {
-            if (!callback.onApply(context)) {
+public interface BuffTestCallback {
+    Event<BuffTestCallback> EVENT = EventFactory.createArrayBacked(BuffTestCallback.class, callbacks -> context -> {
+        for (BuffTestCallback callback : callbacks) {
+            if (!callback.onTest(context)) {
                 return false;
             }
         }
@@ -18,5 +18,5 @@ public interface BuffApplyCallback {
         return true;
     });
 
-    boolean onApply(BuffContext<?> context);
+    boolean onTest(BuffContext<?> context);
 }

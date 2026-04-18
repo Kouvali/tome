@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.kouv.tome.api.buff.Buff;
 import org.kouv.tome.api.buff.BuffContext;
 import org.kouv.tome.api.buff.BuffInstance;
-import org.kouv.tome.api.buff.event.BuffApplyCallback;
+import org.kouv.tome.api.buff.event.BuffTestCallback;
 import org.kouv.tome.api.buff.manager.BuffManager;
 import org.kouv.tome.api.entity.attribute.AttributeModifierTracker;
 import org.kouv.tome.impl.buff.BuffContextImpl;
@@ -52,7 +52,7 @@ public final class BuffManagerImpl implements BuffManager {
         }
 
         BuffContext<P> context = createContext(buff, params);
-        if (!BuffApplyCallback.EVENT.invoker().onApply(context)) {
+        if (!BuffTestCallback.EVENT.invoker().onTest(context)) {
             return false;
         }
 
