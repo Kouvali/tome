@@ -19,7 +19,12 @@ public final class SkillInstanceImpl<S> implements SkillInstance<S> {
     private boolean markedForCompletion;
     private int elapsedTime;
 
-    public SkillInstanceImpl(Holder<? extends Skill<S>> skill, LivingEntity source, S state, AttributeModifierTracker attributeModifierTracker, int duration) {
+    public SkillInstanceImpl(
+            Holder<? extends Skill<S>> skill,
+            LivingEntity source, S state,
+            AttributeModifierTracker attributeModifierTracker,
+            int duration
+    ) {
         this.skill = Objects.requireNonNull(skill);
         this.source = Objects.requireNonNull(source);
         this.state = Objects.requireNonNull(state);

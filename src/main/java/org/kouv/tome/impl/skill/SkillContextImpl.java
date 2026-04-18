@@ -11,7 +11,10 @@ public final class SkillContextImpl<S> implements SkillContext<S> {
     private final Holder<? extends Skill<S>> skill;
     private final LivingEntity source;
 
-    public SkillContextImpl(Holder<? extends Skill<S>> skill, LivingEntity source) {
+    public SkillContextImpl(
+            Holder<? extends Skill<S>> skill,
+            LivingEntity source
+    ) {
         this.skill = Objects.requireNonNull(skill);
         this.source = Objects.requireNonNull(source);
     }
